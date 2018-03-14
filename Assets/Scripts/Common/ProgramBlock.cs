@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ProgramBlock : MonoBehaviour, Block {
 
+	public ProgramBlockType Type { get; set; }
+
 	#region Lifecycle
 
 	void Awake() 
@@ -37,6 +39,6 @@ public enum ProgramBlockType
 	RotateLeft = 1,
 	RotateRight = 2,
 	Jump = 3,
-	ForLoop = 4,
-	End = 5
+	ForLoopStart = 4,
+	ForLoopEnd = 5
 }	
