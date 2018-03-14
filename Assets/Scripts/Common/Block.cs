@@ -10,7 +10,7 @@ public class Block : MonoBehaviour
 
 	// Use this for initialization
 	void Start () {
-
+		gameObject.AddComponent<BlockController> ();
 	}
 
 	// Update is called once per frame
