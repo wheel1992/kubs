@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TerrainBlock : MonoBehaviour, Block {
 
+	public TerrainBlockType Type { get; set; }
+
 	#region Lifecycle
 
 	void Awake() 
