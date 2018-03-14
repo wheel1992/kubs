@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObstacleBlock : MonoBehaviour, Block  {
 
+	public ObstacleBlockType Type { get; set; }
+
 	#region Lifecycle
 
 	void Awake() 
@@ -30,7 +32,7 @@ public class ObstacleBlock : MonoBehaviour, Block  {
 	#endregion
 }
 
-public enum ObstacleBlockType 
+public enum ObstacleBlockType
 {
 	Water = 0,
 	Mud = 1,
