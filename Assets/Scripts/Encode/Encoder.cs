@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Encode : MonoBehaviour {
+public class Encoder : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
