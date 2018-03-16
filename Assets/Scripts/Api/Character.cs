@@ -13,4 +13,24 @@ public class Character : MonoBehaviour
 	void Update ()
 	{
 	}
+
+	public bool Forward()
+	{
+		return false;
+	}
+
+	public bool Jump()
+	{
+		return false;
+	}
+
+	public bool RotateLeft()
+	{
+		return false;
+	}
+
+	public bool RotateRight()
+	{
+		return false;
+	}
 }

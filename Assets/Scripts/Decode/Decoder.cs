@@ -13,4 +13,9 @@ public class Decoder : MonoBehaviour
 	void Update ()
 	{
 	}
+
+	public bool Decode(List<Block> blockchain)
+	{
+		return false;
+	}
 }
