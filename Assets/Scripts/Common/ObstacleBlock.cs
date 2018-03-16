@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleBlock : MonoBehaviour, Block  {
+public class ObstacleBlock : Block  {
 
 	public ObstacleBlockType Type { get; set; }
 

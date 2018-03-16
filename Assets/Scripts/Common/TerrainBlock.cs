@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TerrainBlock : MonoBehaviour, Block {
+public class TerrainBlock : Block {
 
 	public TerrainBlockType Type { get; set; }
 

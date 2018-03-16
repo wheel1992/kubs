@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProgramBlock : MonoBehaviour, Block {
+public class ProgramBlock : Block {
 
 	public ProgramBlockType Type { get; set; }
 
