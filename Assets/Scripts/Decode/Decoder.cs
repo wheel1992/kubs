@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Decoder : MonoBehaviour
 {
+    private Character _character;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -14,8 +16,16 @@ public class Decoder : MonoBehaviour
 	{
 	}
 
-	public bool Decode(List<Block> blockchain)
+	public bool Decode(List<ProgramBlock> blockchain)
 	{
+        foreach (var block in blockchain)
+        {
+            if (block.Type == ProgramBlockType.Forward)
+            {
+                _character.Forward();
+            }
+        }
+
 		return false;
 	}
 }
