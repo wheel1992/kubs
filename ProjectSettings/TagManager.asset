@@ -15,6 +15,7 @@ TagManager:
   - Torso
   - OtherSaucers
   - Block_Program
+  - BlockChainPlate
   layers:
   - Default
   - TransparentFX
