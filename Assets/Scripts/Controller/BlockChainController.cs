@@ -6,7 +6,6 @@ namespace Kubs
 {
     public class BlockChainController : MonoBehaviour
     {
-
         // Use this for initialization
         void Start()
         {
