@@ -32,6 +32,14 @@ namespace Kubs
             CreateForwardBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
             startZ += blockSize;
             CreateForwardBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
+
+            startX = -1f;
+            startZ = -2f;
+            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
+            startZ += blockSize;
+            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
+            startZ += blockSize;
+            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
         }
 
         GameObject CreateForwardBlock(Vector3 position)
