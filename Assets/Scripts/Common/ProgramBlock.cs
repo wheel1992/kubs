@@ -19,13 +19,11 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            Start();
         }
 
         // Update is called once per frame
         void Update()
         {
-            Update();
         }
 
         #endregion
