@@ -9,16 +9,11 @@ namespace Kubs
 
         public ProgramBlockType Type { get; set; }
 
-        public bool IsChained { get; set; }
-
-        public int ChainIndex { get; set; }
-
         #region Lifecycle
 
         void Awake()
         {
             Category = BlockCategory.Program;
-            IsChained = false;
         }
 
         // Use this for initialization
