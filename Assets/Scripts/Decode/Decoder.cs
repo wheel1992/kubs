@@ -3,97 +3,101 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Decoder : MonoBehaviour
+namespace Kubs
 {
     private Character _character;
     private List<ProgramBlock> listForLoopStart;
     private IEnumerator blockEnumerator;
     private bool reset = false;
 
-	// Use this for initialization
-	void Start ()
-	{
-	}
-
-	// Update is called once per frame
-	void Update ()
-	{
-	}
-
-    //Called after program blocks are encoded
-    //Calls Character api
-    //Decodes the program blocks that were encoded according to the type of program block
-	public bool Decode(List<ProgramBlock> blockchain)
-	{
-        blockEnumerator = blockchain.GetEnumerator();
-        try
+    public class Decoder : MonoBehaviour
+    {
+        // Use this for initialization
+        void Start()
         {
-            //blockchain should not be modified, added or remove in order for blockEnumberator to work.
-            while (blockEnumerator.MoveNext())
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+        }
+
+        //Called after program blocks are encoded
+        //Calls Character api
+        //Decodes the program blocks that were encoded according to the type of program block
+    	public bool Decode(List<ProgramBlock> blockchain)
+    	{
+            blockEnumerator = blockchain.GetEnumerator();
+            try
             {
-                //Checks if reset was called
-                if (reset)
+                //blockchain should not be modified, added or remove in order for blockEnumberator to work.
+                while (blockEnumerator.MoveNext())
                 {
-                    //Checks if list is null or empty
-                    //Sets reset to false if the current enumerator is at the desired for loop
-                    if (listForLoopStart != null && listForLoopStart.Count > 0)
+                    //Checks if reset was called
+                    if (reset)
                     {
-                        int latestForwardLoopIndex = listForLoopStart.Count;
-                        ProgramBlock latestForwardLoopBlock = (ProgramBlock)listForLoopStart[latestForwardLoopIndex - 1];
-                        if (blockEnumerator.Current.Equals(latestForwardLoopBlock))
+                        //Checks if list is null or empty
+                        //Sets reset to false if the current enumerator is at the desired for loop
+                        if (listForLoopStart != null && listForLoopStart.Count > 0)
                         {
-                            reset = false;
+                            int latestForwardLoopIndex = listForLoopStart.Count;
+                            ProgramBlock latestForwardLoopBlock = (ProgramBlock)listForLoopStart[latestForwardLoopIndex - 1];
+                            if (blockEnumerator.Current.Equals(latestForwardLoopBlock))
+                            {
+                                reset = false;
+                            }
                         }
                     }
-                }
-                else
-                {
-                    ProgramBlock block = (ProgramBlock)blockEnumerator.Current;
-                    if (block.Type == ProgramBlockType.Forward)
+                    else
                     {
-                        _character.Forward();
-                    }
-                    else if (block.Type == ProgramBlockType.RotateLeft)
-                    {
-                        _character.RotateLeft();
-                    }
-                    else if (block.Type == ProgramBlockType.RotateRight)
-                    {
-                        _character.RotateRight();
-                    }
-                    else if (block.Type == ProgramBlockType.Jump)
-                    {
-                        _character.Jump();
-                    }
-                    else if (block.Type == ProgramBlockType.ForLoopStart)
-                    {
-                        //++forLoopCounter;
-                        ProgramBlock tempBlock = block;
-                        listForLoopStart.Add(tempBlock);
-                    }
-                    else if (block.Type == ProgramBlockType.ForLoopEnd)
-                    {
-                        //--forLoopCounter;
-                        int latestForwardLoopIndex = listForLoopStart.Count;
-                        --listForLoopStart[latestForwardLoopIndex - 1].Value;
-                        if (listForLoopStart[latestForwardLoopIndex - 1].Value > 0)
+                        ProgramBlock block = (ProgramBlock)blockEnumerator.Current;
+                        if (block.Type == ProgramBlockType.Forward)
                         {
-                            reset = true;
-                            blockEnumerator.Reset();
+                            _character.Forward();
                         }
-                        else
+                        else if (block.Type == ProgramBlockType.RotateLeft)
                         {
-                            listForLoopStart.RemoveAt(latestForwardLoopIndex - 1);
+                            _character.RotateLeft();
+                        }
+                        else if (block.Type == ProgramBlockType.RotateRight)
+                        {
+                            _character.RotateRight();
+                        }
+                        else if (block.Type == ProgramBlockType.Jump)
+                        {
+                            _character.Jump();
+                        }
+                        else if (block.Type == ProgramBlockType.ForLoopStart)
+                        {
+                            //++forLoopCounter;
+                            ProgramBlock tempBlock = block;
+                            listForLoopStart.Add(tempBlock);
+                        }
+                        else if (block.Type == ProgramBlockType.ForLoopEnd)
+                        {
+                            //--forLoopCounter;
+                            int latestForwardLoopIndex = listForLoopStart.Count;
+                            --listForLoopStart[latestForwardLoopIndex - 1].Value;
+                            if (listForLoopStart[latestForwardLoopIndex - 1].Value > 0)
+                            {
+                                reset = true;
+                                blockEnumerator.Reset();
+                            }
+                            else
+                            {
+                                listForLoopStart.RemoveAt(latestForwardLoopIndex - 1);
+                            }
                         }
                     }
                 }
             }
-        }
-        catch (InvalidOperationException e)
-        {
-            throw new InvalidOperationException("BlockChain is modified, iterator not functioning!", e);
-        }
+            catch (InvalidOperationException e)
+            {
+                throw new InvalidOperationException("BlockChain is modified, iterator not functioning!", e);
+            }
 
-		return true;
-	}
+    		return true;
+    	}
+
+    }
 }
