@@ -7,10 +7,11 @@ namespace Kubs
     {
         public static float DEFAULT_Y = 0.63f;
 
+        public static string NAME_TOP_COLLIDER_GROUP = "TopCollideZoneGroup";
         public static string NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK = "Program_Block_SnapDropZone";
 
         public static string TAG_BLOCK_PROGRAM = "Block_Program";
-
+        public static string TAG_TOP_COLLIDER_OBJECT = "TopColliderObject";
     }
 }
 

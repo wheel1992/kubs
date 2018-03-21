@@ -16,6 +16,7 @@ TagManager:
   - OtherSaucers
   - Block_Program
   - BlockChainPlate
+  - TopColliderObject
   layers:
   - Default
   - TransparentFX
