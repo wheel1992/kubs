@@ -1,51 +1,123 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using VRTK;
 
 namespace Kubs
 {
     public class SnapDropZone_Block_Group : MonoBehaviour
     {
+        [SerializeField] private int maximumNumberOfSnapDropZones = 10;
+        [SerializeField] private GameObject snapDropZonePrefab;
 
-        private GameObject _programBlockZone;
+        /// <summary>
+        /// This holds the default first snap drop zone gameobject
+        /// </summary>
+        private GameObject _defaultSnapDropZonePrefab;
+        private Vector3 _defaultSnapDropZonePosition;
+
+        //private static int SnappedBlockIndex = 0; 
+        private static int _numOfSnapDropZone = 1;
+        private static int _snappedBlockCount = 0;
+
+        //private GameObject _programBlockZone;
         //private GameObject sphereZone;
 
         private void Start()
         {
-            _programBlockZone = transform.Find(Constant.NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK).gameObject;
-            //sphereZone = transform.Find("Sphere_SnapDropZone").gameObject;
+            _defaultSnapDropZonePrefab = transform.Find(Constant.NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK).gameObject;
+            _defaultSnapDropZonePosition = _defaultSnapDropZonePrefab.transform.position;
 
-            _programBlockZone.GetComponent<VRTK_SnapDropZone>().ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneSnapped);
-            _programBlockZone.GetComponent<VRTK_SnapDropZone>().ObjectSnappedToDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneSnapped);
-            _programBlockZone.GetComponent<VRTK_SnapDropZone>().ObjectExitedSnapDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneUnsnapped);
-            _programBlockZone.GetComponent<VRTK_SnapDropZone>().ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneUnsnapped);
+            RegisterSnapDropZoneEventHandler(_defaultSnapDropZonePrefab);
 
-            //sphereZone.GetComponent<VRTK_SnapDropZone>().ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoSphereZoneSnapped);
-            //sphereZone.GetComponent<VRTK_SnapDropZone>().ObjectSnappedToDropZone += new SnapDropZoneEventHandler(DoSphereZoneSnapped);
-            //sphereZone.GetComponent<VRTK_SnapDropZone>().ObjectExitedSnapDropZone += new SnapDropZoneEventHandler(DoSphereZoneUnsnapped);
-            //sphereZone.GetComponent<VRTK_SnapDropZone>().ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoSphereZoneUnsnapped);
+            for(int i = 0; i <= maximumNumberOfSnapDropZones; i++)
+            {
+                AddSnapDropZone();
+            } 
+        }
+
+        private void DoProgramBlockZoneEntered(object sender, SnapDropZoneEventArgs e)
+        {
+            Debug.Log("== SnapDropZone: ENTERING <<<<");
         }
 
         private void DoProgramBlockZoneSnapped(object sender, SnapDropZoneEventArgs e)
         {
-            //sphereZone.SetActive(false);
+            if (e.snappedObject != null)
+            {
+                ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
+            }
+
+            _snappedBlockCount++;
+            Debug.Log("== SnapDropZone: SNAPPED count = " + _snappedBlockCount);
+        }
+
+        private void DoProgramBlockZoneExited(object sender, SnapDropZoneEventArgs e)
+        {
+            Debug.Log("== SnapDropZone: EXITED >>>>");
         }
 
         private void DoProgramBlockZoneUnsnapped(object sender, SnapDropZoneEventArgs e)
         {
-            //sphereZone.SetActive(true);
+            if (e.snappedObject != null)
+            {
+                ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
+            }
+            _snappedBlockCount--;
+            Debug.Log("== SnapDropZone: UNSNAPPED count = " + _snappedBlockCount);
         }
 
-        //private void DoSphereZoneSnapped(object sender, SnapDropZoneEventArgs e)
-        //{
-        //    cubeZone.SetActive(false);
-        //}
+        private void RegisterSnapDropZoneEventHandler(GameObject snapDropZone)
+        {
+            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneEntered);
+            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectSnappedToDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneSnapped);
+            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectExitedSnapDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneExited);
+            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneUnsnapped);
+        }
 
-        //private void DoSphereZoneUnsnapped(object sender, SnapDropZoneEventArgs e)
-        //{
-        //    cubeZone.SetActive(true);
-        //}
+        private void AddSnapDropZone()
+        {
+            if (_numOfSnapDropZone >= maximumNumberOfSnapDropZones)
+            {
+                // ...
+                Debug.Log("AddSnapDropZone: Reach maximum number = " + maximumNumberOfSnapDropZones + " of snap drop zones!");
+                return;
+            }
+
+            CreateSnapDropZone(new Vector3(
+                _defaultSnapDropZonePosition.x, 
+                _defaultSnapDropZonePosition.y, 
+                _defaultSnapDropZonePosition.z + (_defaultSnapDropZonePrefab.transform.localScale.z * _numOfSnapDropZone)));
+
+            _numOfSnapDropZone++;
+        }
+
+        private GameObject CreateSnapDropZone(Vector3 position)
+        {
+            if (snapDropZonePrefab == null) {
+                Debug.Log("CreateSnapDropZone: SnapDropZone prefab is not defined!");
+                return null;
+            }
+            var snapDropZone = (GameObject)Instantiate(
+              snapDropZonePrefab,
+              position,
+              Quaternion.identity);
+            snapDropZone.transform.SetParent(gameObject.transform);
+            return snapDropZone;
+        }
+
+        private void RemoveSnapDropZone()
+        {
+            if (_numOfSnapDropZone == 1)
+            {
+                // ...
+                Debug.Log("RemoveSnapDropZone: Cannot go lower than 1 snap drop zone!");
+                return;
+            }
+
+            // ...
+
+            _numOfSnapDropZone--;
+        }
+
     }
 }
 
