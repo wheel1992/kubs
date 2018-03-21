@@ -3,74 +3,77 @@ using UnityEngine.Events;
 using System.Collections.Generic;
 using System;
 
-public class EventManager : MonoBehaviour
+namespace Kubs
 {
-
-    private Dictionary<string, UnityAction<object>> eventDictionary;
-
-    private static EventManager eventManager;
-
-    public static EventManager instance
+    public class EventManager : MonoBehaviour
     {
-        get
-        {
-            if (!eventManager)
-            {
-                eventManager = FindObjectOfType(typeof(EventManager)) as EventManager;
 
+        private Dictionary<string, UnityAction<object>> eventDictionary;
+
+        private static EventManager eventManager;
+
+        public static EventManager instance
+        {
+            get
+            {
                 if (!eventManager)
                 {
-                    Debug.LogError("There needs to be one active EventManger script on a GameObject in your scene.");
+                    eventManager = FindObjectOfType(typeof(EventManager)) as EventManager;
+
+                    if (!eventManager)
+                    {
+                        Debug.LogError("There needs to be one active EventManger script on a GameObject in your scene.");
+                    }
+                    else
+                    {
+                        eventManager.Init();
+                    }
                 }
-                else
-                {
-                    eventManager.Init();
-                }
+
+                return eventManager;
             }
-
-            return eventManager;
         }
-    }
 
-    void Init()
-    {
-        if (eventDictionary == null)
+        void Init()
         {
-            eventDictionary = new Dictionary<string, UnityAction<object>>();
+            if (eventDictionary == null)
+            {
+                eventDictionary = new Dictionary<string, UnityAction<object>>();
+            }
         }
-    }
 
-    public static void StartListening(string eventName, UnityAction<object> listener)
-    {
-
-        UnityAction<object> thisEvent;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        public static void StartListening(string eventName, UnityAction<object> listener)
         {
-            thisEvent += listener;
+
+            UnityAction<object> thisEvent;
+            if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent += listener;
+            }
+            else
+            {
+                thisEvent += listener;
+                instance.eventDictionary.Add(eventName, thisEvent);
+            }
         }
-        else
-        {
-            thisEvent += listener;
-            instance.eventDictionary.Add(eventName, thisEvent);
-        }
-    }
 
-    public static void StopListening(string eventName, UnityAction<object> listener)
-    {
-        if (eventManager == null) return;
-        UnityAction<object> thisEvent;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        public static void StopListening(string eventName, UnityAction<object> listener)
         {
-            thisEvent -= listener;
+            if (eventManager == null) return;
+            UnityAction<object> thisEvent;
+            if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent -= listener;
+            }
         }
-    }
 
-    public static void TriggerEvent(string eventName, object h)
-    {
-        UnityAction<object> thisEvent = null;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        public static void TriggerEvent(string eventName, object h)
         {
-            thisEvent.Invoke(h);
+            UnityAction<object> thisEvent = null;
+            if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+            {
+                thisEvent.Invoke(h);
+            }
         }
     }
 }

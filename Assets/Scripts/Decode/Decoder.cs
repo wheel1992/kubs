@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Decoder : MonoBehaviour
+namespace Kubs
 {
-	// Use this for initialization
-	void Start ()
-	{
-	}
+    public class Decoder : MonoBehaviour
+    {
+        // Use this for initialization
+        void Start()
+        {
+        }
 
-	// Update is called once per frame
-	void Update ()
-	{
-	}
+        // Update is called once per frame
+        void Update()
+        {
+        }
 
-	public bool Decode(List<Block> blockchain)
-	{
-		return false;
-	}
+        public bool Decode(List<Block> blockchain)
+        {
+            return false;
+        }
+    }
 }

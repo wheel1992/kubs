@@ -2,15 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Encoder : MonoBehaviour {
+namespace Kubs
+{
+    public class Encoder : MonoBehaviour
+    {
 
-	// Use this for initialization
-	void Start () {
-		//Test
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        // Use this for initialization
+        void Start()
+        {
+            //Test
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+    }
 }
