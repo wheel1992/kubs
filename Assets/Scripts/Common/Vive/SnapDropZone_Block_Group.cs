@@ -8,6 +8,7 @@ namespace Kubs
     public class SnapDropZone_Block_Group : MonoBehaviour
     {
         [SerializeField] private int maximumNumberOfSnapDropZones = 10;
+        [SerializeField] private GameObject levelPrefab;
         [SerializeField] private GameObject snapDropZonePrefab;
         [SerializeField] private GameObject topColliderObjectPrefab;
         [SerializeField] private GameObject _topColliderGroup;
@@ -23,20 +24,18 @@ namespace Kubs
         private Vector3 _defaultSnapDropZonePosition;
 
         private IList<Block> _blocks;
-        private IList<GameObject> _topColliderObjects;
+        private IList<GameObject> _zones;
+        //private IList<GameObject> _topColliderObjects;
 
-        //private static int SnappedBlockIndex = 0; 
+        //private static int SnappedBlockIndex = 0;
         private static int _numOfSnapDropZone = 1;
         private static int _snappedBlockCount = 0;
 
-        //private GameObject _programBlockZone;
-        //private GameObject sphereZone;
-
         private void Start()
         {
-
             _blocks = new List<Block>();
-            _topColliderObjects = new List<GameObject>();
+            _zones = new List<GameObject>();
+            //_topColliderObjects = new List<GameObject>();
 
             _defaultSnapDropZonePrefab = transform.Find(Constant.NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK).gameObject;
             _defaultSnapDropZonePrefab.GetComponent<SnapDropZone>().ZoneId = 0;
@@ -44,11 +43,14 @@ namespace Kubs
 
             RegisterSnapDropZoneEventHandler(_defaultSnapDropZonePrefab);
 
-            for(int i = 0; i <= maximumNumberOfSnapDropZones; i++)
+            RegisterLevelSceneLoadEventHandler(levelPrefab.GetComponent<SceneLoad>());
+
+
+            for (int i = 0; i <= maximumNumberOfSnapDropZones; i++)
             {
-                AddSnapDropZone();
+                _zones.Add(AddSnapDropZone());
                 _blocks.Add(null);
-                _topColliderObjects.Add(null);
+                //_topColliderObjects.Add(null);
             } 
         }
 
@@ -70,15 +72,12 @@ namespace Kubs
                 // Can be used to replace at specific list index
                 _blocks[snappedZoneId] = block;
 
-                AddTopColliderObject(snappedZoneId, block);
+                block.ZoneId = snappedZoneId;
 
             } else
             {
                 Debug.Log("DoProgramBlockZoneSnapped snappedObject is null!!!");
-            }
-
-            _snappedBlockCount++;
-            Debug.Log("== SnapDropZone: SNAPPED count = " + _snappedBlockCount);
+            } 
         }
 
         private void DoProgramBlockZoneExited(object sender, SnapDropZoneEventArgs e)
@@ -87,12 +86,16 @@ namespace Kubs
             if (e.snappedObject != null)
             {
                 Debug.Log("DoProgramBlockZoneExited object tag = " + e.snappedObject.tag);
-                ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
-                //int snappedZoneId = GetProgramBlockSnappedDropZone(block).ZoneId;
-                int snappedZoneId = _blocks.IndexOf(block);
-                Debug.Log("DoProgramBlockZoneExited to zone " + snappedZoneId);
 
-                RemoveTopColliderObject(snappedZoneId);
+                if (e.snappedObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+                {
+                    ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
+                    //int snappedZoneId = GetProgramBlockSnappedDropZone(block).ZoneId;
+                    int snappedZoneId = _blocks.IndexOf(block);
+                    Debug.Log("DoProgramBlockZoneExited to zone " + snappedZoneId);
+
+                    block.ZoneId = -1;
+                }
             }
             
         }
@@ -101,16 +104,24 @@ namespace Kubs
         {
             if (e.snappedObject != null)
             {
-                ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
-                int snappedZoneId = GetProgramBlockSnappedDropZone(block).ZoneId;
-                Debug.Log("DoProgramBlockZoneSnapped to zone " + snappedZoneId);
+                Debug.Log("DoProgramBlockZoneUnsnapped object tag = " + e.snappedObject.tag);
 
-                // Zone id start index at 0
-                // Can be used to replace at specific list index
-                _blocks[snappedZoneId] = null;
+                if (e.snappedObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+                {
+                    ProgramBlock block = e.snappedObject.GetComponent<ProgramBlock>();
+                    int snappedZoneId = GetProgramBlockSnappedDropZone(block).ZoneId;
+                    Debug.Log("DoProgramBlockZoneUnsnapped to zone " + snappedZoneId);
+
+                    // Zone id start index at 0
+                    // Can be used to replace at specific list index
+                    _blocks[snappedZoneId] = null;
+                } 
             }
-            _snappedBlockCount--;
-            Debug.Log("== SnapDropZone: UNSNAPPED count = " + _snappedBlockCount);
+        }
+
+        private void RegisterLevelSceneLoadEventHandler(SceneLoad levelObj)
+        {
+            levelObj.ProgramBlockShiftRight += new SceneLoad.ProgramBlockShiftRightEventHandler(DoProgramBlockShiftRight);
         }
 
         private void RegisterSnapDropZoneEventHandler(GameObject snapDropZone)
@@ -121,12 +132,14 @@ namespace Kubs
             snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoProgramBlockZoneUnsnapped);
         }
 
-        private void AddSnapDropZone()
+        
+
+        private GameObject AddSnapDropZone()
         {
             if (_numOfSnapDropZone >= maximumNumberOfSnapDropZones)
             {
                 Debug.Log("AddSnapDropZone: Reach maximum number = " + maximumNumberOfSnapDropZones + " of snap drop zones!");
-                return;
+                return null;
             }
 
             var obj = CreateSnapDropZone(new Vector3(
@@ -141,21 +154,23 @@ namespace Kubs
             obj.AddComponent<SnapDropZone>().ZoneId = _numOfSnapDropZone;
 
             _numOfSnapDropZone++;
+
+            return obj;
         }
 
-        private void AddTopColliderObject(int zoneId, Block block)
-        {
-            var blockPosition = block.transform.position;
-            var blockHeight = block.transform.localScale.y;
-            var blockWidth = block.transform.localScale.z;
-            var colliderObject = CreateTopColliderObject(
-                new Vector3(
-                    blockPosition.x,
-                    blockPosition.y + blockHeight,
-                    blockPosition.z - (blockWidth / 2)));
+        //private void AddTopColliderObject(int zoneId, Block block)
+        //{
+        //    var blockPosition = block.transform.position;
+        //    var blockHeight = block.transform.localScale.y;
+        //    var blockWidth = block.transform.localScale.z;
+        //    var colliderObject = CreateTopColliderObject(
+        //        new Vector3(
+        //            blockPosition.x,
+        //            blockPosition.y + blockHeight,
+        //            blockPosition.z - (blockWidth / 2)));
 
-            _topColliderObjects[zoneId] = colliderObject;
-        }
+        //    _topColliderObjects[zoneId] = colliderObject;
+        //}
 
         private GameObject CreateSnapDropZone(Vector3 position)
         {
@@ -172,28 +187,70 @@ namespace Kubs
             return snapDropZone;
         }
 
-        private GameObject CreateTopColliderObject(Vector3 position)
+        //private GameObject CreateTopColliderObject(Vector3 position)
+        //{
+        //    if (topColliderObjectPrefab == null)
+        //    {
+        //        Debug.Log("CreateTopColliderObject: topColliderObject prefab is not defined!");
+        //        return null;
+        //    }
+
+        //    var colliderObject = Instantiate(
+        //     topColliderObjectPrefab,
+        //     position,
+        //     Quaternion.identity);
+
+        //    colliderObject.AddComponent<TopColliderObject_Controller>();
+        //    colliderObject.transform.SetParent(_topColliderGroup.transform);
+
+        //    return colliderObject;
+        //}
+
+        private void DoProgramBlockShiftRight(int startZoneIndex)
         {
-            if (topColliderObjectPrefab == null)
+            if (startZoneIndex < maximumNumberOfSnapDropZones - 1)
             {
-                Debug.Log("CreateTopColliderObject: topColliderObject prefab is not defined!");
-                return null;
+                DoProgramBlockShiftRight(startZoneIndex + 1);
             }
 
-            var colliderObject = Instantiate(
-             topColliderObjectPrefab,
-             position,
-             Quaternion.identity);
+            if (startZoneIndex == maximumNumberOfSnapDropZones - 1)
+            {
+                return;
+            }
 
-            colliderObject.AddComponent<TopColliderObject_Controller>();
-            colliderObject.transform.SetParent(_topColliderGroup.transform);
+            bool isNextFilled = _blocks[startZoneIndex + 1] != null;
+            bool isCurrentFilled = _blocks[startZoneIndex] != null;
+ 
+            if (!isCurrentFilled)
+            {
+                // Since current zone is not filled
+                // Can skip
+                Debug.Log("ShiftRight: Current " + startZoneIndex + " is filled. End shift.");
+                return;
+            }
 
-            return colliderObject;
+            if (isNextFilled)
+            {
+                // since next zone is filled
+                // dont need to shift right already
+                Debug.Log("ShiftRight: Current " + startZoneIndex + " Next " + (startZoneIndex + 1) + " is filled. End shift.");
+                return;
+            }
+
+            var currentBlock = (ProgramBlock) _blocks[startZoneIndex];
+            
+            VRTK_SnapDropZone currentVrtkZone = currentBlock.GetVRTKSnapDropZone();
+            currentVrtkZone.ForceUnsnap();
+
+            VRTK_SnapDropZone nextVrtkZone = _zones[startZoneIndex + 1].GetComponent<VRTK_SnapDropZone>();
+            nextVrtkZone.ForceSnap(currentBlock.gameObject);
+
         }
+
 
         private SnapDropZone GetProgramBlockSnappedDropZone(ProgramBlock block)
         {
-            return block.GetComponent<VRTK_InteractableObject>().GetStoredSnapDropZone().GetComponent<SnapDropZone>();
+            return block.GetSnapDropZone();
         }
 
         private GameObject GetTopColliderGroup()
@@ -201,12 +258,12 @@ namespace Kubs
             return transform.Find(Constant.NAME_TOP_COLLIDER_GROUP).gameObject;
         }
 
-        private void RemoveTopColliderObject(int zoneId)
-        {
-            var obj = _topColliderObjects[zoneId];
-            _topColliderObjects[zoneId] = null;
-            Destroy(obj);
-        }
+        //private void RemoveTopColliderObject(int zoneId)
+        //{
+        //    var obj = _topColliderObjects[zoneId];
+        //    _topColliderObjects[zoneId] = null;
+        //    Destroy(obj);
+        //}
     }
 }
 

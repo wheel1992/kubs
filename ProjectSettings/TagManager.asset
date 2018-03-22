@@ -17,6 +17,7 @@ TagManager:
   - Block_Program
   - BlockChainPlate
   - TopColliderObject
+  - SweepTestChild
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - SweepTest
   - 
   - 
   - 

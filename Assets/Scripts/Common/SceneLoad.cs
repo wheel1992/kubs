@@ -5,8 +5,12 @@ namespace Kubs
 {
     public class SceneLoad : MonoBehaviour
     {
+        public delegate void ProgramBlockShiftRightEventHandler(int startZoneIndex);
+        public event ProgramBlockShiftRightEventHandler ProgramBlockShiftRight;
+
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
+        [SerializeField] private GameObject _sweepTestChildBlockPrefab;
 
         // Use this for initialization
         void Start()
@@ -20,7 +24,7 @@ namespace Kubs
             // ...
         }
 
-        void CreateBlocks()
+        private void CreateBlocks()
         {
             float blockSize = 1f;
             float startX = -3f;
@@ -42,6 +46,16 @@ namespace Kubs
             CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
         }
 
+        private void DoProgramBlockHover(ProgramBlock hoveredBlock)
+        {
+            ProgramBlockShiftRight(hoveredBlock.ZoneId);
+        }
+
+        private void RegisterProgramBlockEventHandler(ProgramBlock block)
+        {
+            block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
+        }
+
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject) Instantiate(
@@ -52,6 +66,8 @@ namespace Kubs
 
             ProgramBlock block = forwardBlock.AddComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
+
+            RegisterProgramBlockEventHandler(block);
 
             return forwardBlock;
         }
@@ -67,7 +83,14 @@ namespace Kubs
             ProgramBlock block = rotateleftBlock.AddComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
 
+            RegisterProgramBlockEventHandler(block);
+
             return rotateleftBlock;
+        }
+
+        GameObject CreateSweepTestChildBlock()
+        {
+            return Instantiate(_sweepTestChildBlockPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         }
 
 
