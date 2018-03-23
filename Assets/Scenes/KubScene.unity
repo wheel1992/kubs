@@ -932,7 +932,8 @@ MonoBehaviour:
     type: 2}
   topColliderObjectPrefab: {fileID: 1186922445993948, guid: 36be213c5f3d40a48a099a4267e6b84e,
     type: 2}
-  _topColliderGroup: {fileID: 1956519127}
+  _proposedBlockPrefab: {fileID: 1112282109462768, guid: 2c5e34c26ad2be042830626e896ed206,
+    type: 2}
 --- !u!1 &233605901
 GameObject:
   m_ObjectHideFlags: 0
@@ -7228,7 +7229,7 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 707
+      value: 706
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}

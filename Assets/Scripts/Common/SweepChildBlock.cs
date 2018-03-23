@@ -25,11 +25,25 @@ namespace Kubs
 
         private void OnTriggerEnter(Collider other)
         {
-            //Debug.Log("SweepChildBlock OnTriggerEnter: collider at layer = " + other.gameObject.layer);
             if (OnEnter != null)
             {
                 OnEnter(other);
             }
+        }
+
+        public void PauseTrigger()
+        {
+            GetBoxCollider().enabled = false;
+        }
+
+        public void StartTrigger()
+        {
+            GetBoxCollider().enabled = true;
+        }
+
+        private BoxCollider GetBoxCollider()
+        {
+            return gameObject.GetComponent<BoxCollider>();
         }
     }
 }

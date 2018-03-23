@@ -5,8 +5,13 @@ namespace Kubs
 {
     public class SceneLoad : MonoBehaviour
     {
-        public delegate void ProgramBlockShiftRightEventHandler(int startZoneIndex);
-        public event ProgramBlockShiftRightEventHandler ProgramBlockShiftRight;
+        public delegate void ProgramBlockShiftEventHandler(int startZoneIndex);
+        public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
+        public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
+        public event ProgramBlockShiftEventHandler ProgramBlockShiftRight;
+        public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
+        public event ProgramBlockPlaceEventHandler ProgramBlockPlace;
+        public event ProgramBlockSnapEventHandler ProgramBlockSnap;
 
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
@@ -46,14 +51,33 @@ namespace Kubs
             CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
         }
 
-        private void DoProgramBlockHover(ProgramBlock hoveredBlock)
+        private void DoProgramBlockHover(int targetZoneId)
         {
-            ProgramBlockShiftRight(hoveredBlock.ZoneId);
+            ProgramBlockShiftRevert(targetZoneId);
+            ProgramBlockShiftRight(targetZoneId);
+        }
+
+        private void DoProgramBlockUnhover(int targetZoneId)
+        {
+            ProgramBlockShiftRevert(targetZoneId);
+        }
+
+        private void DoProgramBlockPlace(int targetZoneId)
+        {
+            ProgramBlockPlace(targetZoneId);
+        }
+
+        private void DoProgramBlockSnap(GameObject block, int zoneId)
+        {
+            ProgramBlockSnap(block, zoneId);
         }
 
         private void RegisterProgramBlockEventHandler(ProgramBlock block)
         {
             block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
+            block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
+            block.Place += new ProgramBlock.PlaceEventHandler(DoProgramBlockPlace);
+            block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
         }
 
         GameObject CreateForwardBlock(Vector3 position)
@@ -66,6 +90,7 @@ namespace Kubs
 
             ProgramBlock block = forwardBlock.AddComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
+            block.PauseSweepChildTrigger();
 
             RegisterProgramBlockEventHandler(block);
 
@@ -82,17 +107,11 @@ namespace Kubs
 
             ProgramBlock block = rotateleftBlock.AddComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
-
+            block.PauseSweepChildTrigger();
             RegisterProgramBlockEventHandler(block);
 
             return rotateleftBlock;
         }
-
-        GameObject CreateSweepTestChildBlock()
-        {
-            return Instantiate(_sweepTestChildBlockPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        }
-
 
     }
 }
