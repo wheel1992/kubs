@@ -78,7 +78,7 @@ namespace Kubs
                 // Can be used to replace at specific list index
                 _blocks[snappedZoneId] = block;
 
-                
+                Debug.Log("DoProgramBlockZoneSnapped DONE!");
             } else
             {
                 Debug.Log("DoProgramBlockZoneSnapped snappedObject is null!!!");
@@ -151,34 +151,59 @@ namespace Kubs
             pb.ZoneId = zoneId;
             _blocks[zoneId] = pb;
 
-            DestroyAllProposedBlocks();
+            //DestroyAllProposedBlocks();
         }
 
         private void DoProgramBlockPlace(int startZoneIndex)
         {
-            Debug.Log("DoProgramBlockPlace ");
-            while (!IsStackMoveZoneEmpty())
-            {
-                StackItemMoveZone item = _stackMoveZones.Pop();
-                MoveSnappedBlock(item.From, item.To);
-            }
-            DestroyAllProposedBlocks();
+            DoProgramBlockShiftRight(startZoneIndex);
+            //ClearStackMoveZone();
+            //ShiftRight(startZoneIndex);
+
+            //Debug.Log("DoProgramBlockPlace");
+            //while (!IsStackMoveZoneEmpty())
+            //{
+            //    StackItemMoveZone item = _stackMoveZones.Pop();
+            //    MoveSnappedBlock(item.From, item.To);
+            //}
+            //DestroyAllProposedBlocks();
         }
 
         private void DoProgramBlockShiftRevert(int startZoneIndex)
         {
             Debug.Log("DoProgramBlockShiftRevert at index " + startZoneIndex);
-            //RevertStackMoveZone();
-            DestroyAllProposedBlocks();
+            //DestroyAllProposedBlocks();
+            printStack();
+            while (!IsStackMoveZoneEmpty())
+            {
+                StackItemMoveZone item = _stackMoveZones.Pop();
+                MoveSnappedBlock(item.To, item.From);
+            }
         }
 
         private void DoProgramBlockShiftRight(int startZoneIndex)
         {
             //Debug.Log("DoProgramBlockShiftRight at index " + startZoneIndex);
+            //DisplayProposedBlock(startZoneIndex + 1);
+            ClearStackMoveZone();
+            ShiftRight(startZoneIndex);
 
+            //while (!IsStackMoveZoneEmpty())
+            //{
+            //    StackItemMoveZone item = _stackMoveZones.Pop();
+            //    MoveSnappedBlock(item.From, item.To);
+            //}
+            foreach(StackItemMoveZone item in _stackMoveZones)
+            {
+                MoveSnappedBlock(item.From, item.To);
+            }
+        }
+
+        private void ShiftRight(int startZoneIndex)
+        {
             if (startZoneIndex < maximumNumberOfSnapDropZones - 1)
             {
-                DoProgramBlockShiftRight(startZoneIndex + 1);
+                ShiftRight(startZoneIndex + 1);
             }
             if (startZoneIndex == maximumNumberOfSnapDropZones - 1)
             {
@@ -201,47 +226,60 @@ namespace Kubs
                 return;
             }
 
-            //Debug.Log("DoProgramBlockShiftRight start shift from " + startZoneIndex + " to " + (startZoneIndex + 1));
+            //Debug.Log("ShiftRight start shift from " + startZoneIndex + " to " + (startZoneIndex + 1));
             if (!isStackMoveZoneContain(startZoneIndex, startZoneIndex + 1))
             {
                 _stackMoveZones.Push(new StackItemMoveZone { From = startZoneIndex, To = startZoneIndex + 1 });
             }
-
-            DisplayProposedBlock(startZoneIndex + 1);
         }
+
 
         private void MoveSnappedBlock(int fromIndex, int toIndex)
         {
-            Debug.Log("MoveSnappedBlock: From " + fromIndex + " - to " + toIndex);
+            Debug.Log("BEFORE MOVE SNAP");
+            printBlocks();
+
+            Debug.Log("MoveSnappedBlock: From " + fromIndex + " to " + toIndex);
             var currentBlock = (ProgramBlock) _blocks[fromIndex];
 
             VRTK_SnapDropZone currentVrtkZone = currentBlock.GetVRTKSnapDropZone();
             currentVrtkZone.ForceUnsnap();
 
             VRTK_SnapDropZone nextVrtkZone = _zones[toIndex].GetComponent<VRTK_SnapDropZone>();
-            nextVrtkZone.ForceSnap(currentBlock.gameObject);
+            anextVrtkZone.ForceSnap(currentBlock.gameObject);
+            //StartCoroutine(SnapBlock(toIndex, currentBlock.gameObject));
+
+            Debug.Log("AFTER MOVE SNAP");
+            printBlocks();
         }
 
-        private void DisplayProposedBlock(int zoneIndex)
+        private IEnumerator SnapBlock(int zoneId, GameObject obj)
         {
-            var zonePosition = _zones[zoneIndex].GetComponent<VRTK_SnapDropZone>().transform.position;
-            var proposedBlock = Instantiate(_proposedBlockPrefab, zonePosition,
-               Quaternion.identity);
-            _proposedBlocks.Add(proposedBlock);
+            VRTK_SnapDropZone nextVrtkZone = _zones[zoneId].GetComponent<VRTK_SnapDropZone>();
+            nextVrtkZone.ForceSnap(obj);
+            yield return null;
         }
 
-        private void DestroyAllProposedBlocks()
-        {
-            foreach (var block in _proposedBlocks)
-            {
-                DestoryProposedBlock(block);
-            }
-        }
+        //private void DisplayProposedBlock(int zoneIndex)
+        //{
+        //    var zonePosition = _zones[zoneIndex].GetComponent<VRTK_SnapDropZone>().transform.position;
+        //    var proposedBlock = Instantiate(_proposedBlockPrefab, zonePosition,
+        //       Quaternion.identity);
+        //    _proposedBlocks.Add(proposedBlock);
+        //}
 
-        private void DestoryProposedBlock(GameObject obj)
-        {
-            Destroy(obj);
-        }
+        //private void DestroyAllProposedBlocks()
+        //{
+        //    foreach (var block in _proposedBlocks)
+        //    {
+        //        DestoryProposedBlock(block);
+        //    }
+        //}
+
+        //private void DestoryProposedBlock(GameObject obj)
+        //{
+        //    Destroy(obj);
+        //}
 
         //private void RevertStackMoveZone()
         //{
@@ -253,11 +291,11 @@ namespace Kubs
         //    }
         //}
 
-        //private void ClearStackMoveZone()
-        //{
-        //    Debug.Log("ClearStackMoveZone");
-        //    _stackMoveZones.Clear();
-        //}
+        private void ClearStackMoveZone()
+        {
+            Debug.Log("ClearStackMoveZone");
+            _stackMoveZones.Clear();
+        }
 
         private GameObject AddSnapDropZone()
         {
@@ -317,6 +355,34 @@ namespace Kubs
         {
             if (_stackMoveZones == null) { return true; }
             return _stackMoveZones.Count == 0;
+        }
+
+        private void printStack()
+        {
+            Debug.Log("===== PRINT STACK ====");
+            foreach (StackItemMoveZone item in _stackMoveZones)
+            {
+                Debug.Log("From " + item.From + " to " + item.To);
+            }
+            Debug.Log("======================");
+        }
+
+        private void printBlocks()
+        {
+            string msg = "";
+            Debug.Log("===== PRINT BLOCKS ====");
+            foreach (Block block in _blocks)
+            {
+                if (block == null)
+                {
+                    msg += "[x] ";
+                } else
+                {
+                    msg += "[B] ";
+                }
+            }
+            Debug.Log(msg);
+            Debug.Log("======================");
         }
 
     }

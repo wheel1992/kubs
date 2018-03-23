@@ -53,7 +53,6 @@ namespace Kubs
 
         private void DoProgramBlockHover(int targetZoneId)
         {
-            ProgramBlockShiftRevert(targetZoneId);
             ProgramBlockShiftRight(targetZoneId);
         }
 

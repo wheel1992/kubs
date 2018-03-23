@@ -17,9 +17,11 @@ namespace Kubs
 
         public ProgramBlockType Type { get; set; }
         public int ZoneId { get; set; }
+        public int HoverZoneId = -1;
+
         private Rigidbody _rb;
-        private bool hasHover = false;
-        private int hoverZoneId = -1;
+        
+
         #region Lifecycle
 
         void Awake()
@@ -39,154 +41,116 @@ namespace Kubs
             PauseSweepChildTrigger();
 
             GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
+            GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
+            
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (isGrabbed())
-            {
-                if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-                {
-                    if (hasHover)
-                    {
-                        hasHover = false;
-                        Unhover(hoverZoneId);
-                        hoverZoneId = -1;
-                    }
-                }
-            }
+            //if (isGrabbed())
+            //{
+            //    if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
+            //    {
+            //        if (hasHover)
+            //        {
+            //            hasHover = false;
+            //            Unhover(hoverZoneId);
+            //            hoverZoneId = -1;
+            //        }
+            //    }
+            //}
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (isSnappedToZone()) { return; }
-            if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-            {
-                Debug.Log("OnTriggerEnter: isGrabbed=" + isGrabbed() + ", hasHover = " + hasHover);
-                // hit collider game object is SweepTestChild
-                // Get parent of the SweepTestChild 
-                GameObject sweepChildParent = other.gameObject.transform.parent.gameObject;
-                // Get zoneId from parent of the SweepTestChild 
-                int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
-
-                if (isGrabbed())
-                {
-                    if (targetZoneId > -1)
-                    {
-                        //Debug.Log("ProgramBlock Update: hit on gameobject parent zone id " + targetZoneId);
-                        if (hoverZoneId != targetZoneId)
-                        {
-                            Hover(sweepChildParent.GetComponent<ProgramBlock>().ZoneId);
-                            hoverZoneId = targetZoneId;
-                        }
-                        hasHover = true;
-                    }
-                }
-                else // Not Grab
-                {
-                    if (targetZoneId > -1 && hasHover)
-                    {
-                        Place(targetZoneId);
-                        Snap(gameObject, targetZoneId);
-                        hoverZoneId = -1;
-                        hasHover = false;
-                    }
-                }
-
-            }
-
-            //if (isGrabbed())
+            //if (isSnappedToZone()) { return; }
+            //if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
             //{
-            //    if (other != null)
+            //    Debug.Log("OnTriggerEnter: isGrabbed=" + isGrabbed() + ", hasHover = " + hasHover);
+            //    // hit collider game object is SweepTestChild
+            //    // Get parent of the SweepTestChild 
+            //    GameObject sweepChildParent = other.gameObject.transform.parent.gameObject;
+            //    // Get zoneId from parent of the SweepTestChild 
+            //    int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
+
+            //    if (isGrabbed())
             //    {
-            //        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
+            //        if (targetZoneId > -1)
             //        {
-            //            // hit collider game object is SweepTestChild
-            //            // Get parent 
-            //            GameObject sweepChildParent = other.gameObject.transform.parent.gameObject;
-            //            int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
-            //            if (targetZoneId > -1)
+            //            //Debug.Log("ProgramBlock Update: hit on gameobject parent zone id " + targetZoneId);
+            //            if (hoverZoneId != targetZoneId)
             //            {
-            //                Debug.Log("ProgramBlock Update: hit on gameobject parent zone id " + targetZoneId);
-            //                if (hoverZoneId != targetZoneId)
-            //                {
-            //                    Hover(sweepChildParent.GetComponent<ProgramBlock>().ZoneId);
-            //                    hoverZoneId = targetZoneId;
-            //                }
-            //                hasHover = true;
+            //                Hover(sweepChildParent.GetComponent<ProgramBlock>().ZoneId);
+            //                hoverZoneId = targetZoneId;
             //            }
+            //            hasHover = true;
             //        }
-            //        //else
-            //        //{
-
-            //        //}
             //    }
-            //} else
-            //{
-            //    // Ungrab but still collide
-            //    //if (other != null)
-            //    //{
-            //    //    if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-            //    //    {
-            //    //        GameObject sweepChildParent = other.gameObject.transform.parent.gameObject;
-            //    //        int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
-            //    //        if (targetZoneId > -1)
-            //    //        {
-            //    //            Place(targetZoneId);
-            //    //            Snap(gameObject, targetZoneId);
-            //    //        }
-            //    //    }
-            //    //}
+            //    else // Not Grab
+            //    {
+            //        if (targetZoneId > -1 && hasHover)
+            //        {
+            //            Place(targetZoneId);
+            //            Snap(gameObject, targetZoneId);
+            //            hoverZoneId = -1;
+            //            hasHover = false;
+            //        }
+            //    }
             //}
         }
 
         // Update is called once per frame
-        void FixedUpdate()
-        {
-
-            //if (isGrabbed())
-            //{
-            //    RaycastHit hit;
-            //    // Test raycast on z-axis (right) and y-axis (down) 
-            //    // _rb.SweepTest(transform.forward, out hit, 2f) || 
-            //    if (_rb.SweepTest(-transform.up, out hit, 2f))
-            //    {
-            //        if (hit.collider != null)
-            //        {
-            //            if (hit.collider.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-            //            {
-            //                // hit collider game object is SweepTestChild
-            //                // Get parent 
-            //                GameObject sweepChildParent = hit.collider.gameObject.transform.parent.gameObject;
-            //                int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
-            //                if (targetZoneId > -1)
-            //                {
-            //                    Debug.Log("ProgramBlock Update: hit on gameobject parent zone id " + targetZoneId);
-            //                    if (hoverZoneId != targetZoneId)
-            //                    {
-            //                        Hover(sweepChildParent.GetComponent<ProgramBlock>().ZoneId);
-            //                        hoverZoneId = targetZoneId;
-            //                    }
-            //                    hasHover = true;
-            //                }
-            //            }
-            //            else
-            //            {
-            //                if (hasHover)
-            //                {
-            //                    hasHover = false;
-            //                    Unhover(hoverZoneId);
-            //                    hoverZoneId = -1;
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+        void Update()
+        {   
         }
+
+
 
         private void DoChildTriggeredEnter(Collider other)
         {
-           
+            //Debug.Log("DoChildTriggeredEnter: other tag =" + other.gameObject.tag);
+            // My SweepTestChild collide with other.gameobject which is ProgramBlock
+            if (other != null && other.gameObject.tag.CompareTo("Block_Program") == 0)
+            {
+                ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
+
+                Debug.Log("DoChildTriggeredEnter: other program block isGrabbed " + otherBlock.IsGrabbed());
+                Debug.Log("DoChildTriggeredEnter: other program block zoneId " + otherBlock.ZoneId);
+
+                if (otherBlock.IsGrabbed())
+                {
+                    if (ZoneId > -1)
+                    {
+                        if (ZoneId != otherBlock.ZoneId)
+                        {
+                            Hover(ZoneId);
+                            otherBlock.HoverZoneId = ZoneId;
+                        }
+                    }
+                }
+                else if (!otherBlock.IsGrabbed())
+                {
+                    if (ZoneId > -1 && ZoneId == otherBlock.HoverZoneId)
+                    {
+                        Place(ZoneId);
+                        Snap(other.gameObject, ZoneId);
+                        otherBlock.HoverZoneId = -1;
+                    }
+                }
+            }
+        }
+
+        private void DoChildTriggerExit(Collider other)
+        {
+            //if (other != null && other.gameObject.tag.CompareTo("Block_Program") == 0)
+            //{
+            //    ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
+            //    if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId)
+            //    {
+            //        otherBlock.HoverZoneId = -1;
+            //        Unhover(ZoneId);
+            //    }
+            //}
         }
 
         #endregion
@@ -213,12 +177,12 @@ namespace Kubs
             return getComponentInteractableObject().GetStoredSnapDropZone();
         }
 
-        public bool isGrabbed()
+        public bool IsGrabbed()
         {
             return getComponentInteractableObject().IsGrabbed();
         }
 
-        public bool isSnappedToZone()
+        public bool IsSnappedToZone()
         {
             return getComponentInteractableObject().IsInSnapDropZone();
         }

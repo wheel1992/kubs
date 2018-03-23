@@ -10,6 +10,7 @@ namespace Kubs
 
         public delegate void TriggerEventHandler(Collider other);
         public event TriggerEventHandler OnEnter;
+        public event TriggerEventHandler OnExit;
 
         // Use this for initialization
         void Start()
@@ -23,8 +24,18 @@ namespace Kubs
 
         }
 
+        private void OnTriggerExit(Collider other)
+        {
+            //Debug.Log("SweepChildBlock OnTriggerExit");
+            if (OnExit != null)
+            {
+                OnExit(other);
+            }
+        }
+
         private void OnTriggerEnter(Collider other)
         {
+            //Debug.Log("SweepChildBlock OnTriggerEnter");
             if (OnEnter != null)
             {
                 OnEnter(other);
