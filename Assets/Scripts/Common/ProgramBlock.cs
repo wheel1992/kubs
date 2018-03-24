@@ -16,6 +16,7 @@ namespace Kubs
         public event SnapEventHandler Snap;
 
         public ProgramBlockType Type { get; set; }
+        public State State { get; set; }
         public int ZoneId { get; set; }
         public int HoverZoneId = -1;
 
@@ -28,6 +29,7 @@ namespace Kubs
         {
             Category = BlockCategory.Program;
             ZoneId = -1;
+            State = State.UnsnapIdle;
         }
 
         // Use this for initialization
@@ -42,99 +44,76 @@ namespace Kubs
 
             GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
             GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
-            
         }
 
         private void OnTriggerExit(Collider other)
         {
-            //if (isGrabbed())
-            //{
-            //    if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-            //    {
-            //        if (hasHover)
-            //        {
-            //            hasHover = false;
-            //            Unhover(hoverZoneId);
-            //            hoverZoneId = -1;
-            //        }
-            //    }
-            //}
+            // I am the Unsnap BlockProgram
+            if (State == State.UnsnapHover)
+            {
+                if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+                {
+                    // I am exiting from current zone!
+                    Unhover(HoverZoneId);
+                    HoverZoneId = -1;
+                }
+            }
+            
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            //if (isSnappedToZone()) { return; }
-            //if (other != null && other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_NAME_SWEEP_TEST))
-            //{
-            //    Debug.Log("OnTriggerEnter: isGrabbed=" + isGrabbed() + ", hasHover = " + hasHover);
-            //    // hit collider game object is SweepTestChild
-            //    // Get parent of the SweepTestChild 
-            //    GameObject sweepChildParent = other.gameObject.transform.parent.gameObject;
-            //    // Get zoneId from parent of the SweepTestChild 
-            //    int targetZoneId = sweepChildParent.GetComponent<ProgramBlock>().ZoneId;
-
-            //    if (isGrabbed())
-            //    {
-            //        if (targetZoneId > -1)
-            //        {
-            //            //Debug.Log("ProgramBlock Update: hit on gameobject parent zone id " + targetZoneId);
-            //            if (hoverZoneId != targetZoneId)
-            //            {
-            //                Hover(sweepChildParent.GetComponent<ProgramBlock>().ZoneId);
-            //                hoverZoneId = targetZoneId;
-            //            }
-            //            hasHover = true;
-            //        }
-            //    }
-            //    else // Not Grab
-            //    {
-            //        if (targetZoneId > -1 && hasHover)
-            //        {
-            //            Place(targetZoneId);
-            //            Snap(gameObject, targetZoneId);
-            //            hoverZoneId = -1;
-            //            hasHover = false;
-            //        }
-            //    }
-            //}
+            if (State == State.UnsnapHover) {
+                if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+                {
+                    // I am still colliding at the current zone!
+                }
+            }
         }
 
-        // Update is called once per frame
-        void Update()
-        {   
+        private void Update()
+        {
+            if (getComponentInteractableObject().IsInSnapDropZone())
+            {
+                StartSweepChildTrigger();
+                ZoneId = GetSnapDropZone().ZoneId;
+            } else
+            {
+                PauseSweepChildTrigger();
+                ZoneId = -1;
+            }
         }
-
-
 
         private void DoChildTriggeredEnter(Collider other)
         {
-            //Debug.Log("DoChildTriggeredEnter: other tag =" + other.gameObject.tag);
-            // My SweepTestChild collide with other.gameobject which is ProgramBlock
-            if (other != null && other.gameObject.tag.CompareTo("Block_Program") == 0)
+            // My SweepTestChild collide with other.gameobject which is a ProgramBlock
+            if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
             {
                 ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
 
-                Debug.Log("DoChildTriggeredEnter: other program block isGrabbed " + otherBlock.IsGrabbed());
-                Debug.Log("DoChildTriggeredEnter: other program block zoneId " + otherBlock.ZoneId);
+                //Debug.Log("DoChildTriggeredEnter: other program block isGrabbed " + otherBlock.IsGrabbed());
+                //Debug.Log("DoChildTriggeredEnter: other program block zoneId " + otherBlock.ZoneId);
 
                 if (otherBlock.IsGrabbed())
                 {
-                    if (ZoneId > -1)
+                    if (ZoneId > -1 && ZoneId != otherBlock.ZoneId)
                     {
-                        if (ZoneId != otherBlock.ZoneId)
-                        {
-                            Hover(ZoneId);
-                            otherBlock.HoverZoneId = ZoneId;
-                        }
+                        Hover(ZoneId);
+                        // Set my current state to SnapTempMove
+                        State = State.SnapTempMove;
+
+                        // Set other block HoverZoneId and state to UnsnapHover
+                        otherBlock.HoverZoneId = ZoneId;
+                        otherBlock.State = State.UnsnapHover;
                     }
                 }
                 else if (!otherBlock.IsGrabbed())
                 {
                     if (ZoneId > -1 && ZoneId == otherBlock.HoverZoneId)
                     {
-                        Place(ZoneId);
+                        //Place(ZoneId);
                         Snap(other.gameObject, ZoneId);
-                        otherBlock.HoverZoneId = -1;
+                        //otherBlock.HoverZoneId = -1;
                     }
                 }
             }
@@ -142,15 +121,16 @@ namespace Kubs
 
         private void DoChildTriggerExit(Collider other)
         {
-            //if (other != null && other.gameObject.tag.CompareTo("Block_Program") == 0)
-            //{
-            //    ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
-            //    if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId)
-            //    {
-            //        otherBlock.HoverZoneId = -1;
-            //        Unhover(ZoneId);
-            //    }
-            //}
+            if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+            {
+                ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
+                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && 
+                    State == State.SnapIdle && otherBlock.State == State.UnsnapHover)
+                {
+                    otherBlock.HoverZoneId = -1;
+                    Unhover(ZoneId);
+                }
+            }
         }
 
         #endregion
@@ -208,5 +188,13 @@ namespace Kubs
         Jump = 3,
         ForLoopStart = 4,
         ForLoopEnd = 5
+    }
+
+    public enum State
+    {
+        UnsnapIdle = 0,
+        UnsnapHover = 1,
+        SnapIdle = 2,
+        SnapTempMove = 3
     }
 }

@@ -15,7 +15,7 @@ namespace Kubs
 
         public static string TAG_BLOCK_PROGRAM = "Block_Program";
         public static string TAG_BLOCK_SWEEP_TEST_CHILD = "SweepTestChild";
-        public static string TAG_TOP_COLLIDER_OBJECT = "TopColliderObject";
+        public static string TAG_TEMPORARY_POSITION_OBJECT = "TempPositionObject";
     }
 }
 

@@ -8,7 +8,7 @@ namespace Kubs
         public delegate void ProgramBlockShiftEventHandler(int startZoneIndex);
         public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
-        public event ProgramBlockShiftEventHandler ProgramBlockShiftRight;
+        public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
         public event ProgramBlockPlaceEventHandler ProgramBlockPlace;
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
@@ -53,7 +53,7 @@ namespace Kubs
 
         private void DoProgramBlockHover(int targetZoneId)
         {
-            ProgramBlockShiftRight(targetZoneId);
+            ProgramBlockShiftRightWhenHover(targetZoneId);
         }
 
         private void DoProgramBlockUnhover(int targetZoneId)

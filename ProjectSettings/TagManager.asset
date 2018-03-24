@@ -16,8 +16,8 @@ TagManager:
   - OtherSaucers
   - Block_Program
   - BlockChainPlate
-  - TopColliderObject
   - SweepTestChild
+  - TempPositionObject
   layers:
   - Default
   - TransparentFX
