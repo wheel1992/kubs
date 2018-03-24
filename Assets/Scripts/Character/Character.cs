@@ -65,13 +65,7 @@ namespace Kubs
 
 		public bool Forward()
 		{
-			return _isAnimating ? Forward_Enqueue() : Forward_Start();
-		}
-
-		private bool Forward_Enqueue()
-		{
-			_queue.Enqueue(ProgramBlockType.Forward);
-			return false;
+			return _isAnimating ? Enqueue(ProgramBlockType.Forward) : Forward_Start();
 		}
 
 		private bool Forward_Start()
@@ -111,13 +105,7 @@ namespace Kubs
 
 		public bool Jump()
 		{
-			return _isAnimating ? Jump_Enqueue() : Jump_Start();
-		}
-
-		private bool Jump_Enqueue()
-		{
-			_queue.Enqueue(ProgramBlockType.Jump);
-			return false;
+			return _isAnimating ? Enqueue(ProgramBlockType.Jump) : Jump_Start();
 		}
 
 		private bool Jump_Start()
@@ -151,6 +139,12 @@ namespace Kubs
 			{
 				Debug.Log(s);
 			}
+		}
+
+		private bool Enqueue(ProgramBlockType type)
+		{
+			_queue.Enqueue(type);
+			return false;
 		}
 
 		private void Set(Animations animation)
