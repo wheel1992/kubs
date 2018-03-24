@@ -27,6 +27,7 @@ namespace Kubs
 			if (_isDebug)
 			{
 				Invoke("Forward", 1);
+				Invoke("Jump", 1);
 				Invoke("Forward", 1);
 			}
 		}
@@ -39,6 +40,7 @@ namespace Kubs
 				switch (_type)
 				{
 					case ProgramBlockType.Forward:
+					case ProgramBlockType.Jump:
 						Forward_Update();
 						break;
 					default:
@@ -51,6 +53,9 @@ namespace Kubs
 				{
 					case ProgramBlockType.Forward:
 						Forward_Start();
+						break;
+					case ProgramBlockType.Jump:
+						Jump_Start();
 						break;
 					default:
 						break;
@@ -106,7 +111,28 @@ namespace Kubs
 
 		public bool Jump()
 		{
+			return _isAnimating ? Jump_Enqueue() : Jump_Start();
+		}
+
+		private bool Jump_Enqueue()
+		{
+			_queue.Enqueue(ProgramBlockType.Jump);
 			return false;
+		}
+
+		private bool Jump_Start()
+		{
+			startPos = transform.position;
+			endPos = transform.position + transform.forward * 2;
+			incrementor = 0;
+			trajectoryHeight = 0.5f;
+
+			Set(Animations.Jump);
+
+			_type = ProgramBlockType.Jump;
+			_isAnimating = true;
+
+			return true;
 		}
 
 		public bool RotateLeft()
