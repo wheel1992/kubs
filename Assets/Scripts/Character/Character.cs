@@ -12,9 +12,15 @@ public class Character : MonoBehaviour
 	private Vector3 endPos;
 	private float trajectoryHeight;
 
+	private bool _isDebug = true;
+
 	// Use this for initialization
 	void Start ()
 	{
+		if (_isDebug)
+		{
+			Invoke("Forward", 1);
+		}
 	}
 
 	// Update is called once per frame
@@ -32,10 +38,10 @@ public class Character : MonoBehaviour
 					Vector3 currentPos = Vector3.Lerp(startPos, endPos, cTime);
 					// add a value to Y, using Sine to give a curved trajectory in the Y direction
 					currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(cTime) * Mathf.PI);
-					Debug.Log(transform.position);
+					DebugLog(transform.position);
 					if (transform.position == endPos)
 					{
-						Debug.Log("end");
+						DebugLog("end");
 						_isAnimating = false;
 					}
 					// finally assign the computed position to our gameObject:
@@ -45,7 +51,6 @@ public class Character : MonoBehaviour
 					break;
 			}
 		}
-
 	}
 
 	public bool Forward()
@@ -73,5 +78,13 @@ public class Character : MonoBehaviour
 	public bool RotateRight()
 	{
 		return false;
+	}
+
+	private void DebugLog(object s)
+	{
+		if (_isDebug)
+		{
+			Debug.Log(s);
+		}
 	}
 }
