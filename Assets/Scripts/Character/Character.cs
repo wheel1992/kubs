@@ -6,12 +6,15 @@ namespace Kubs
 {
 	public class Character : MonoBehaviour
 	{
+		private Animator _animator;
 		private bool _isAnimating;
+		private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
 		private ProgramBlockType _type;
 
 		// Forward
 		private Vector3 startPos;
 		private Vector3 endPos;
+		private float incrementor;
 		private float trajectoryHeight;
 
 		private bool _isDebug = true;
@@ -19,8 +22,11 @@ namespace Kubs
 		// Use this for initialization
 		void Start ()
 		{
+			_animator = GetComponent<Animator>();
+
 			if (_isDebug)
 			{
+				Invoke("Forward", 1);
 				Invoke("Forward", 1);
 			}
 		}
@@ -39,6 +45,17 @@ namespace Kubs
 						break;
 				}
 			}
+			else if (_queue.Count > 0)
+			{
+				switch (_queue.Dequeue())
+				{
+					case ProgramBlockType.Forward:
+						Forward_Start();
+						break;
+					default:
+						break;
+				}
+			}
 		}
 
 		public bool Forward()
@@ -48,14 +65,18 @@ namespace Kubs
 
 		private bool Forward_Enqueue()
 		{
+			_queue.Enqueue(ProgramBlockType.Forward);
 			return false;
 		}
 
 		private bool Forward_Start()
 		{
-			startPos = new Vector3(0, 0.5f, 0);
-			endPos = new Vector3(0, 0.5f, 4);
-			trajectoryHeight = 1;
+			startPos = transform.position;
+			endPos = transform.position + transform.forward;
+			incrementor = 0;
+			trajectoryHeight = 0;
+
+			Set(Animations.Walk);
 
 			_type = ProgramBlockType.Forward;
 			_isAnimating = true;
@@ -67,15 +88,16 @@ namespace Kubs
 		{
 			// https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
 			// calculate current time within our lerping time range
-			float cTime = Time.time * 0.5f;
+			incrementor += Time.deltaTime;
 			// calculate straight-line lerp position:
-			Vector3 currentPos = Vector3.Lerp(startPos, endPos, cTime);
+			Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
 			// add a value to Y, using Sine to give a curved trajectory in the Y direction
-			currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(cTime) * Mathf.PI);
+			currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
 			DebugLog(transform.position);
 			if (transform.position == endPos)
 			{
 				DebugLog("end");
+				SetIdle();
 				_isAnimating = false;
 			}
 			// finally assign the computed position to our gameObject:
@@ -103,6 +125,16 @@ namespace Kubs
 			{
 				Debug.Log(s);
 			}
+		}
+
+		private void Set(Animations animation)
+		{
+			_animator.SetInteger("animation", (int)animation);
+		}
+
+		private void SetIdle()
+		{
+			Set(Animations.Idle);
 		}
 	}
 }
