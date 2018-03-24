@@ -76,7 +76,7 @@ namespace Kubs
 			incrementor = 0;
 			trajectoryHeight = 0;
 
-			Set(Animations.Walk);
+			Set(Animations.Move);
 
 			_type = ProgramBlockType.Forward;
 			_isAnimating = true;
