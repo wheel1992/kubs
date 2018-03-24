@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace Kubs
 {
-    private Character _character;
-    private List<ProgramBlock> listForLoopStart;
-    private IEnumerator blockEnumerator;
-    private bool reset = false;
-
     public class Decoder : MonoBehaviour
     {
+        private Character _character;
+        private List<ProgramBlock> listForLoopStart;
+        private IEnumerator blockEnumerator;
+        private bool reset = false;
+
         // Use this for initialization
         void Start()
         {
