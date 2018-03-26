@@ -7,7 +7,7 @@ namespace Kubs
 {
     public class Decoder : MonoBehaviour
     {
-        private Character _character;
+        [SerializeField] private Character _character;
         private List<ProgramBlock> listForLoopStart;
         private IEnumerator blockEnumerator;
         private bool reset = false;
@@ -59,7 +59,6 @@ namespace Kubs
                         else if (block.Type == ProgramBlockType.RotateLeft)
                         {
                             Debug.Log("Decode Character Rotate Left");
-
                             _character.RotateLeft();
                         }
                         else if (block.Type == ProgramBlockType.RotateRight)
