@@ -41,8 +41,6 @@ namespace Kubs
 				{
 					case ProgramBlockType.Forward:
 					case ProgramBlockType.Jump:
-						Forward_Update();
-						break;
 					default:
 						break;
 				}
@@ -80,11 +78,15 @@ namespace Kubs
 			_type = ProgramBlockType.Forward;
 			_isAnimating = true;
 
+			StartCoroutine("Forward_Update");
+
 			return true;
 		}
 
-		private void Forward_Update()
+		private IEnumerator Forward_Update()
 		{
+		  while (true)
+		  {
 			// https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
 			// calculate current time within our lerping time range
 			incrementor += Time.deltaTime;
@@ -92,15 +94,17 @@ namespace Kubs
 			Vector3 currentPos = Vector3.Lerp(startPos, endPos, incrementor);
 			// add a value to Y, using Sine to give a curved trajectory in the Y direction
 			currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
-			DebugLog(transform.position);
 			if (transform.position == endPos)
 			{
 				DebugLog("end");
 				SetIdle();
 				_isAnimating = false;
+				yield break;
 			}
 			// finally assign the computed position to our gameObject:
 			transform.position = currentPos;
+			yield return null;
+		  }
 		}
 
 		public bool Jump()
@@ -119,6 +123,8 @@ namespace Kubs
 
 			_type = ProgramBlockType.Jump;
 			_isAnimating = true;
+
+			StartCoroutine("Forward_Update");
 
 			return true;
 		}
