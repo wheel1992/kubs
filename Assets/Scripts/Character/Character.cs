@@ -171,7 +171,7 @@ namespace Kubs
 			startRot = transform.rotation;
 			endRot = Quaternion.LookRotation(transform.right);
 
-			Set(Animations.Move_L);
+			Set(Animations.Move_R);
 
 			_type = ProgramBlockType.RotateRight;
 			_isAnimating = true;
