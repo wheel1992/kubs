@@ -74,7 +74,7 @@ namespace Kubs
 
         private void Update()
         {
-            if (getComponentInteractableObject().IsInSnapDropZone())
+            if (GetComponentInteractableObject().IsInSnapDropZone())
             {
                 StartSweepChildTrigger();
                 ZoneId = GetSnapDropZone().ZoneId;
@@ -151,27 +151,27 @@ namespace Kubs
 
         public SnapDropZone GetSnapDropZone()
         {
-            return getComponentInteractableObject().GetStoredSnapDropZone().GetComponent<SnapDropZone>();
+            return GetComponentInteractableObject().GetStoredSnapDropZone().GetComponent<SnapDropZone>();
         }
 
         public VRTK_SnapDropZone GetVRTKSnapDropZone()
         {
-            return getComponentInteractableObject().GetStoredSnapDropZone();
+            return GetComponentInteractableObject().GetStoredSnapDropZone();
         }
 
         public bool IsGrabbed()
         {
-            return getComponentInteractableObject().IsGrabbed();
+            return GetComponentInteractableObject().IsGrabbed();
         }
 
         public bool IsSnappedToZone()
         {
-            return getComponentInteractableObject().IsInSnapDropZone();
+            return GetComponentInteractableObject().IsInSnapDropZone();
         }
 
         #endregion
 
-        private VRTK_InteractableObject getComponentInteractableObject()
+        private VRTK_InteractableObject GetComponentInteractableObject()
         {
             return GetComponent<VRTK_InteractableObject>();
         }
