@@ -1,21 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using VRTK;
 
 namespace Kubs
 {
-    public class BlockChainController : MonoBehaviour
+    public class SnapDropZone : MonoBehaviour
     {
+        public int ZoneId { get; set; }
+
         // Use this for initialization
         void Start()
         {
-
         }
 
         // Update is called once per frame
         void Update()
         {
-
         }
     }
 }
+

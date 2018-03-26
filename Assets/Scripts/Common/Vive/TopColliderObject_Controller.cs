@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Constant : MonoBehaviour {
+public class TopColliderObject_Controller : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

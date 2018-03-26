@@ -25,8 +25,8 @@ namespace Kubs
         //Called after program blocks are encoded
         //Calls Character api
         //Decodes the program blocks that were encoded according to the type of program block
-    	public bool Decode(List<ProgramBlock> blockchain)
-    	{
+        public bool Decode(List<ProgramBlock> blockchain)
+        {
             blockEnumerator = blockchain.GetEnumerator();
             try
             {
@@ -53,18 +53,23 @@ namespace Kubs
                         ProgramBlock block = (ProgramBlock)blockEnumerator.Current;
                         if (block.Type == ProgramBlockType.Forward)
                         {
+                            Debug.Log("Decode Character Forward");
                             _character.Forward();
                         }
                         else if (block.Type == ProgramBlockType.RotateLeft)
                         {
+                            Debug.Log("Decode Character Rotate Left");
+
                             _character.RotateLeft();
                         }
                         else if (block.Type == ProgramBlockType.RotateRight)
                         {
+                            Debug.Log("Decode Character Rotate Right");
                             _character.RotateRight();
                         }
                         else if (block.Type == ProgramBlockType.Jump)
                         {
+                            Debug.Log("Decode Character Jump");
                             _character.Jump();
                         }
                         else if (block.Type == ProgramBlockType.ForLoopStart)
@@ -95,9 +100,8 @@ namespace Kubs
             {
                 throw new InvalidOperationException("BlockChain is modified, iterator not functioning!", e);
             }
-
-    		return true;
-    	}
-
+            return true;
+        }
     }
 }
+
