@@ -201,6 +201,8 @@ namespace Kubs
 				incrementor += Time.deltaTime/scalingFactor;
 				// calculate straight-line lerp rotation:
 				var currentRot = Quaternion.Lerp(startRot, endRot, incrementor);
+				// check quarternion
+				if (currentRot == transform.rotation) break;
 				// finally assign the computed rotation to our gameObject:
 				transform.rotation = currentRot;
 				yield return null;
