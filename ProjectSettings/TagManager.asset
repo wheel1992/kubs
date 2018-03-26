@@ -19,6 +19,7 @@ TagManager:
   - SweepTestChild
   - TempPositionObject
   - SnapDropZoneGroup
+  - Level
   layers:
   - Default
   - TransparentFX

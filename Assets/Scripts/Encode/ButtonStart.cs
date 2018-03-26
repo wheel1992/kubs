@@ -31,12 +31,20 @@ namespace Kubs
         private void HandlePush(object sender, Control3DEventArgs e)
         {
             VRTK_Logger.Info("Pushed");
-			var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
-			Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
+            var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
+            Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
+
+            GetDecoder().Decode(listBlocks);
         }
 
-		private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup() {
-			return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
-		}
+        private Decoder GetDecoder()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
+        }
+
+        private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
+        }
     }
 }
