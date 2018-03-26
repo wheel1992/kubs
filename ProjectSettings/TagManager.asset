@@ -18,6 +18,7 @@ TagManager:
   - BlockChainPlate
   - SweepTestChild
   - TempPositionObject
+  - SnapDropZoneGroup
   layers:
   - Default
   - TransparentFX

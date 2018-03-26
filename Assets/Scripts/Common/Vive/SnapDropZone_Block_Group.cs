@@ -12,9 +12,6 @@ namespace Kubs
         [SerializeField] private GameObject snapDropZonePrefab;
         [SerializeField] private GameObject tempPositionObjectPrefab;
         [SerializeField] private GameObject _proposedBlockPrefab;
-        /// <summary>
-        /// Holds a list of top collider object prefabs
-        /// </summary>
 
 
         /// <summary>
@@ -22,8 +19,6 @@ namespace Kubs
         /// </summary>
         private GameObject _defaultSnapDropZonePrefab;
         private Vector3 _defaultSnapDropZonePosition;
-
-        //private IList<Block> _blocks;
         private IList<GameObject> _zones;
         private IList<GameObject> _tempPositionObjects;
         //private IList<GameObject> _proposedBlocks;
@@ -32,6 +27,20 @@ namespace Kubs
         private static int _numOfSnapDropZone = 1;
 
         //private GameObject _tempPositionObject;
+
+        public List<ProgramBlock> GetListOfSnappedProgramBlocks()
+        {
+            List<ProgramBlock> blocks = new List<ProgramBlock>();
+            foreach (var zone in _zones)
+            {
+                var obj = GetGameObjectBySnapIndex(zone.GetComponent<VRTK_SnapDropZone>().GetComponent<SnapDropZone>().ZoneId);
+                if (obj != null)
+                {
+                    blocks.Add(GetProgramBlockByObject(obj));
+                }
+            }
+            return blocks;
+        }
 
         private void Start()
         {
@@ -367,7 +376,7 @@ namespace Kubs
                 }
                 else
                 {
-                    msg += "[" + (int) GetProgramBlockByObject(obj).State + "] ";
+                    msg += "[" + (int)GetProgramBlockByObject(obj).State + "] ";
                 }
 
             }
