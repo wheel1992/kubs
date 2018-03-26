@@ -16,6 +16,10 @@ namespace Kubs
 		private Vector3 endPos;
 		private float trajectoryHeight;
 
+		// Rotation
+		private Quaternion startRot;
+		private Quaternion endRot;
+
 		private bool _isDebug = true;
 
 		// Use this for initialization
@@ -27,6 +31,9 @@ namespace Kubs
 			{
 				Invoke("Forward", 1);
 				Invoke("Jump", 1);
+				Invoke("RotateLeft", 1);
+				Invoke("Forward", 1);
+				Invoke("RotateRight", 1);
 				Invoke("Forward", 1);
 			}
 		}
@@ -40,6 +47,8 @@ namespace Kubs
 				{
 					case ProgramBlockType.Forward:
 					case ProgramBlockType.Jump:
+					case ProgramBlockType.RotateLeft:
+					case ProgramBlockType.RotateRight:
 					default:
 						break;
 				}
@@ -53,6 +62,12 @@ namespace Kubs
 						break;
 					case ProgramBlockType.Jump:
 						Jump_Start();
+						break;
+					case ProgramBlockType.RotateLeft:
+						RotateLeft_Start();
+						break;
+					case ProgramBlockType.RotateRight:
+						RotateRight_Start();
 						break;
 					default:
 						break;
@@ -128,12 +143,42 @@ namespace Kubs
 
 		public bool RotateLeft()
 		{
-			return false;
+			return _isAnimating ? Enqueue(ProgramBlockType.RotateLeft) : RotateLeft_Start();
+		}
+
+		private bool RotateLeft_Start()
+		{
+			startRot = transform.rotation;
+			endRot = Quaternion.LookRotation(-transform.right);
+
+			Set(Animations.Move_L);
+
+			_type = ProgramBlockType.RotateLeft;
+			_isAnimating = true;
+
+			StartCoroutine("UpdateRotation");
+
+			return true;
 		}
 
 		public bool RotateRight()
 		{
-			return false;
+			return _isAnimating ? Enqueue(ProgramBlockType.RotateRight) : RotateRight_Start();
+		}
+
+		private bool RotateRight_Start()
+		{
+			startRot = transform.rotation;
+			endRot = Quaternion.LookRotation(transform.right);
+
+			Set(Animations.Move_L);
+
+			_type = ProgramBlockType.RotateRight;
+			_isAnimating = true;
+
+			StartCoroutine("UpdateRotation");
+
+			return true;
 		}
 
 		private void DebugLog(object s)
@@ -158,6 +203,28 @@ namespace Kubs
 		private void SetIdle()
 		{
 			Set(Animations.Idle);
+		}
+
+		private IEnumerator UpdateRotation()
+		{
+			var incrementor = 0f;
+			var scalingFactor = 1; // Bigger for slower
+
+			while (transform.rotation != endRot)
+			{
+				// calculate current time within our lerping time range
+				incrementor += Time.deltaTime/scalingFactor;
+				// calculate straight-line lerp rotation:
+				var currentRot = Quaternion.Lerp(startRot, endRot, incrementor);
+				// finally assign the computed rotation to our gameObject:
+				transform.rotation = currentRot;
+				yield return null;
+			}
+
+			DebugLog("end");
+			SetIdle();
+			_isAnimating = false;
+			yield break;
 		}
 	}
 }
