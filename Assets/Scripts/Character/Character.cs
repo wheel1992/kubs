@@ -58,16 +58,16 @@ namespace Kubs
 				switch (_queue.Dequeue())
 				{
 					case ProgramBlockType.Forward:
-						Forward_Start();
+						Forward();
 						break;
 					case ProgramBlockType.Jump:
-						Jump_Start();
+						Jump();
 						break;
 					case ProgramBlockType.RotateLeft:
-						RotateLeft_Start();
+						RotateLeft();
 						break;
 					case ProgramBlockType.RotateRight:
-						RotateRight_Start();
+						RotateRight();
 						break;
 					default:
 						break;
@@ -77,83 +77,75 @@ namespace Kubs
 
 		public bool Forward()
 		{
-			return _isAnimating ? Enqueue(ProgramBlockType.Forward) : Forward_Start();
-		}
+			if (_isAnimating)
+			{
+				_queue.Enqueue(ProgramBlockType.Forward);
+				return false;
+			}
 
-		private bool Forward_Start()
-		{
 			startPos = transform.position;
 			endPos = transform.position + transform.forward;
 			trajectoryHeight = 0;
 
 			Set(Animations.Move);
-
 			_type = ProgramBlockType.Forward;
-			_isAnimating = true;
 
 			StartCoroutine("UpdatePosition");
-
 			return true;
 		}
 
 		public bool Jump()
 		{
-			return _isAnimating ? Enqueue(ProgramBlockType.Jump) : Jump_Start();
-		}
+			if (_isAnimating)
+			{
+				_queue.Enqueue(ProgramBlockType.Jump);
+				return false;
+			}
 
-		private bool Jump_Start()
-		{
 			startPos = transform.position;
 			endPos = transform.position + transform.forward * 2;
 			trajectoryHeight = 0.5f;
 
 			Set(Animations.Jump);
-
 			_type = ProgramBlockType.Jump;
-			_isAnimating = true;
 
 			StartCoroutine("UpdatePosition");
-
 			return true;
 		}
 
 		public bool RotateLeft()
 		{
-			return _isAnimating ? Enqueue(ProgramBlockType.RotateLeft) : RotateLeft_Start();
-		}
+			if (_isAnimating)
+			{
+				_queue.Enqueue(ProgramBlockType.RotateLeft);
+				return false;
+			}
 
-		private bool RotateLeft_Start()
-		{
 			startRot = transform.rotation;
 			endRot = Quaternion.LookRotation(-transform.right);
 
 			Set(Animations.Move_L);
-
 			_type = ProgramBlockType.RotateLeft;
-			_isAnimating = true;
 
 			StartCoroutine("UpdateRotation");
-
 			return true;
 		}
 
 		public bool RotateRight()
 		{
-			return _isAnimating ? Enqueue(ProgramBlockType.RotateRight) : RotateRight_Start();
-		}
+			if (_isAnimating)
+			{
+				_queue.Enqueue(ProgramBlockType.RotateRight);
+				return false;
+			}
 
-		private bool RotateRight_Start()
-		{
 			startRot = transform.rotation;
 			endRot = Quaternion.LookRotation(transform.right);
 
 			Set(Animations.Move_R);
-
 			_type = ProgramBlockType.RotateRight;
-			_isAnimating = true;
 
 			StartCoroutine("UpdateRotation");
-
 			return true;
 		}
 
@@ -165,24 +157,15 @@ namespace Kubs
 			}
 		}
 
-		private bool Enqueue(ProgramBlockType type)
-		{
-			_queue.Enqueue(type);
-			return false;
-		}
-
 		private void Set(Animations animation)
 		{
 			_animator.SetInteger("animation", (int)animation);
 		}
 
-		private void SetIdle()
-		{
-			Set(Animations.Idle);
-		}
-
 		private IEnumerator UpdatePosition()
 		{
+			_isAnimating = true;
+
 			var incrementor = 0f;
 
 			while (transform.position != endPos)
@@ -200,13 +183,15 @@ namespace Kubs
 			}
 
 			DebugLog("end");
-			SetIdle();
+			Set(Animations.Idle);
 			_isAnimating = false;
 			yield break;
 		}
 
 		private IEnumerator UpdateRotation()
 		{
+			_isAnimating = true;
+
 			var incrementor = 0f;
 			var scalingFactor = 1; // Bigger for slower
 
@@ -222,7 +207,7 @@ namespace Kubs
 			}
 
 			DebugLog("end");
-			SetIdle();
+			Set(Animations.Idle);
 			_isAnimating = false;
 			yield break;
 		}
