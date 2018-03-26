@@ -32,7 +32,7 @@ namespace Kubs
         private static int _numOfSnapDropZone = 1;
 
         //private GameObject _tempPositionObject;
-       
+
         private void Start()
         {
             _zones = new List<GameObject>();
@@ -49,11 +49,13 @@ namespace Kubs
             RegisterLevelSceneLoadEventHandler(levelPrefab.GetComponent<SceneLoad>());
 
             _zones.Add(_defaultSnapDropZonePrefab);
-            for (int i = 1; i <= maximumNumberOfSnapDropZones; i++)
+            for (int i = 1; i < maximumNumberOfSnapDropZones; i++)
             {
                 _zones.Add(AddSnapDropZone());
                 //_blocks.Add(null);
-            } 
+            }
+
+            Debug.Log("_zones.Count = " + _zones.Count);
         }
 
         private void DoProgramBlockZoneEntered(object sender, SnapDropZoneEventArgs e)
@@ -67,7 +69,12 @@ namespace Kubs
 
         private void DoProgramBlockZoneExited(object sender, SnapDropZoneEventArgs e)
         {
-            //Debug.Log("== SnapDropZone: EXITED >>>>");
+            Debug.Log("== SnapDropZone: EXITED >>>>");
+            if (sender is VRTK_SnapDropZone)
+            {
+                VRTK_SnapDropZone originZone = (VRTK_SnapDropZone)sender;
+                DecreaseZoneHeight(originZone.GetComponent<SnapDropZone>().ZoneId);
+            }
         }
 
         private void DoProgramBlockZoneUnsnapped(object sender, SnapDropZoneEventArgs e)
@@ -78,7 +85,6 @@ namespace Kubs
         {
             levelObj.ProgramBlockShiftRightWhenHover += new SceneLoad.ProgramBlockShiftEventHandler(DoProgramBlockShiftRightWhenHover);
             levelObj.ProgramBlockShiftRevert += new SceneLoad.ProgramBlockShiftEventHandler(DoProgramBlockShiftRevert);
-            levelObj.ProgramBlockPlace += new SceneLoad.ProgramBlockPlaceEventHandler(DoProgramBlockPlace);
             levelObj.ProgramBlockSnap += new SceneLoad.ProgramBlockSnapEventHandler(DoProgramBlockSnap);
         }
 
@@ -106,39 +112,22 @@ namespace Kubs
             ClearStackMoveZone();
 
             SnapAt(block.GetComponent<ProgramBlock>(), zoneId);
-
-            //VRTK_SnapDropZone nextVrtkZone = _zones[zoneId].GetComponent<VRTK_SnapDropZone>();
-            //nextVrtkZone.ForceSnap(block);
-
-            //var pb = block.GetComponent<ProgramBlock>();
-            //pb.ZoneId = zoneId;
-            //_blocks[zoneId] = pb;
-
-            //DestroyAllProposedBlocks();
         }
-
-        private void DoProgramBlockPlace(int startZoneIndex)
-        {
-            //DoProgramBlockShiftRight(startZoneIndex);
-            //ClearStackMoveZone();
-            //ShiftRight(startZoneIndex);
-
-            //Debug.Log("DoProgramBlockPlace");
-            //while (!IsStackMoveZoneEmpty())
-            //{
-            //    StackItemMoveZone item = _stackMoveZones.Pop();
-            //    MoveSnappedBlock(item.From, item.To);
-            //}
-            //DestroyAllProposedBlocks();
-        }
-
         private void DoProgramBlockShiftRevert(int startZoneIndex)
         {
             Debug.Log("DoProgramBlockShiftRevert at index " + startZoneIndex);
             printStack();
 
+            // Remove all temporary position objects
             DestroyAllTemporaryPositionObjects();
 
+            // Set all VRTK_SnapDropZone to default height
+            for (var i = 0; i < _zones.Count; i++)
+            {
+                DecreaseZoneHeight(i);
+            }
+
+            // Move all snapped blocks back to original position
             while (!IsStackMoveZoneEmpty())
             {
                 StackItemMoveZone item = _stackMoveZones.Pop();
@@ -217,7 +206,8 @@ namespace Kubs
             if (isTemporary)
             {
                 block.State = State.SnapTempMove;
-            } else
+            }
+            else
             {
                 block.State = State.SnapIdle;
             }
@@ -269,12 +259,14 @@ namespace Kubs
 
         private void DecreaseZoneHeight(int zoneId)
         {
-            GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(1, 0.7f, 1);
+             Debug.Log("DecreaseZoneHeight at zone id = " + zoneId);
+            //GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 1, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
+            _zones[zoneId].transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 1, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
         }
 
         private void DestroyAllTemporaryPositionObjects()
         {
-            foreach(GameObject obj in _tempPositionObjects)
+            foreach (GameObject obj in _tempPositionObjects)
             {
                 Destroy(obj);
             }
@@ -282,7 +274,8 @@ namespace Kubs
 
         private void IncreaseZoneHeight(int zoneId)
         {
-            GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(1, 2, 1);
+            //GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 2, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
+            _zones[zoneId].transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 2, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
         }
 
         private GameObject AddSnapDropZone()
@@ -296,7 +289,7 @@ namespace Kubs
             var obj = CreateSnapDropZone(new Vector3(
                 _defaultSnapDropZonePosition.x,
                 _defaultSnapDropZonePosition.y,
-                _defaultSnapDropZonePosition.z + (_defaultSnapDropZonePrefab.transform.localScale.z * _numOfSnapDropZone)));
+               _defaultSnapDropZonePosition.z + (Constant.DEFAULT_BLOCK_SIZE * _numOfSnapDropZone)));
 
             RegisterSnapDropZoneEventHandler(obj);
             // Set Zone Id
@@ -372,7 +365,7 @@ namespace Kubs
 
         private bool isStackMoveZoneContain(int from, int to)
         {
-            foreach(StackItemMoveZone item in _stackMoveZones)
+            foreach (StackItemMoveZone item in _stackMoveZones)
             {
                 if (item.From == from && item.To == to) { return true; }
             }

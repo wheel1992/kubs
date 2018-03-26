@@ -8,11 +8,9 @@ namespace Kubs
     public class ProgramBlock : Block
     {
         public delegate void HoverEventHandler(int targetZoneId);
-        public delegate void PlaceEventHandler(int targetZoneId);
         public delegate void SnapEventHandler(GameObject block, int zoneId);
         public event HoverEventHandler Hover;
         public event HoverEventHandler Unhover;
-        public event PlaceEventHandler Place;
         public event SnapEventHandler Snap;
 
         public ProgramBlockType Type { get; set; }
@@ -48,10 +46,11 @@ namespace Kubs
 
         private void OnTriggerExit(Collider other)
         {
-            // I am the Unsnap BlockProgram
+            if (other == null) { return; }
+            // I am an Unsnap BlockProgram
             if (State == State.UnsnapHover)
             {
-                if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+                if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
                 {
                     // I am exiting from current zone!
                     Unhover(HoverZoneId);
@@ -63,8 +62,10 @@ namespace Kubs
 
         private void OnTriggerEnter(Collider other)
         {
+            if (other == null) { return; }
+            // I am an Unsnap BlockProgram
             if (State == State.UnsnapHover) {
-                if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+                if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
                 {
                     // I am still colliding at the current zone!
                 }
@@ -91,13 +92,17 @@ namespace Kubs
             {
                 ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
 
-                //Debug.Log("DoChildTriggeredEnter: other program block isGrabbed " + otherBlock.IsGrabbed());
-                //Debug.Log("DoChildTriggeredEnter: other program block zoneId " + otherBlock.ZoneId);
-
                 if (otherBlock.IsGrabbed())
                 {
-                    if (ZoneId > -1 && ZoneId != otherBlock.ZoneId)
+                    Debug.Log("DoChildTriggeredEnter: other program block HoverZoneId " + otherBlock.HoverZoneId);
+                    if (ZoneId > -1 && ZoneId != otherBlock.HoverZoneId)
                     {
+                        if (otherBlock.HoverZoneId > -1) {
+                            // has hovered on other zone currently
+                            Unhover(otherBlock.HoverZoneId);
+                            otherBlock.HoverZoneId = -1;
+                        }
+                        
                         Hover(ZoneId);
                         // Set my current state to SnapTempMove
                         State = State.SnapTempMove;
@@ -107,13 +112,11 @@ namespace Kubs
                         otherBlock.State = State.UnsnapHover;
                     }
                 }
-                else if (!otherBlock.IsGrabbed())
+                else
                 {
                     if (ZoneId > -1 && ZoneId == otherBlock.HoverZoneId)
                     {
-                        //Place(ZoneId);
                         Snap(other.gameObject, ZoneId);
-                        //otherBlock.HoverZoneId = -1;
                     }
                 }
             }
@@ -124,8 +127,7 @@ namespace Kubs
             if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
             {
                 ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
-                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && 
-                    State == State.SnapIdle && otherBlock.State == State.UnsnapHover)
+                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && otherBlock.State == State.UnsnapHover && State == State.SnapIdle) 
                 {
                     otherBlock.HoverZoneId = -1;
                     Unhover(ZoneId);

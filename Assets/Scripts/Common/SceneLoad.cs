@@ -10,7 +10,6 @@ namespace Kubs
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
-        public event ProgramBlockPlaceEventHandler ProgramBlockPlace;
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
 
         [SerializeField] private GameObject _forwardBlockPrefab;
@@ -60,12 +59,6 @@ namespace Kubs
         {
             ProgramBlockShiftRevert(targetZoneId);
         }
-
-        private void DoProgramBlockPlace(int targetZoneId)
-        {
-            ProgramBlockPlace(targetZoneId);
-        }
-
         private void DoProgramBlockSnap(GameObject block, int zoneId)
         {
             ProgramBlockSnap(block, zoneId);
@@ -75,7 +68,6 @@ namespace Kubs
         {
             block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
             block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
-            block.Place += new ProgramBlock.PlaceEventHandler(DoProgramBlockPlace);
             block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
         }
 
