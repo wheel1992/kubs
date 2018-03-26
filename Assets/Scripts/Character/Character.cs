@@ -14,7 +14,6 @@ namespace Kubs
 		// Forward
 		private Vector3 startPos;
 		private Vector3 endPos;
-		private float incrementor;
 		private float trajectoryHeight;
 
 		private bool _isDebug = true;
@@ -70,7 +69,6 @@ namespace Kubs
 		{
 			startPos = transform.position;
 			endPos = transform.position + transform.forward;
-			incrementor = 0;
 			trajectoryHeight = 0;
 
 			Set(Animations.Move);
@@ -85,6 +83,8 @@ namespace Kubs
 
 		private IEnumerator Forward_Update()
 		{
+			var incrementor = 0f;
+
 			while (transform.position != endPos)
 			{
 				// https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
@@ -114,7 +114,6 @@ namespace Kubs
 		{
 			startPos = transform.position;
 			endPos = transform.position + transform.forward * 2;
-			incrementor = 0;
 			trajectoryHeight = 0.5f;
 
 			Set(Animations.Jump);
