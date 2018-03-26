@@ -79,7 +79,7 @@ namespace Kubs
                Quaternion.identity);
             forwardBlock.tag = Constant.TAG_BLOCK_PROGRAM;
 
-            ProgramBlock block = forwardBlock.AddComponent<ProgramBlock>();
+            ProgramBlock block = forwardBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
             block.PauseSweepChildTrigger();
 
@@ -96,7 +96,7 @@ namespace Kubs
               Quaternion.identity);
             rotateleftBlock.tag = Constant.TAG_BLOCK_PROGRAM;
 
-            ProgramBlock block = rotateleftBlock.AddComponent<ProgramBlock>();
+            ProgramBlock block = rotateleftBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
             block.PauseSweepChildTrigger();
             RegisterProgramBlockEventHandler(block);
