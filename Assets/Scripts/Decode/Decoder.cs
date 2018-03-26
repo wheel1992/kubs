@@ -53,18 +53,22 @@ namespace Kubs
                         ProgramBlock block = (ProgramBlock)blockEnumerator.Current;
                         if (block.Type == ProgramBlockType.Forward)
                         {
+                            Debug.Log("Decode Character Forward");
                             _character.Forward();
                         }
                         else if (block.Type == ProgramBlockType.RotateLeft)
                         {
+                            Debug.Log("Decode Character Rotate Left");
                             _character.RotateLeft();
                         }
                         else if (block.Type == ProgramBlockType.RotateRight)
                         {
+                            Debug.Log("Decode Character Rotate Right");
                             _character.RotateRight();
                         }
                         else if (block.Type == ProgramBlockType.Jump)
                         {
+                            Debug.Log("Decode Character Jump");
                             _character.Jump();
                         }
                         else if (block.Type == ProgramBlockType.ForLoopStart)
