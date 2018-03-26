@@ -52,10 +52,8 @@ namespace Kubs
             for (int i = 1; i < maximumNumberOfSnapDropZones; i++)
             {
                 _zones.Add(AddSnapDropZone());
-                //_blocks.Add(null);
+                _tempPositionObjects.Add(null);
             }
-
-            Debug.Log("_zones.Count = " + _zones.Count);
         }
 
         private void DoProgramBlockZoneEntered(object sender, SnapDropZoneEventArgs e)
@@ -65,6 +63,24 @@ namespace Kubs
 
         private void DoProgramBlockZoneSnapped(object sender, SnapDropZoneEventArgs e)
         {
+            //Debug.Log("== SnapDropZone: SNAPPED >>>> [ ] <<<<");
+            if (sender is VRTK_SnapDropZone)
+            {
+                VRTK_SnapDropZone originZone = (VRTK_SnapDropZone)sender;
+                int zoneId = originZone.GetComponent<SnapDropZone>().ZoneId;
+                DecreaseZoneHeight(zoneId);
+                Destroy(GetTemporaryPositionObjectByZoneId(zoneId));
+
+                ProgramBlock block = GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId));
+                //Debug.Log("== SnapDropZone: SNAPPED block state = " + block.State.ToString());
+                if (block.State != State.SnapTempMove)
+                {
+                    if (IsPreviousZoneEmpty(zoneId))
+                    {
+                        MoveSnappedBlock(zoneId, zoneId - 1, false);
+                    }
+                }
+            }
         }
 
         private void DoProgramBlockZoneExited(object sender, SnapDropZoneEventArgs e)
@@ -98,7 +114,8 @@ namespace Kubs
 
         private void DoProgramBlockSnap(GameObject block, int zoneId)
         {
-            Debug.Log("DoProgramBlockSnap at zone " + zoneId);
+            // Debug.Log("DoProgramBlockSnap at zone " + zoneId);
+            // Debug.Log("DoProgramBlockSnap stack count " + _stackMoveZones.Count);
 
             DecreaseZoneHeight(zoneId);
             DestroyAllTemporaryPositionObjects();
@@ -106,17 +123,20 @@ namespace Kubs
             // By right all items in stack are still alive
             foreach (StackItemMoveZone item in _stackMoveZones)
             {
-                GetGameObjectBySnapIndex(item.To).GetComponent<ProgramBlock>().State = State.SnapIdle;
+                GetProgramBlockByObject(GetGameObjectBySnapIndex(item.To)).State = State.SnapIdle;
             }
 
             ClearStackMoveZone();
 
-            SnapAt(block.GetComponent<ProgramBlock>(), zoneId);
+            SnapAt(GetProgramBlockByObject(block), zoneId);
+
+            PrintBlockStates();
         }
         private void DoProgramBlockShiftRevert(int startZoneIndex)
         {
-            Debug.Log("DoProgramBlockShiftRevert at index " + startZoneIndex);
-            printStack();
+            Debug.Log("DoProgramBlockShiftRevert");
+            // Debug.Log("DoProgramBlockShiftRevert at index " + startZoneIndex);
+            // printStack();
 
             // Remove all temporary position objects
             DestroyAllTemporaryPositionObjects();
@@ -133,16 +153,25 @@ namespace Kubs
                 StackItemMoveZone item = _stackMoveZones.Pop();
                 MoveSnappedBlock(item.To, item.From, false);
             }
-        }
 
+            PrintBlockStates();
+        }
         private void DoProgramBlockShiftRightWhenHover(int startZoneIndex)
         {
+            if (!IsStackMoveZoneEmpty())
+            {
+                StackItemMoveZone item = _stackMoveZones.Pop();
+                MoveSnappedBlock(item.To, item.From, false);
+            }
+
             IncreaseZoneHeight(startZoneIndex);
-            _tempPositionObjects.Add(CreateTemporaryPositionObject(GetGameObjectBySnapIndex(startZoneIndex).transform.position));
+            _tempPositionObjects.Insert(startZoneIndex, CreateTemporaryPositionObject(GetGameObjectBySnapIndex(startZoneIndex).transform.position));
             ClearStackMoveZone();
             ShiftRight(startZoneIndex);
-        }
 
+
+            PrintBlockStates();
+        }
         private void ShiftRight(int startZoneIndex)
         {
             Debug.Log("ShiftRight at " + startZoneIndex);
@@ -182,13 +211,11 @@ namespace Kubs
                 MoveSnappedBlock(startZoneIndex, startZoneIndex + 1, true);
             }
         }
-
         private void SnapRemove(ProgramBlock block)
         {
             VRTK_SnapDropZone currentVrtkZone = block.GetVRTKSnapDropZone();
             currentVrtkZone.ForceUnsnap();
         }
-
         private void SnapAt(ProgramBlock block, int newZoneIndex)
         {
             VRTK_SnapDropZone nextVrtkZone = _zones[newZoneIndex].GetComponent<VRTK_SnapDropZone>();
@@ -196,10 +223,9 @@ namespace Kubs
 
             block.ZoneId = nextVrtkZone.GetComponent<SnapDropZone>().ZoneId;
         }
-
         private void MoveSnappedBlock(int fromIndex, int toIndex, bool isTemporary)
         {
-            ProgramBlock block = GetGameObjectBySnapIndex(fromIndex).GetComponent<ProgramBlock>();
+            ProgramBlock block = GetProgramBlockByObject(GetGameObjectBySnapIndex(fromIndex));
             SnapRemove(block);
             SnapAt(block, toIndex);
 
@@ -212,58 +238,15 @@ namespace Kubs
                 block.State = State.SnapIdle;
             }
         }
-
-        private IEnumerator SnapBlock(int zoneId, GameObject obj)
-        {
-            VRTK_SnapDropZone nextVrtkZone = _zones[zoneId].GetComponent<VRTK_SnapDropZone>();
-            nextVrtkZone.ForceSnap(obj);
-            yield return null;
-        }
-
-        //private void DisplayProposedBlock(int zoneIndex)
-        //{
-        //    var zonePosition = _zones[zoneIndex].GetComponent<VRTK_SnapDropZone>().transform.position;
-        //    var proposedBlock = Instantiate(_proposedBlockPrefab, zonePosition,
-        //       Quaternion.identity);
-        //    _proposedBlocks.Add(proposedBlock);
-        //}
-
-        //private void DestroyAllProposedBlocks()
-        //{
-        //    foreach (var block in _proposedBlocks)
-        //    {
-        //        DestoryProposedBlock(block);
-        //    }
-        //}
-
-        //private void DestoryProposedBlock(GameObject obj)
-        //{
-        //    Destroy(obj);
-        //}
-
-        //private void RevertStackMoveZone()
-        //{
-        //    Debug.Log("RevertStackMoveZone");
-        //    while (!IsStackMoveZoneEmpty())
-        //    {
-        //        StackItemMoveZone item = _stackMoveZones.Pop();
-        //        MoveSnappedBlock(item.To, item.From);
-        //    }
-        //}
-
         private void ClearStackMoveZone()
         {
             Debug.Log("ClearStackMoveZone");
             _stackMoveZones.Clear();
         }
-
         private void DecreaseZoneHeight(int zoneId)
         {
-             Debug.Log("DecreaseZoneHeight at zone id = " + zoneId);
-            //GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 1, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
             _zones[zoneId].transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 1, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
         }
-
         private void DestroyAllTemporaryPositionObjects()
         {
             foreach (GameObject obj in _tempPositionObjects)
@@ -271,13 +254,14 @@ namespace Kubs
                 Destroy(obj);
             }
         }
-
+        private GameObject GetTemporaryPositionObjectByZoneId(int zoneId)
+        {
+            return _tempPositionObjects[zoneId];
+        }
         private void IncreaseZoneHeight(int zoneId)
         {
-            //GetProgramBlockVRTKSnappedDropZone(GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId))).transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 2, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
             _zones[zoneId].transform.localScale = new Vector3(Constant.DEFAULT_SNAP_DROP_ZONE_SCALE, 2, Constant.DEFAULT_SNAP_DROP_ZONE_SCALE);
         }
-
         private GameObject AddSnapDropZone()
         {
             if (_numOfSnapDropZone >= maximumNumberOfSnapDropZones)
@@ -301,7 +285,6 @@ namespace Kubs
 
             return obj;
         }
-
         private GameObject CreateSnapDropZone(Vector3 position)
         {
             if (snapDropZonePrefab == null)
@@ -317,7 +300,6 @@ namespace Kubs
 
             return snapDropZone;
         }
-
         private GameObject CreateTemporaryPositionObject(Vector3 position)
         {
             return Instantiate(
@@ -325,23 +307,6 @@ namespace Kubs
               position,
               Quaternion.identity);
         }
-
-        //private GameObject CreateTemporaryPositionObject(Vector3 position)
-        //{
-        //    return Instantiate(
-        //      tempPositionObjectPrefab,
-        //      position,
-        //      Quaternion.identity);
-        //}
-
-        //private void DestroyTemporaryPositionObject()
-        //{
-        //    if (_tempPositionObject != null)
-        //    {
-        //        Destroy(_tempPositionObject);
-        //    }
-        //}
-
         private SnapDropZone GetProgramBlockSnappedDropZone(ProgramBlock block)
         {
             return block.GetSnapDropZone();
@@ -351,18 +316,21 @@ namespace Kubs
         {
             return block.GetVRTKSnapDropZone();
         }
-
         private GameObject GetGameObjectBySnapIndex(int snapIndex)
         {
             VRTK_SnapDropZone zone = _zones[snapIndex].GetComponent<VRTK_SnapDropZone>();
             return zone.GetCurrentSnappedObject();
         }
-
         private ProgramBlock GetProgramBlockByObject(GameObject obj)
         {
             return obj.GetComponent<ProgramBlock>();
         }
-
+        private bool IsPreviousZoneEmpty(int currentZoneId)
+        {
+            if (currentZoneId == 0) { return false; }
+            if (currentZoneId >= _zones.Count) { return false; }
+            return GetGameObjectBySnapIndex(currentZoneId - 1) == null;
+        }
         private bool isStackMoveZoneContain(int from, int to)
         {
             foreach (StackItemMoveZone item in _stackMoveZones)
@@ -371,14 +339,12 @@ namespace Kubs
             }
             return false;
         }
-
         private bool IsStackMoveZoneEmpty()
         {
             if (_stackMoveZones == null) { return true; }
             return _stackMoveZones.Count == 0;
         }
-
-        private void printStack()
+        private void PrintStack()
         {
             Debug.Log("===== PRINT STACK ====");
             foreach (StackItemMoveZone item in _stackMoveZones)
@@ -388,24 +354,26 @@ namespace Kubs
             Debug.Log("======================");
         }
 
-        private void printBlocks()
+        private void PrintBlockStates()
         {
-            //string msg = "";
-            //Debug.Log("===== PRINT BLOCKS ====");
-            //foreach (Block block in _blocks)
-            //{
-            //    if (block == null)
-            //    {
-            //        msg += "[x] ";
-            //    } else
-            //    {
-            //        msg += "[B] ";
-            //    }
-            //}
-            //Debug.Log(msg);
-            //Debug.Log("======================");
-        }
+            string msg = "";
+            Debug.Log("===== PRINT BLOCK STATES ====");
+            foreach (GameObject zone in _zones)
+            {
+                GameObject obj = GetGameObjectBySnapIndex(zone.GetComponent<VRTK_SnapDropZone>().GetComponent<SnapDropZone>().ZoneId);
+                if (obj == null)
+                {
+                    msg += "[x] ";
+                }
+                else
+                {
+                    msg += "[" + (int) GetProgramBlockByObject(obj).State + "] ";
+                }
 
+            }
+            Debug.Log(msg);
+            Debug.Log("======================");
+        }
     }
 }
 
