@@ -54,10 +54,10 @@ namespace Kubs
             _defaultSnapDropZonePosition = _defaultSnapDropZonePrefab.transform.position;
 
             RegisterSnapDropZoneEventHandler(_defaultSnapDropZonePrefab);
-
             RegisterLevelSceneLoadEventHandler(levelPrefab.GetComponent<SceneLoad>());
 
             _zones.Add(_defaultSnapDropZonePrefab);
+            _tempPositionObjects.Add(null);
             for (int i = 1; i < maximumNumberOfSnapDropZones; i++)
             {
                 _zones.Add(AddSnapDropZone());
