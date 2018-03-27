@@ -108,7 +108,6 @@ namespace Kubs
             if (e.snappedObject != null)
             {
                 e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
-                // e.snappedObject.GetComponent<BoxCollider>().size = new Vector3(.1f, 1f, .1f);
             }
         }
 
@@ -118,7 +117,6 @@ namespace Kubs
             if (e.snappedObject != null)
             {
                 e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-                // e.snappedObject.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, 1f);
             }
         }
 
@@ -139,9 +137,6 @@ namespace Kubs
 
         private void DoProgramBlockSnap(GameObject block, int zoneId)
         {
-            // Debug.Log("DoProgramBlockSnap at zone " + zoneId);
-            // Debug.Log("DoProgramBlockSnap stack count " + _stackMoveZones.Count);
-
             DecreaseZoneHeight(zoneId);
             DestroyAllTemporaryPositionObjects();
 
@@ -159,9 +154,7 @@ namespace Kubs
         }
         private void DoProgramBlockShiftRevert(int startZoneIndex)
         {
-            Debug.Log("DoProgramBlockShiftRevert");
-            // Debug.Log("DoProgramBlockShiftRevert at index " + startZoneIndex);
-            // printStack();
+            //Debug.Log("DoProgramBlockShiftRevert");
 
             // Remove all temporary position objects
             DestroyAllTemporaryPositionObjects();
@@ -179,7 +172,7 @@ namespace Kubs
                 MoveSnappedBlock(item.To, item.From, false);
             }
 
-            PrintBlockStates();
+            //PrintBlockStates();
         }
         private void DoProgramBlockShiftRightWhenHover(int startZoneIndex)
         {
@@ -194,19 +187,18 @@ namespace Kubs
             ClearStackMoveZone();
             ShiftRight(startZoneIndex);
 
-
-            PrintBlockStates();
+            //PrintBlockStates();
         }
         private void ShiftRight(int startZoneIndex)
         {
-            Debug.Log("ShiftRight at " + startZoneIndex);
+            //Debug.Log("ShiftRight at " + startZoneIndex);
 
             bool isCurrentFilled = GetGameObjectBySnapIndex(startZoneIndex) != null;
             if (!isCurrentFilled)
             {
                 // Since current zone is not filled
                 // Can skip
-                Debug.Log("ShiftRight index at current " + startZoneIndex + " is filled!");
+                //Debug.Log("ShiftRight index at current " + startZoneIndex + " is filled!");
                 return;
             }
 

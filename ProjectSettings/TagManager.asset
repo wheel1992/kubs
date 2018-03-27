@@ -25,6 +25,7 @@ TagManager:
   - SnapDropZoneCloneRotateLeft
   - SnapDropZonePlate
   - SnapDropZoneCloneJump
+  - SnapDropZoneCloneRotateRight
   layers:
   - Default
   - TransparentFX
