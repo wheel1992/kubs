@@ -20,7 +20,7 @@ namespace Kubs
 		private Quaternion startRot;
 		private Quaternion endRot;
 
-		private bool _isDebug = true;
+		private bool _isDebug = false;
 		public float _scale;
 
 		// Use this for initialization
