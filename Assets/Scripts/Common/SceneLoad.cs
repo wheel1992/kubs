@@ -18,13 +18,21 @@ namespace Kubs
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
 
+        private AudioSource _mAudioSource;
+
+        void Awake()
+        {
+            _mAudioSource = GetComponent<AudioSource>();
+            _mAudioSource.Play();
+        }
+
         // Use this for initialization
         void Start()
         {
             //CreateBlocks();
             var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0,0,0));
             rotateLeftBlock.GetComponent<ProgramBlock>().isCloned = false;
-            
+
             var forwardBlock = CreateForwardBlock(new Vector3(0,0,0));
             forwardBlock.GetComponent<ProgramBlock>().isCloned = false;
 
