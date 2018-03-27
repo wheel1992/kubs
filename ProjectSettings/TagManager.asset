@@ -28,6 +28,7 @@ TagManager:
   - Grass
   - Hole
   - Collectable
+  - SnapDropZoneCloneRotateRight
   layers:
   - Default
   - TransparentFX

@@ -12,10 +12,10 @@ namespace Kubs
         public static float DEFAULT_SNAP_DROP_ZONE_SCALE = 0.5f;
         public static float DEFAULT_BLOCK_SPACING = 0.03f;
         public static string LAYER_NAME_SWEEP_TEST = "SweepTest";
-        public static string NAME_PROGRAM_BLOCK_FORWARD = "Forward_ProgramBlock";
-        public static string NAME_PROGRAM_BLOCK_ROTATELEFT= "RotateLeft_ProgramBlock";
-        public static string NAME_PROGRAM_BLOCK_ROTATERIGHT= "RotateRight_ProgramBlock";
-        public static string NAME_PROGRAM_BLOCK_JUMP = "Jump_ProgramBlock";
+        public static string NAME_PROGRAM_BLOCK_FORWARD = "Forward_ProgramBlock_New";
+        public static string NAME_PROGRAM_BLOCK_ROTATELEFT= "RotateLeft_ProgramBlock_New";
+        public static string NAME_PROGRAM_BLOCK_ROTATERIGHT= "RotateRight_ProgramBlock_New";
+        public static string NAME_PROGRAM_BLOCK_JUMP = "Jump_ProgramBlock_New";
         public static string NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK = "Program_Block_SnapDropZone";
         public static string TAG_BLOCK_PROGRAM = "Block_Program";
         public static string TAG_BLOCK_SWEEP_TEST_CHILD = "SweepTestChild";
@@ -24,6 +24,7 @@ namespace Kubs
         public static string TAG_SNAP_DROP_ZONE_PLATE = "SnapDropZonePlate";
         public static string TAG_SNAP_DROP_ZONE_CLONE_FORWARD = "SnapDropZoneCloneForward";
         public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT = "SnapDropZoneCloneRotateLeft";
+        public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT = "SnapDropZoneCloneRotateRight";
         public static string TAG_SNAP_DROP_ZONE_CLONE_JUMP = "SnapDropZoneCloneJump";
         public static string TAG_TEMPORARY_POSITION_OBJECT = "TempPositionObject";  
     }

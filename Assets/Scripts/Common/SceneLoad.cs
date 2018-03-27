@@ -16,6 +16,7 @@ namespace Kubs
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
+        [SerializeField] private GameObject _rotateRightBlockPrefab;
         [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
         private AudioSource _mAudioSource;
@@ -46,10 +47,12 @@ namespace Kubs
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
             var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
+            var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
 
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
+            GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
         }
 
         // Update is called once per frame
@@ -90,7 +93,7 @@ namespace Kubs
             block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
             block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
         }
-            private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
+        private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
         {
             block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
         }
@@ -137,21 +140,42 @@ namespace Kubs
             ProgramBlock block = rotateleftBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
             block.PauseSweepChildTrigger();
+
             RegisterProgramBlockHoverEventHandler(block);
 
             return rotateleftBlock;
+        }
+        GameObject CreateRotateRightBlock(Vector3 position)
+        {
+            var rotateRightBlock = (GameObject)Instantiate(
+              _rotateRightBlockPrefab,
+              position,
+              Quaternion.identity);
+            rotateRightBlock.tag = Constant.TAG_BLOCK_PROGRAM;
+
+            ProgramBlock block = rotateRightBlock.GetComponent<ProgramBlock>();
+            block.Type = ProgramBlockType.RotateRight;
+            block.PauseSweepChildTrigger();
+            
+            RegisterProgramBlockHoverEventHandler(block);
+
+            return rotateRightBlock;
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FORWARD).GetComponent<VRTK_SnapDropZone>();
         }
-         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_JUMP).GetComponent<VRTK_SnapDropZone>();
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneRotateLeft()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT).GetComponent<VRTK_SnapDropZone>();
+        }
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneRotateRight()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT).GetComponent<VRTK_SnapDropZone>();
         }
 
     }
