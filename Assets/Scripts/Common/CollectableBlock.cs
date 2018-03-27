@@ -18,6 +18,11 @@ namespace Kubs
             Category = BlockCategory.Collectable;
         }
 
+        void Update()
+        {
+            transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
+        }
+
         #endregion
 
         #region Public methods
