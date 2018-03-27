@@ -100,8 +100,8 @@ namespace Kubs
 				var collectableBlock = other.gameObject.GetComponent<CollectableBlock>();
 				if (collectableBlock != null)
 				{
-					transform.position = _originalPos;
 					tutorialManager.ShowStage(collectableBlock.nextStage);
+					Invoke("ResetPosition", 1.5f);
 				}
 			}
 	    }
@@ -186,6 +186,11 @@ namespace Kubs
 			{
 				Debug.Log(s);
 			}
+		}
+
+		private void ResetPosition()
+		{
+			transform.position = _originalPos;
 		}
 
 		private void Set(Animations animation)
