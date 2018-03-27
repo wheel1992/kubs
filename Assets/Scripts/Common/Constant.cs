@@ -19,6 +19,8 @@ namespace Kubs
         public static string TAG_BLOCK_SWEEP_TEST_CHILD = "SweepTestChild";
         public static string TAG_LEVEL = "Level";
         public static string TAG_SNAP_DROP_ZONE_GROUP = "SnapDropZoneGroup";
+        public static string TAG_SNAP_DROP_ZONE_CLONE_FORWARD = "SnapDropZoneCloneForward";
+        public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT = "SnapDropZoneCloneRotateLeft";
         public static string TAG_TEMPORARY_POSITION_OBJECT = "TempPositionObject";
         
     }

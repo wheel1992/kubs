@@ -16,10 +16,13 @@ namespace Kubs
         public ProgramBlockType Type { get; set; }
         public State State { get; set; }
         public int ZoneId { get; set; }
+        [HideInInspector]
         public int HoverZoneId = -1;
-
+        [HideInInspector]
+        public bool isCloned = true;
         private Rigidbody _rb;
-        
+        private VRTK_InteractableObject _interactableObject;
+
 
         #region Lifecycle
 
@@ -34,7 +37,7 @@ namespace Kubs
         void Start()
         {
             _rb = GetComponent<Rigidbody>();
-
+            _interactableObject = GetComponentInteractableObject();
 
             // Sweep child block by default is not triggered
             // Only triggered when it is attached
@@ -43,7 +46,6 @@ namespace Kubs
             GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
             GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
         }
-
         private void OnTriggerExit(Collider other)
         {
             if (other == null) { return; }
@@ -57,34 +59,38 @@ namespace Kubs
                     HoverZoneId = -1;
                 }
             }
-            
-        }
 
+        }
         private void OnTriggerEnter(Collider other)
         {
             if (other == null) { return; }
             // I am an Unsnap BlockProgram
-            if (State == State.UnsnapHover) {
+            if (State == State.UnsnapHover)
+            {
                 if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
                 {
                     // I am still colliding at the current zone!
                 }
             }
         }
-
         private void Update()
         {
+            if (!isCloned)
+            {
+                return;
+            }
+            // Only blocks with isCloned will check for SnapDropZone
             if (GetComponentInteractableObject().IsInSnapDropZone())
             {
                 StartSweepChildTrigger();
                 ZoneId = GetSnapDropZone().ZoneId;
-            } else
+            }
+            else
             {
                 PauseSweepChildTrigger();
                 ZoneId = -1;
             }
         }
-
         private void DoChildTriggeredEnter(Collider other)
         {
             // My SweepTestChild collide with other.gameobject which is a ProgramBlock
@@ -97,12 +103,13 @@ namespace Kubs
                     Debug.Log("DoChildTriggeredEnter: other program block HoverZoneId " + otherBlock.HoverZoneId);
                     if (ZoneId > -1 && ZoneId != otherBlock.HoverZoneId)
                     {
-                        if (otherBlock.HoverZoneId > -1) {
+                        if (otherBlock.HoverZoneId > -1)
+                        {
                             // has hovered on other zone currently
                             Unhover(otherBlock.HoverZoneId);
                             otherBlock.HoverZoneId = -1;
                         }
-                        
+
                         Hover(ZoneId);
                         // Set my current state to SnapTempMove
                         State = State.SnapTempMove;
@@ -121,13 +128,12 @@ namespace Kubs
                 }
             }
         }
-
         private void DoChildTriggerExit(Collider other)
         {
             if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
             {
                 ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
-                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && otherBlock.State == State.UnsnapHover && State == State.SnapIdle) 
+                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && otherBlock.State == State.UnsnapHover && State == State.SnapIdle)
                 {
                     otherBlock.HoverZoneId = -1;
                     Unhover(ZoneId);

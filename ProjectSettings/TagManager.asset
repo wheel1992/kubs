@@ -20,6 +20,9 @@ TagManager:
   - TempPositionObject
   - SnapDropZoneGroup
   - Level
+  - SnapDropZoneClone
+  - SnapDropZoneCloneForward
+  - SnapDropZoneCloneRotateLeft
   layers:
   - Default
   - TransparentFX

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
+
 namespace Kubs
 {
     public class SceneLoad : MonoBehaviour
@@ -19,7 +21,16 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            CreateBlocks();
+            //CreateBlocks();
+            var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0,0,0));
+            rotateLeftBlock.GetComponent<ProgramBlock>().isCloned = false;
+            
+            var forwardBlock = CreateForwardBlock(new Vector3(0,0,0));
+            forwardBlock.GetComponent<ProgramBlock>().isCloned = false;
+
+            GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
+            GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
+
         }
 
         // Update is called once per frame
@@ -49,7 +60,6 @@ namespace Kubs
             startZ += blockSize;
             CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
         }
-
         private void DoProgramBlockHover(int targetZoneId)
         {
             ProgramBlockShiftRightWhenHover(targetZoneId);
@@ -102,6 +112,12 @@ namespace Kubs
             RegisterProgramBlockEventHandler(block);
 
             return rotateleftBlock;
+        }
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward() {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FORWARD).GetComponent<VRTK_SnapDropZone>();
+        }
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneRotateLeft() {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT).GetComponent<VRTK_SnapDropZone>();
         }
 
     }

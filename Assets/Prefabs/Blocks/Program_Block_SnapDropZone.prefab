@@ -244,7 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightObjectPrefab: {fileID: 1437918477260968, guid: 6ec41e789db4d1b4ab1ae2e6edb133eb,
     type: 2}
-  snapType: 0
+  snapType: 2
   snapDuration: 0
   applyScalingOnSnap: 0
   cloneNewOnUnsnap: 0
