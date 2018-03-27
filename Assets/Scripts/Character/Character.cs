@@ -21,6 +21,7 @@ namespace Kubs
 		private Quaternion endRot;
 
 		private bool _isDebug = true;
+		private bool _isStopped;
 		public float _scale;
 
 		// Use this for initialization
@@ -43,6 +44,11 @@ namespace Kubs
 		// Update is called once per frame
 		void Update ()
 		{
+			if (_isStopped)
+			{
+				return;
+			}
+
 			if (_isAnimating)
 			{
 				switch (_type)
@@ -76,6 +82,14 @@ namespace Kubs
 				}
 			}
 		}
+
+		void OnTriggerEnter(Collider other)
+		{
+			if (other.gameObject.tag == "Hole")
+			{
+				_isStopped = true;
+			}
+	    }
 
 		public bool Forward()
 		{
