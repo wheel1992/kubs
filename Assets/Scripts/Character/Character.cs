@@ -22,6 +22,7 @@ namespace Kubs
 		// Rotation
 		private Quaternion startRot;
 		private Quaternion endRot;
+		private Quaternion _originalRot;
 
 		private bool _isDebug = false;
 		private bool _isStopped;
@@ -37,11 +38,15 @@ namespace Kubs
 			if (_isDebug)
 			{
 				Invoke("Forward", 1);
-				Invoke("Jump", 1);
-				Invoke("RotateLeft", 1);
-				Invoke("Forward", 1);
-				Invoke("RotateRight", 1);
-				Invoke("Forward", 1);
+
+				Invoke("Forward", 5);
+				Invoke("RotateLeft", 5);
+				Invoke("Forward", 5);
+
+				Invoke("Forward", 10);
+				Invoke("RotateLeft", 10);
+				Invoke("Forward", 10);
+				Invoke("Jump", 10);
 			}
 		}
 
@@ -101,7 +106,7 @@ namespace Kubs
 				if (collectableBlock != null)
 				{
 					tutorialManager.ShowStage(collectableBlock.nextStage);
-					Invoke("ResetPosition", 1.5f);
+					Invoke("Reset", 1.5f);
 				}
 			}
 	    }
@@ -188,9 +193,10 @@ namespace Kubs
 			}
 		}
 
-		private void ResetPosition()
+		private void Reset()
 		{
 			transform.position = _originalPos;
+			transform.rotation = _originalRot;
 		}
 
 		private void Set(Animations animation)
