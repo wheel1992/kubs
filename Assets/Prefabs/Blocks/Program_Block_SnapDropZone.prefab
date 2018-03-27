@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 135330456996440294}
   m_Layer: 0
   m_Name: Program_Block_SnapDropZone
-  m_TagString: Untagged
+  m_TagString: SnapDropZonePlate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -244,11 +244,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightObjectPrefab: {fileID: 1437918477260968, guid: 6ec41e789db4d1b4ab1ae2e6edb133eb,
     type: 2}
-  snapType: 2
+  snapType: 0
   snapDuration: 0
   applyScalingOnSnap: 0
   cloneNewOnUnsnap: 0
-  highlightColor: {r: 0.94347334, g: 0.9558824, b: 0.056228373, a: 0}
+  highlightColor: {r: 0, g: 1, b: 0.8850608, a: 1}
   highlightAlwaysActive: 0
   validObjectListPolicy: {fileID: 114254543895556090}
   displayDropZoneInEditor: 1

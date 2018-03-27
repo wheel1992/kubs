@@ -21,12 +21,9 @@ namespace Kubs
         private Vector3 _defaultSnapDropZonePosition;
         private IList<GameObject> _zones;
         private IList<GameObject> _tempPositionObjects;
-        //private IList<GameObject> _proposedBlocks;
-
         private Stack<StackItemMoveZone> _stackMoveZones;
         private static int _numOfSnapDropZone = 1;
-
-        //private GameObject _tempPositionObject;
+        private Vector3 _prevPos;
 
         public List<ProgramBlock> GetListOfSnappedProgramBlocks()
         {
@@ -52,6 +49,8 @@ namespace Kubs
             _defaultSnapDropZonePrefab = transform.Find(Constant.NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK).gameObject;
             _defaultSnapDropZonePrefab.GetComponent<SnapDropZone>().ZoneId = 0;
             _defaultSnapDropZonePosition = _defaultSnapDropZonePrefab.transform.position;
+
+            _prevPos = _defaultSnapDropZonePosition;
 
             RegisterSnapDropZoneEventHandler(_defaultSnapDropZonePrefab);
             RegisterLevelSceneLoadEventHandler(levelPrefab.GetComponent<SceneLoad>());
@@ -100,10 +99,22 @@ namespace Kubs
                 VRTK_SnapDropZone originZone = (VRTK_SnapDropZone)sender;
                 DecreaseZoneHeight(originZone.GetComponent<SnapDropZone>().ZoneId);
             }
+
+            if (e.snappedObject != null)
+            {
+                e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                // e.snappedObject.GetComponent<BoxCollider>().size = new Vector3(.1f, 1f, .1f);
+            }
         }
 
         private void DoProgramBlockZoneUnsnapped(object sender, SnapDropZoneEventArgs e)
         {
+            Debug.Log("== SnapDropZone: UNSNAPPED >>>>");
+            if (e.snappedObject != null)
+            {
+                e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+                // e.snappedObject.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, 1f);
+            }
         }
 
         private void RegisterLevelSceneLoadEventHandler(SceneLoad levelObj)
@@ -275,14 +286,17 @@ namespace Kubs
         {
             if (_numOfSnapDropZone >= maximumNumberOfSnapDropZones)
             {
-                Debug.Log("AddSnapDropZone: Reach maximum number = " + maximumNumberOfSnapDropZones + " of snap drop zones!");
+                //Debug.Log("AddSnapDropZone: Reach maximum number = " + maximumNumberOfSnapDropZones + " of snap drop zones!");
                 return null;
             }
 
             var obj = CreateSnapDropZone(new Vector3(
                 _defaultSnapDropZonePosition.x,
                 _defaultSnapDropZonePosition.y,
-               _defaultSnapDropZonePosition.z + (Constant.DEFAULT_BLOCK_SIZE * _numOfSnapDropZone)));
+               _prevPos.z + Constant.DEFAULT_BLOCK_SPACING + Constant.DEFAULT_BLOCK_SIZE));
+
+            // _defaultSnapDropZonePosition.z + (Constant.DEFAULT_BLOCK_SIZE * _numOfSnapDropZone)
+            _prevPos = obj.transform.position;
 
             RegisterSnapDropZoneEventHandler(obj);
             // Set Zone Id

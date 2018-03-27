@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using VRTK;
 
 namespace Kubs
@@ -19,10 +20,9 @@ namespace Kubs
         [HideInInspector]
         public int HoverZoneId = -1;
         [HideInInspector]
-        public bool isCloned = true;
+        //public bool isCloned = true;
         private Rigidbody _rb;
         private VRTK_InteractableObject _interactableObject;
-
 
         #region Lifecycle
 
@@ -45,6 +45,10 @@ namespace Kubs
 
             GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
             GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
+
+            // Fire off event
+            // To register block program events such as Hover, Unhover and Snap
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_EVENT, gameObject);
         }
         private void OnTriggerExit(Collider other)
         {
@@ -59,7 +63,6 @@ namespace Kubs
                     HoverZoneId = -1;
                 }
             }
-
         }
         private void OnTriggerEnter(Collider other)
         {
@@ -75,20 +78,24 @@ namespace Kubs
         }
         private void Update()
         {
-            if (!isCloned)
-            {
-                return;
-            }
+            // if (!isCloned)
+            // {
+            //     return;
+            // }
             // Only blocks with isCloned will check for SnapDropZone
-            if (GetComponentInteractableObject().IsInSnapDropZone())
+            if (GetComponentInteractableObject().IsInSnapDropZone() && GetVRTKSnapDropZone().CompareTag(Constant.TAG_SNAP_DROP_ZONE_PLATE))
             {
                 StartSweepChildTrigger();
                 ZoneId = GetSnapDropZone().ZoneId;
+
+                //gameObject.GetComponent<BoxCollider>().size = new Vector3(.1f, 1f, .1f);
             }
             else
             {
                 PauseSweepChildTrigger();
                 ZoneId = -1;
+
+                //gameObject.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, 1f);
             }
         }
         private void DoChildTriggeredEnter(Collider other)
