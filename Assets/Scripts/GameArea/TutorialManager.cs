@@ -6,10 +6,7 @@ namespace Kubs
 {
 	public class TutorialManager : MonoBehaviour
 	{
-		private int stages;
 		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
-
-		public int count;
 
 		void Start()
 		{
@@ -26,7 +23,6 @@ namespace Kubs
 					continue;
 				}
 
-				count++;
 				var stage = tutorialBlock.stage;
 				if (!tutorialBlocks.ContainsKey(stage))
 				{
@@ -39,6 +35,11 @@ namespace Kubs
 
 		public void ShowStage(int stage)
 		{
+			if (stage == 0)
+			{
+				return;
+			}
+
 			foreach (var block in tutorialBlocks[stage])
 			{
 				block.Grow();

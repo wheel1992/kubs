@@ -8,6 +8,7 @@ namespace Kubs
 {
     public class CollectableBlock : Block
     {
+        public int nextStage;
         public CollectableBlockType Type { get; set; }
 
         #region Lifecycle
@@ -15,18 +16,6 @@ namespace Kubs
         void Awake()
         {
             Category = BlockCategory.Collectable;
-        }
-
-        // Use this for initialization
-        void Start()
-        {
-            Start();
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            Update();
         }
 
         #endregion
