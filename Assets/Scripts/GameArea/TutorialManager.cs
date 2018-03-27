@@ -8,13 +8,13 @@ namespace Kubs
 	{
 		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
 
-		void Start()
-		{
-			tutorialBlocks = new Dictionary<int, List<TutorialBlock>>();
-		}
-
 		public void CollectChildren(Transform parent)
 		{
+			if (tutorialBlocks == null)
+			{
+				tutorialBlocks = new Dictionary<int, List<TutorialBlock>>();
+			}
+
 			foreach (Transform child in parent)
 			{
 				var tutorialBlock = child.gameObject.GetComponent<TutorialBlock>();
