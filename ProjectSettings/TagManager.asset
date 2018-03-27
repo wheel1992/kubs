@@ -25,6 +25,8 @@ TagManager:
   - SnapDropZoneCloneRotateLeft
   - SnapDropZonePlate
   - SnapDropZoneCloneJump
+  - Grass
+  - Hole
   layers:
   - Default
   - TransparentFX
