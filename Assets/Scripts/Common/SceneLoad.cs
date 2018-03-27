@@ -90,12 +90,13 @@ namespace Kubs
             block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
             block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
         }
-            private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
+        private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
         {
             block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
         }
         GameObject CreateForwardBlock(Vector3 position)
         {
+            Debug.Log("CreateForwardBlock");
             var forwardBlock = (GameObject)Instantiate(
                _forwardBlockPrefab,
                position,
@@ -104,7 +105,7 @@ namespace Kubs
 
             ProgramBlock block = forwardBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
-            block.PauseSweepChildTrigger();
+            //block.PauseSweepChildTrigger();
 
             RegisterProgramBlockHoverEventHandler(block);
 
@@ -112,6 +113,7 @@ namespace Kubs
         }
         GameObject CreateJumpBlock(Vector3 position)
         {
+            Debug.Log("CreateJumpBlock");
             var jumpBlock = (GameObject)Instantiate(
                _jumpBlockPrefab,
                position,
@@ -128,6 +130,7 @@ namespace Kubs
         }
         GameObject CreateRotateLeftBlock(Vector3 position)
         {
+            Debug.Log("CreateRotateLeftBlock");
             var rotateleftBlock = (GameObject)Instantiate(
               _rotateLeftBlockPrefab,
               position,
@@ -145,7 +148,7 @@ namespace Kubs
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FORWARD).GetComponent<VRTK_SnapDropZone>();
         }
-         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_JUMP).GetComponent<VRTK_SnapDropZone>();
         }

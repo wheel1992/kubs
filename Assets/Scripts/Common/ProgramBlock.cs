@@ -35,6 +35,7 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
+            Debug.Log("ProgramBlock Start");
             _rb = GetComponent<Rigidbody>();
             _interactableObject = GetComponentInteractableObject();
 
@@ -149,12 +150,20 @@ namespace Kubs
 
         public void PauseSweepChildTrigger()
         {
-            GetSweepChild().PauseTrigger();
+            var child = GetSweepChild();
+            if (child != null)
+            {
+                child.PauseTrigger();
+            }
         }
 
         public void StartSweepChildTrigger()
         {
-            GetSweepChild().StartTrigger();
+            var child = GetSweepChild();
+            if (child != null)
+            {
+                child.StartTrigger();
+            }
         }
 
         public SnapDropZone GetSnapDropZone()
@@ -205,7 +214,15 @@ namespace Kubs
         }
         private SweepChildBlock GetSweepChild()
         {
-            return transform.GetChild(0).GetComponent<SweepChildBlock>();
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
+                {
+                    return transform.GetChild(i).gameObject.GetComponent<SweepChildBlock>();
+                }
+
+            }
+            return null;
         }
     }
 
