@@ -21,11 +21,13 @@ namespace Kubs
 		private Quaternion endRot;
 
 		private bool _isDebug = true;
+		public float _scale;
 
 		// Use this for initialization
 		void Start ()
 		{
 			_animator = GetComponent<Animator>();
+			_scale = transform.lossyScale.x;
 
 			if (_isDebug)
 			{
@@ -84,7 +86,7 @@ namespace Kubs
 			}
 
 			startPos = transform.position;
-			endPos = transform.position + transform.forward;
+			endPos = transform.position + transform.forward * _scale;
 			trajectoryHeight = 0;
 
 			Set(Animations.Move);
@@ -103,7 +105,7 @@ namespace Kubs
 			}
 
 			startPos = transform.position;
-			endPos = transform.position + transform.forward * 2;
+			endPos = transform.position + transform.forward * _scale * 2;
 			trajectoryHeight = 0.5f;
 
 			Set(Animations.Jump);
