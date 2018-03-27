@@ -50,9 +50,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4977792949358182}
   - component: {fileID: 95246919585629340}
+  - component: {fileID: 65159500957410794}
   m_Layer: 0
   m_Name: hole_block
-  m_TagString: Untagged
+  m_TagString: Hole
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -375,6 +376,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1884392225991646}
   m_Mesh: {fileID: 4300000, guid: 8ee0bc99002fc4d4f818cd8cc95cc9a9, type: 3}
+--- !u!65 &65159500957410794
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1466600611357018}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.01, y: 0.0095, z: 0.01}
+  m_Center: {x: -0.018, y: 0.005, z: 0}
 --- !u!95 &95246919585629340
 Animator:
   serializedVersion: 3
