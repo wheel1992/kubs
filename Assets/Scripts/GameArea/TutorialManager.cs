@@ -6,18 +6,15 @@ namespace Kubs
 {
 	public class TutorialManager : MonoBehaviour
 	{
-		private int stages;
 		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
-
-		public int count;
-
-		void Start()
-		{
-			tutorialBlocks = new Dictionary<int, List<TutorialBlock>>();
-		}
 
 		public void CollectChildren(Transform parent)
 		{
+			if (tutorialBlocks == null)
+			{
+				tutorialBlocks = new Dictionary<int, List<TutorialBlock>>();
+			}
+
 			foreach (Transform child in parent)
 			{
 				var tutorialBlock = child.gameObject.GetComponent<TutorialBlock>();
@@ -26,7 +23,6 @@ namespace Kubs
 					continue;
 				}
 
-				count++;
 				var stage = tutorialBlock.stage;
 				if (!tutorialBlocks.ContainsKey(stage))
 				{
@@ -39,6 +35,11 @@ namespace Kubs
 
 		public void ShowStage(int stage)
 		{
+			if (stage == 0)
+			{
+				return;
+			}
+
 			foreach (var block in tutorialBlocks[stage])
 			{
 				block.Grow();

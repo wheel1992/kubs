@@ -6,6 +6,8 @@ namespace Kubs
 {
 	public class Character : MonoBehaviour
 	{
+		public TutorialManager tutorialManager;
+
 		private Animator _animator;
 		private bool _isAnimating;
 		private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
@@ -14,6 +16,7 @@ namespace Kubs
 		// Position
 		private Vector3 startPos;
 		private Vector3 endPos;
+		private Vector3 _originalPos;
 		private float trajectoryHeight;
 
 		// Rotation
@@ -28,6 +31,7 @@ namespace Kubs
 		void Start ()
 		{
 			_animator = GetComponent<Animator>();
+			_originalPos = transform.position;
 			_scale = transform.lossyScale.x;
 
 			if (_isDebug)
@@ -88,6 +92,17 @@ namespace Kubs
 			if (other.gameObject.tag == "Hole")
 			{
 				_isStopped = true;
+			}
+			else if (other.gameObject.tag == "Collectable")
+			{
+				other.gameObject.SetActive(false);
+
+				var collectableBlock = other.gameObject.GetComponent<CollectableBlock>();
+				if (collectableBlock != null)
+				{
+					tutorialManager.ShowStage(collectableBlock.nextStage);
+					Invoke("ResetPosition", 1.5f);
+				}
 			}
 	    }
 
@@ -171,6 +186,11 @@ namespace Kubs
 			{
 				Debug.Log(s);
 			}
+		}
+
+		private void ResetPosition()
+		{
+			transform.position = _originalPos;
 		}
 
 		private void Set(Animations animation)
