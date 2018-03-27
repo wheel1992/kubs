@@ -8,11 +8,14 @@ namespace Kubs
 	public class TerrainReplacer : MonoBehaviour
 	{
 		public NamedPrefab[] prefabs;
+		public TutorialManager tutorialManager;
 
 		void Start()
 		{
 			var dictionary = Convert(prefabs);
 			ReplaceChildren(transform, dictionary);
+
+			tutorialManager.CollectChildren(transform);
 		}
 
 		private Dictionary<string, GameObject> Convert(NamedPrefab[] namedPrefabs)
@@ -35,11 +38,12 @@ namespace Kubs
 
 				if (dictionary.TryGetValue(child.gameObject.tag, out prefab))
 				{
-					Instantiate(prefab,
+					var block = Instantiate(prefab,
 								child.position,
 								child.rotation,
 								parent);
 
+					tutorialManager.TransferComponent(child.gameObject, block);
 					Destroy(child.gameObject);
 				}
 			}
