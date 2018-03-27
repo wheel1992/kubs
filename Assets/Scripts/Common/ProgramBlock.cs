@@ -13,7 +13,6 @@ namespace Kubs
         public event HoverEventHandler Hover;
         public event HoverEventHandler Unhover;
         public event SnapEventHandler Snap;
-
         public ProgramBlockType Type { get; set; }
         public State State { get; set; }
         public int ZoneId { get; set; }
@@ -48,7 +47,11 @@ namespace Kubs
 
             // Fire off event
             // To register block program events such as Hover, Unhover and Snap
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_EVENT, gameObject);
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, gameObject);
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, gameObject);
+
+            // Set its type again by checking its name
+            GetProgramBlockByGameObject(gameObject).Type = GetProgramBlockTypeByName(gameObject.name);
         }
         private void OnTriggerExit(Collider other)
         {
@@ -78,24 +81,16 @@ namespace Kubs
         }
         private void Update()
         {
-            // if (!isCloned)
-            // {
-            //     return;
-            // }
             // Only blocks with isCloned will check for SnapDropZone
             if (GetComponentInteractableObject().IsInSnapDropZone() && GetVRTKSnapDropZone().CompareTag(Constant.TAG_SNAP_DROP_ZONE_PLATE))
             {
                 StartSweepChildTrigger();
                 ZoneId = GetSnapDropZone().ZoneId;
-
-                //gameObject.GetComponent<BoxCollider>().size = new Vector3(.1f, 1f, .1f);
             }
             else
             {
                 PauseSweepChildTrigger();
                 ZoneId = -1;
-
-                //gameObject.GetComponent<BoxCollider>().size = new Vector3(1f, 1f, 1f);
             }
         }
         private void DoChildTriggeredEnter(Collider other)
@@ -188,7 +183,26 @@ namespace Kubs
         {
             return GetComponent<VRTK_InteractableObject>();
         }
-
+        private ProgramBlockType GetProgramBlockTypeByName(string name)
+        {
+            if (name.Contains(Constant.NAME_PROGRAM_BLOCK_FORWARD))
+            {
+                return ProgramBlockType.Forward;
+            }
+            else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_JUMP))
+            {
+                return ProgramBlockType.Jump;
+            }
+            else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT))
+            {
+                return ProgramBlockType.RotateLeft;
+            }
+            return ProgramBlockType.RotateRight;
+        }
+        private ProgramBlock GetProgramBlockByGameObject(GameObject obj)
+        {
+            return obj.GetComponent<ProgramBlock>();
+        }
         private SweepChildBlock GetSweepChild()
         {
             return transform.GetChild(0).GetComponent<SweepChildBlock>();

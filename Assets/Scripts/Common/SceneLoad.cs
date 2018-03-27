@@ -14,41 +14,41 @@ namespace Kubs
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
-
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
+        [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
-
         private AudioSource _mAudioSource;
-
-        private UnityAction<object> onBlockProgramRegisterEventListener;
+        private UnityAction<object> onBlockProgramRegisterHoverEventListener;
+        private UnityAction<object> onBlockProgramRegisterSnapEventListener;
 
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
             _mAudioSource.Play();
 
-            onBlockProgramRegisterEventListener = new UnityAction<object>(HandleBlockProgramRegisterEventListener);
+            onBlockProgramRegisterHoverEventListener = new UnityAction<object>(HandleBlockProgramRegisterHoverEventListener);
+            onBlockProgramRegisterSnapEventListener = new UnityAction<object>(HandleBlockProgramRegisterSnapEventListener);
         }
         void OnEnable()
         {
-            EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_EVENT, onBlockProgramRegisterEventListener);
+            EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
+            EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
         }
         void OnDisable()
         {
-            EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_EVENT, onBlockProgramRegisterEventListener);
+            EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
+            EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
         }
         // Use this for initialization
         void Start()
         {
-            //CreateBlocks();
-            var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
-            //rotateLeftBlock.GetComponent<ProgramBlock>().isCloned = false;
-
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
-            //forwardBlock.GetComponent<ProgramBlock>().isCloned = false;
+            var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
+            var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
 
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
+            GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
         }
 
@@ -57,33 +57,10 @@ namespace Kubs
         {
             // ...
         }
-
-        private void CreateBlocks()
-        {
-            float blockSize = 1f;
-            float startX = -3f;
-            float startZ = -2f;
-
-            // let's create a few forward blocks
-            CreateForwardBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-            startZ += blockSize;
-            CreateForwardBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-            startZ += blockSize;
-            CreateForwardBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-
-            startX = -1f;
-            startZ = -2f;
-            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-            startZ += blockSize;
-            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-            startZ += blockSize;
-            CreateRotateLeftBlock(new Vector3(startX, Constant.DEFAULT_Y, startZ));
-        }
         private void DoProgramBlockHover(int targetZoneId)
         {
             ProgramBlockShiftRightWhenHover(targetZoneId);
         }
-
         private void DoProgramBlockUnhover(int targetZoneId)
         {
             ProgramBlockShiftRevert(targetZoneId);
@@ -92,21 +69,31 @@ namespace Kubs
         {
             ProgramBlockSnap(block, zoneId);
         }
-        private void HandleBlockProgramRegisterEventListener(object item)
+        private void HandleBlockProgramRegisterHoverEventListener(object item)
         {
             if (item is GameObject)
             {
-                GameObject obj = (GameObject) item;
-                RegisterProgramBlockEventHandler(obj.GetComponent<ProgramBlock>());
+                GameObject obj = (GameObject)item;
+                RegisterProgramBlockHoverEventHandler(obj.GetComponent<ProgramBlock>());
             }
         }
-        private void RegisterProgramBlockEventHandler(ProgramBlock block)
+        private void HandleBlockProgramRegisterSnapEventListener(object item)
+        {
+            if (item is GameObject)
+            {
+                GameObject obj = (GameObject)item;
+                RegisterProgramBlockSnapEventHandler(obj.GetComponent<ProgramBlock>());
+            }
+        }
+        private void RegisterProgramBlockHoverEventHandler(ProgramBlock block)
         {
             block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
             block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
+        }
+            private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
+        {
             block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
         }
-
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(
@@ -119,11 +106,26 @@ namespace Kubs
             block.Type = ProgramBlockType.Forward;
             block.PauseSweepChildTrigger();
 
-            RegisterProgramBlockEventHandler(block);
+            RegisterProgramBlockHoverEventHandler(block);
 
             return forwardBlock;
         }
+        GameObject CreateJumpBlock(Vector3 position)
+        {
+            var jumpBlock = (GameObject)Instantiate(
+               _jumpBlockPrefab,
+               position,
+               Quaternion.identity);
+            jumpBlock.tag = Constant.TAG_BLOCK_PROGRAM;
 
+            ProgramBlock block = jumpBlock.GetComponent<ProgramBlock>();
+            block.Type = ProgramBlockType.Jump;
+            block.PauseSweepChildTrigger();
+
+            RegisterProgramBlockHoverEventHandler(block);
+
+            return jumpBlock;
+        }
         GameObject CreateRotateLeftBlock(Vector3 position)
         {
             var rotateleftBlock = (GameObject)Instantiate(
@@ -135,13 +137,17 @@ namespace Kubs
             ProgramBlock block = rotateleftBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
             block.PauseSweepChildTrigger();
-            RegisterProgramBlockEventHandler(block);
+            RegisterProgramBlockHoverEventHandler(block);
 
             return rotateleftBlock;
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FORWARD).GetComponent<VRTK_SnapDropZone>();
+        }
+         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_JUMP).GetComponent<VRTK_SnapDropZone>();
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneRotateLeft()
         {

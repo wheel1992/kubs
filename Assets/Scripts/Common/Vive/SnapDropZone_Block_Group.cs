@@ -81,6 +81,9 @@ namespace Kubs
 
                 ProgramBlock block = GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId));
                 //Debug.Log("== SnapDropZone: SNAPPED block state = " + block.State.ToString());
+                Debug.Log("BEFORE PRINT ");
+                PrintBlockTypes();
+
                 if (block.State != State.SnapTempMove)
                 {
                     if (IsPreviousZoneEmpty(zoneId))
@@ -88,12 +91,14 @@ namespace Kubs
                         MoveSnappedBlock(zoneId, zoneId - 1, false);
                     }
                 }
+                Debug.Log("AFTER PRINT ");
+                PrintBlockTypes();
             }
         }
 
         private void DoProgramBlockZoneExited(object sender, SnapDropZoneEventArgs e)
         {
-            Debug.Log("== SnapDropZone: EXITED >>>>");
+            //Debug.Log("== SnapDropZone: EXITED >>>>");
             if (sender is VRTK_SnapDropZone)
             {
                 VRTK_SnapDropZone originZone = (VRTK_SnapDropZone)sender;
@@ -391,6 +396,27 @@ namespace Kubs
                 else
                 {
                     msg += "[" + (int)GetProgramBlockByObject(obj).State + "] ";
+                }
+
+            }
+            Debug.Log(msg);
+            Debug.Log("======================");
+        }
+
+        private void PrintBlockTypes()
+        {
+            string msg = "";
+            Debug.Log("===== PRINT BLOCK TYPES ====");
+            foreach (GameObject zone in _zones)
+            {
+                GameObject obj = GetGameObjectBySnapIndex(zone.GetComponent<VRTK_SnapDropZone>().GetComponent<SnapDropZone>().ZoneId);
+                if (obj == null)
+                {
+                    msg += "[x] ";
+                }
+                else
+                {
+                    msg += "[" + (int)GetProgramBlockByObject(obj).Type + "] ";
                 }
 
             }
