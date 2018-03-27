@@ -25,9 +25,10 @@ namespace Kubs
 
     public enum BlockCategory
     {
-        Obstacle = 0,
-        Program = 1,
-        Terrain = 2
+        Collectable = 0,
+        Obstacle = 1,
+        Program = 2,
+        Terrain = 3,
     }
 }
 
