@@ -38,11 +38,15 @@ namespace Kubs
 			if (_isDebug)
 			{
 				Invoke("Forward", 1);
-				Invoke("Jump", 1);
-				Invoke("RotateLeft", 1);
-				Invoke("Forward", 1);
-				Invoke("RotateRight", 1);
-				Invoke("Forward", 1);
+
+				Invoke("Forward", 5);
+				Invoke("RotateLeft", 5);
+				Invoke("Forward", 5);
+
+				Invoke("Forward", 10);
+				Invoke("RotateLeft", 10);
+				Invoke("Forward", 10);
+				Invoke("Jump", 10);
 			}
 		}
 
