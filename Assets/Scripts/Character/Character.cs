@@ -182,7 +182,6 @@ namespace Kubs
 				yield return null;
 			}
 
-			DebugLog("end");
 			Set(Animations.Idle);
 			_isAnimating = false;
 			yield break;
@@ -208,7 +207,6 @@ namespace Kubs
 				yield return null;
 			}
 
-			DebugLog("end");
 			Set(Animations.Idle);
 			_isAnimating = false;
 			yield break;
