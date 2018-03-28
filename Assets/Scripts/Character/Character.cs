@@ -115,7 +115,9 @@ namespace Kubs
                 if (collectableBlock != null)
                 {
                     tutorialManager.ShowStage(collectableBlock.nextStage);
-                    Invoke("Reset", 1.5f);
+
+					Set(Animations.Victory);
+                    Invoke("Reset", 2f);
                 }
             }
         }
@@ -223,13 +225,20 @@ namespace Kubs
             _audioSourceJump.clip = audioClipJump;
             _audioSourceJump.loop = false;
             _audioSourceJump.playOnAwake = false;
-            _audioSourceJump.volume = 1.0f;
+            _audioSourceJump.volume = 0.8f;
 		}
 
         private void Reset()
         {
             transform.position = _originalPos;
             transform.rotation = _originalRot;
+
+			Set(Animations.Idle);
+        }
+
+		private Animations GetAnimation()
+        {
+            return (Animations)_animator.GetInteger("animation");
         }
 
         private void Set(Animations animation)
@@ -257,7 +266,11 @@ namespace Kubs
                 yield return null;
             }
 
-            Set(Animations.Idle);
+            if (GetAnimation() != Animations.Victory)
+			{
+				Set(Animations.Idle);
+			}
+
             _isAnimating = false;
             yield break;
         }
@@ -282,7 +295,11 @@ namespace Kubs
                 yield return null;
             }
 
-            Set(Animations.Idle);
+            if (GetAnimation() != Animations.Victory)
+			{
+				Set(Animations.Idle);
+			}
+
             _isAnimating = false;
             yield break;
         }

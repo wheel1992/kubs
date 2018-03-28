@@ -33,14 +33,14 @@ namespace Kubs
 
         private void OnTriggerExit(Collider other)
         {
-            Debug.Log("OnTriggerExit");
+            //Debug.Log("OnTriggerExit");
             //gameObject.GetComponent<Renderer>().material = _defaultMaterial;
 
             // Run();
         }
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("OnTriggerEnter");
+            //Debug.Log("OnTriggerEnter");
             //ChangeColor();
 
             if (!_isAnimating)
@@ -59,7 +59,7 @@ namespace Kubs
         private void Run()
         {
             var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
-            Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
+            //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
             GetDecoder().Decode(listBlocks);
         }
@@ -80,7 +80,7 @@ namespace Kubs
         {
             if (_isAnimating)
             {
-                Debug.Log("_isAnimating");
+                //Debug.Log("_isAnimating");
                 yield break;
             }
 
@@ -92,8 +92,8 @@ namespace Kubs
 
             var incrementor = 0f;
 
-            Debug.Log(Vector3.SqrMagnitude(transform.localScale - endScale));
-            Debug.Log("+");
+            // Debug.Log(Vector3.SqrMagnitude(transform.localScale - endScale));
+            // Debug.Log("+");
 
             while (Vector3.SqrMagnitude(transform.localScale - endScale) > 0.00000001)
             {

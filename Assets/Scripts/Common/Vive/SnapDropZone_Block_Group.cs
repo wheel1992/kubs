@@ -81,8 +81,8 @@ namespace Kubs
 
                 ProgramBlock block = GetProgramBlockByObject(GetGameObjectBySnapIndex(zoneId));
                 //Debug.Log("== SnapDropZone: SNAPPED block state = " + block.State.ToString());
-                Debug.Log("BEFORE PRINT ");
-                PrintBlockTypes();
+                //Debug.Log("BEFORE PRINT ");
+                //PrintBlockTypes();
 
                 if (block.State != State.SnapTempMove)
                 {
@@ -91,8 +91,8 @@ namespace Kubs
                         MoveSnappedBlock(zoneId, zoneId - 1, false);
                     }
                 }
-                Debug.Log("AFTER PRINT ");
-                PrintBlockTypes();
+                //Debug.Log("AFTER PRINT ");
+                //PrintBlockTypes();
             }
         }
 
@@ -113,7 +113,7 @@ namespace Kubs
 
         private void DoProgramBlockZoneUnsnapped(object sender, SnapDropZoneEventArgs e)
         {
-            Debug.Log("== SnapDropZone: UNSNAPPED >>>>");
+            //Debug.Log("== SnapDropZone: UNSNAPPED >>>>");
             if (e.snappedObject != null)
             {
                 e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
@@ -150,7 +150,7 @@ namespace Kubs
 
             SnapAt(GetProgramBlockByObject(block), zoneId);
 
-            PrintBlockStates();
+            //PrintBlockStates();
         }
         private void DoProgramBlockShiftRevert(int startZoneIndex)
         {
@@ -221,7 +221,7 @@ namespace Kubs
                 return;
             }
 
-            Debug.Log("ShiftRight start shift from " + startZoneIndex + " to " + (startZoneIndex + 1));
+            //Debug.Log("ShiftRight start shift from " + startZoneIndex + " to " + (startZoneIndex + 1));
             if (!isStackMoveZoneContain(startZoneIndex, startZoneIndex + 1))
             {
                 _stackMoveZones.Push(new StackItemMoveZone { From = startZoneIndex, To = startZoneIndex + 1 });
@@ -309,7 +309,7 @@ namespace Kubs
         {
             if (snapDropZonePrefab == null)
             {
-                Debug.Log("CreateSnapDropZone: SnapDropZone prefab is not defined!");
+                //Debug.Log("CreateSnapDropZone: SnapDropZone prefab is not defined!");
                 return null;
             }
             var snapDropZone = Instantiate(

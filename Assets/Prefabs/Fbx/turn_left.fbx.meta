@@ -1,33 +1,33 @@
 fileFormatVersion: 2
-guid: 300d3fe33b130e14b9aec7909cdc9e4f
-timeCreated: 1522155671
+guid: 5afb2e03d81a4564ab2b6be7c738ab2d
+timeCreated: 1522223728
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: pCube17
-    100002: polySurface21
-    100004: polySurface22
-    100006: polySurface26
-    100008: transform21
-    100010: transform22
+    100000: pCube30
+    100002: polySurface24
+    100004: polySurface25
+    100006: polySurface57
+    100008: transform41
+    100010: transform42
     100012: //RootNode
-    400000: pCube17
-    400002: polySurface21
-    400004: polySurface22
-    400006: polySurface26
-    400008: transform21
-    400010: transform22
+    400000: pCube30
+    400002: polySurface24
+    400004: polySurface25
+    400006: polySurface57
+    400008: transform41
+    400010: transform42
     400012: //RootNode
     2100000: blinn4
     2100002: lambert8
     2100004: lambert12
-    2300000: pCube17
-    2300002: polySurface26
-    3300000: pCube17
-    3300002: polySurface26
-    4300000: pCube17
-    4300002: polySurface26
+    2300000: pCube30
+    2300002: polySurface57
+    3300000: pCube30
+    3300002: polySurface57
+    4300000: pCube30
+    4300002: polySurface57
     9500000: //RootNode
   externalObjects: {}
   materials:
