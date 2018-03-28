@@ -25,6 +25,9 @@ TagManager:
   - SnapDropZoneCloneRotateLeft
   - SnapDropZonePlate
   - SnapDropZoneCloneJump
+  - Grass
+  - Hole
+  - Collectable
   - SnapDropZoneCloneRotateRight
   layers:
   - Default

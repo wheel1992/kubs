@@ -8,6 +8,7 @@ namespace Kubs
 {
     public class CollectableBlock : Block
     {
+        public int nextStage;
         public CollectableBlockType Type { get; set; }
 
         #region Lifecycle
@@ -17,16 +18,9 @@ namespace Kubs
             Category = BlockCategory.Collectable;
         }
 
-        // Use this for initialization
-        void Start()
-        {
-            Start();
-        }
-
-        // Update is called once per frame
         void Update()
         {
-            Update();
+            transform.Rotate(new Vector3(15, 30, 45) * Time.deltaTime);
         }
 
         #endregion

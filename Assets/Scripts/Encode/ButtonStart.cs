@@ -11,7 +11,7 @@ namespace Kubs
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
-        private bool _isAnimating;
+        private bool _isAnimating = false;
 
         // Use this for initialization
         void Start()
@@ -35,13 +35,18 @@ namespace Kubs
         {
             Debug.Log("OnTriggerExit");
             //gameObject.GetComponent<Renderer>().material = _defaultMaterial;
-            Run();
+
+            // Run();
         }
         private void OnTriggerEnter(Collider other)
         {
             Debug.Log("OnTriggerEnter");
             //ChangeColor();
 
+            if (!_isAnimating)
+            {
+                Run();
+            }
             StartCoroutine("Depress");
         }
 
@@ -95,7 +100,7 @@ namespace Kubs
                 incrementor += Time.deltaTime;
                 var currentScale = Vector3.Lerp(startScale, endScale, incrementor);
                 transform.localScale = currentScale;
-                Debug.Log(1);
+                //Debug.Log(1);
                 yield return null;
             }
 
@@ -108,11 +113,11 @@ namespace Kubs
                 incrementor += Time.deltaTime;
                 var currentScale = Vector3.Lerp(startScale, endScale, incrementor);
                 transform.localScale = currentScale;
-                Debug.Log(2);
+                //Debug.Log(2);
                 yield return null;
             }
 
-            Debug.Log(3);
+            //Debug.Log(3);
 
             _isAnimating = false;
             yield break;
