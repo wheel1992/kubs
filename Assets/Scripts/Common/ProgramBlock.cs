@@ -35,7 +35,7 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            Debug.Log("ProgramBlock Start");
+            //Debug.Log("ProgramBlock Start");
             _rb = GetComponent<Rigidbody>();
             _interactableObject = GetComponentInteractableObject();
 
