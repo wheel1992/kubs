@@ -225,7 +225,7 @@ namespace Kubs
             _audioSourceJump.clip = audioClipJump;
             _audioSourceJump.loop = false;
             _audioSourceJump.playOnAwake = false;
-            _audioSourceJump.volume = 1.0f;
+            _audioSourceJump.volume = 0.8f;
 		}
 
         private void Reset()
@@ -299,7 +299,7 @@ namespace Kubs
 			{
 				Set(Animations.Idle);
 			}
-			
+
             _isAnimating = false;
             yield break;
         }
