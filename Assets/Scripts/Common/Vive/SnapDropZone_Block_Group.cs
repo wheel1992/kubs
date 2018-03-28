@@ -217,7 +217,7 @@ namespace Kubs
             {
                 // since next zone is filled
                 // does not need to shift right
-                Debug.Log("ShiftRight index at next " + (startZoneIndex + 1) + " is not filled!");
+                //Debug.Log("ShiftRight index at next " + (startZoneIndex + 1) + " is not filled!");
                 return;
             }
 
@@ -257,7 +257,7 @@ namespace Kubs
         }
         private void ClearStackMoveZone()
         {
-            Debug.Log("ClearStackMoveZone");
+            //Debug.Log("ClearStackMoveZone");
             _stackMoveZones.Clear();
         }
         private void DecreaseZoneHeight(int zoneId)
