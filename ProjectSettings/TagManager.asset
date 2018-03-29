@@ -29,6 +29,10 @@ TagManager:
   - Hole
   - Collectable
   - SnapDropZoneCloneRotateRight
+  - ZoneBase
+  - ZoneHint
+  - ZoneGroup
+  - ZoneObject
   layers:
   - Default
   - TransparentFX
