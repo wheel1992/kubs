@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Kubs
 {
+    public struct ZoneHintEventArgs
+    {
+        public GameObject OtherObject;
+    }
     public class ZoneHintController : MonoBehaviour
     {
         /// <summary>
@@ -17,11 +21,18 @@ namespace Kubs
         ///  
         /// </summary>
 
-		#region Public methods
 
-		#endregion
 
-		#region Private methods
+        public delegate void ZoneHintEventHandler(object sender, ZoneHintEventArgs args);
+        public event ZoneHintEventHandler OnZoneHintTriggerEnter;
+        public event ZoneHintEventHandler OnZoneHintTriggerExit;
+        public event ZoneHintEventHandler OnZoneHintDisplay;
+
+        #region Public methods
+
+        #endregion
+
+        #region Private methods
         // Use this for initialization
         void Start()
         {
@@ -32,14 +43,17 @@ namespace Kubs
         {
         }
 
-       	void OnTriggerExit(Collider other)
+        void OnTriggerExit(Collider other)
         {
+
+            OnZoneHintTriggerExit(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
         }
         void OnTriggerEnter(Collider other)
         {
+            OnZoneHintTriggerEnter(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
         }
 
-		#endregion
+        #endregion
 
     }
 }

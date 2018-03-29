@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using VRTK;
@@ -19,8 +20,7 @@ namespace Kubs
 		/// and ProgramBlock
         /// </summary>
 
-        const string TAG_ZONE_BASE = "ZoneBase";
-        const string TAG_ZONE_HINT = "ZoneHint";
+        const string TAG_ZONE_BASE = "ZoneBase"; const string TAG_ZONE_HINT = "ZoneHint";
 
         #region Public methods
 
@@ -43,7 +43,7 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-
+            RegisterZoneHintEvents();
         }
 
         // Update is called once per frame
@@ -53,6 +53,25 @@ namespace Kubs
         }
 
         #endregion
+
+        private void HandleZoneHintDisplay(object sender, ZoneHintEventArgs otherObject)
+        {
+
+        }
+        private void HandleZoneHintTriggerEnter(object sender, ZoneHintEventArgs otherObject)
+        {
+
+        }
+        private void HandleZoneHintTriggerExit(object sender, ZoneHintEventArgs otherObject)
+        {
+
+        }
+        private void RegisterZoneHintEvents()
+        {
+            GetChildZoneHint().OnZoneHintDisplay += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintDisplay);
+            GetChildZoneHint().OnZoneHintTriggerEnter += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintTriggerEnter);
+            GetChildZoneHint().OnZoneHintTriggerExit += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintTriggerExit);
+        }
 
         GameObject GetGameObjectObjectByTag(string tag)
         {
@@ -66,13 +85,24 @@ namespace Kubs
         {
             return obj.GetComponent<VRTK_InteractableObject>();
         }
-        ZoneBaseController GetZoneBase(GameObject obj)
+        ZoneBaseController GetChildZoneBase()
         {
-            return obj.GetComponent<ZoneBaseController>();
+            return GetChildByName(TAG_ZONE_BASE).GetComponent<ZoneBaseController>();
         }
-        ZoneHintController GetZoneHint(GameObject obj)
+        ZoneHintController GetChildZoneHint()
         {
-            return obj.GetComponent<ZoneHintController>();
+            return GetChildByName(TAG_ZONE_HINT).GetComponent<ZoneHintController>();
+        }
+        GameObject GetChildByName(string tagName)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).gameObject.tag.CompareTo(tagName) == 0)
+                {
+                    return transform.GetChild(i).gameObject;
+                }
+            }
+            return null;
         }
     }
 }
