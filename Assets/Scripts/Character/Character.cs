@@ -71,7 +71,6 @@ namespace Kubs
                 // Set 2
                 Invoke("RotateLeft", 1);
                 Invoke("Jump", 1);
-                Invoke("Jump", 1);
                 Invoke("Forward", 1);
             }
         }
