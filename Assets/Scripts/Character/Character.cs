@@ -124,7 +124,15 @@ namespace Kubs
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Hole")
+            if (other.gameObject.tag == "Grass")
+            {
+                _isStopped = true;
+                _queue.Clear();
+
+                Set(Animations.Die2);
+                StopCoroutine("UpdatePosition");
+            }
+            else if (other.gameObject.tag == "Hole")
             {
                 _isStopped = true;
             }
