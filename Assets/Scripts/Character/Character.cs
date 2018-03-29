@@ -46,6 +46,8 @@ namespace Kubs
             {
                 Invoke("Forward", 1);
 
+                // Set 1
+                /*
                 Invoke("Forward", 5);
                 Invoke("RotateLeft", 5);
                 Invoke("Forward", 5);
@@ -54,6 +56,12 @@ namespace Kubs
                 Invoke("RotateLeft", 10);
                 Invoke("Forward", 10);
                 Invoke("Jump", 10);
+                */
+
+                // Set 2
+                Invoke("RotateLeft", 1);
+                Invoke("Jump", 1);
+                Invoke("Jump", 1);
             }
         }
 
@@ -152,8 +160,19 @@ namespace Kubs
             }
 
             startPos = transform.position;
-            endPos = transform.position + transform.forward * _scale * 2;
-            trajectoryHeight = 0.5f;
+
+            if (IsBlocked())
+            {
+                // Jump up
+                endPos = transform.position + (transform.forward + transform.up) * _scale;
+                trajectoryHeight = 1f;
+            }
+            else
+            {
+                // Jump over
+                endPos = transform.position + (transform.forward + transform.forward) * _scale;
+                trajectoryHeight = 0.5f;
+            }
 
             Set(Animations.Jump);
             _type = ProgramBlockType.Jump;
@@ -206,6 +225,14 @@ namespace Kubs
             {
                 Debug.Log(s);
             }
+        }
+
+        private bool IsBlocked()
+        {
+            var maxDistance = _scale;
+            var position = transform.position;
+            position.y += 0.5f * _scale;
+            return Physics.Raycast(position, transform.forward, maxDistance);
         }
 
 		private void InitAudioClips() {
