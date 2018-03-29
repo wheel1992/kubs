@@ -8,7 +8,11 @@ namespace Kubs
     {
         public TutorialManager tutorialManager;
 
+        // Components
         private Animator _animator;
+        private Rigidbody _rigidbody;
+
+        // Animation
         private bool _isAnimating;
         private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
         private ProgramBlockType _type;
@@ -24,19 +28,24 @@ namespace Kubs
         private Quaternion endRot;
         private Quaternion _originalRot;
 
+        // Flags and miscellaneous
         private bool _isDebug = false;
         private bool _isStopped;
         public float _scale;
+
+        // Audio
         public AudioClip audioClipWalk;
 		public AudioClip audioClipChewFood;
 		public AudioClip audioClipJump;
         private AudioSource _audioSourceWalk;
 		private AudioSource _audioSourceChewFood;
 		private AudioSource _audioSourceJump;
+
         // Use this for initialization
         void Start()
         {
             _animator = GetComponent<Animator>();
+            _rigidbody = GetComponent<Rigidbody>();
             _originalPos = transform.position;
             _scale = transform.lossyScale.x;
 
@@ -62,6 +71,7 @@ namespace Kubs
                 Invoke("RotateLeft", 1);
                 Invoke("Jump", 1);
                 Invoke("Jump", 1);
+                Invoke("Forward", 1);
             }
         }
 
@@ -84,6 +94,10 @@ namespace Kubs
                     default:
                         break;
                 }
+            }
+            else if (IsFalling())
+            {
+                // No action
             }
             else if (_queue.Count > 0)
             {
@@ -233,6 +247,11 @@ namespace Kubs
             var position = transform.position;
             position.y += 0.5f * _scale;
             return Physics.Raycast(position, transform.forward, maxDistance);
+        }
+
+        private bool IsFalling()
+        {
+            return _rigidbody.velocity.y < -0.1;
         }
 
 		private void InitAudioClips() {
