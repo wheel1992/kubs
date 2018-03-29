@@ -47,6 +47,7 @@ namespace Kubs
             _animator = GetComponent<Animator>();
             _rigidbody = GetComponent<Rigidbody>();
             _originalPos = transform.position;
+            _originalRot = transform.rotation;
             _scale = transform.lossyScale.x;
 
 			InitAudioClips();
