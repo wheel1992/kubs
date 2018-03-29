@@ -17,6 +17,7 @@ namespace Kubs
         public static string NAME_PROGRAM_BLOCK_ROTATERIGHT= "RotateRight_ProgramBlock_New";
         public static string NAME_PROGRAM_BLOCK_JUMP = "Jump_ProgramBlock_New";
         public static string NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK = "Program_Block_SnapDropZone";
+        public static string NAME_TRAIN_MOVE = "Train_Move";
         public static string TAG_BLOCK_PROGRAM = "Block_Program";
         public static string TAG_BLOCK_SWEEP_TEST_CHILD = "SweepTestChild";
         public static string TAG_LEVEL = "Level";
