@@ -12,7 +12,7 @@ namespace Kubs
         [SerializeField] private GameObject snapDropZonePrefab;
         [SerializeField] private GameObject tempPositionObjectPrefab;
         [SerializeField] private GameObject _proposedBlockPrefab;
-
+        [SerializeField] private GameObject _zoneHintHighlightObjectPrefab;
 
         /// <summary>
         /// This holds the default first snap drop zone gameobject
@@ -50,6 +50,14 @@ namespace Kubs
             _defaultSnapDropZonePrefab.GetComponent<SnapDropZone>().ZoneId = 0;
             _defaultSnapDropZonePosition = _defaultSnapDropZonePrefab.transform.position;
 
+            // Create custom zone hint highlight object 
+            var zoneHintHighlightObj = Instantiate(_zoneHintHighlightObjectPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+            zoneHintHighlightObj.GetComponent<Renderer>().enabled = false;
+            zoneHintHighlightObj.transform.SetParent(_defaultSnapDropZonePrefab.transform);
+            zoneHintHighlightObj.transform.localPosition = new Vector3(0, 0, 0);
+            //zoneHintHighlightObj.transform = _defaultSnapDropZonePrefab.transform; 
+
+
             _prevPos = _defaultSnapDropZonePosition;
 
             RegisterSnapDropZoneEventHandler(_defaultSnapDropZonePrefab);
@@ -67,6 +75,19 @@ namespace Kubs
         private void DoProgramBlockZoneEntered(object sender, SnapDropZoneEventArgs e)
         {
             //Debug.Log("== SnapDropZone: ENTERING <<<<");
+            if (sender is VRTK_SnapDropZone)
+            {
+                VRTK_SnapDropZone originZone = (VRTK_SnapDropZone)sender;
+                for (int i = 0; i < originZone.gameObject.transform.childCount; i++)
+                {
+                    if (originZone.gameObject.transform.GetChild(i).gameObject.tag.CompareTo("ZonehintHighlightObject") == 0)
+                    {
+                        originZone.gameObject.transform.GetChild(i).GetComponent<Renderer>().enabled = true;
+                    }
+
+                }
+
+            }
         }
 
         private void DoProgramBlockZoneSnapped(object sender, SnapDropZoneEventArgs e)

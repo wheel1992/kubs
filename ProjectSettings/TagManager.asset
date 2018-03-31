@@ -33,6 +33,9 @@ TagManager:
   - ZoneHint
   - ZoneGroup
   - ZoneObject
+  - ZoneHintHighlightedObject
+  - ZoneSnap
+  - ZoneHintPredicter
   layers:
   - Default
   - TransparentFX

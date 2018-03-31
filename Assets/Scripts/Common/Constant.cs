@@ -10,7 +10,7 @@ namespace Kubs
         public static float DEFAULT_Y = 0.63f;
         public static float DEFAULT_BLOCK_SIZE = 1f;
         public static float DEFAULT_SNAP_DROP_ZONE_SCALE = 0.5f;
-        public static float DEFAULT_BLOCK_SPACING = 0.03f;
+        public static float DEFAULT_BLOCK_SPACING = 0f; //0.03f;
         public static string LAYER_NAME_SWEEP_TEST = "SweepTest";
         public static string NAME_PROGRAM_BLOCK_FORWARD = "Forward_ProgramBlock_New";
         public static string NAME_PROGRAM_BLOCK_ROTATELEFT= "RotateLeft_ProgramBlock_New";

@@ -6,30 +6,27 @@ namespace Kubs
 {
     public struct ZoneHintEventArgs
     {
-        public GameObject OtherObject;
+        public GameObject CollidedObject;
     }
+
+    /// <summary>
+    /// This has a parent which is <see cref="ZoneController"></see>
+    /// 
+    /// This should be a transparent object which is not visible.
+    /// 
+    /// This should contain EventHandlers which can interact with its parent
+    ///  
+    /// </summary>
     public class ZoneHintController : MonoBehaviour
     {
-        /// <summary>
-        /// This has a parent which is <see cref="ZoneController"></see>
-        /// This should contain a box collider which detects
-        /// a ProgramBlock when the block hovers over this hint.
-        /// 
-        /// This should be a transparent object which is not visible.
-        /// 
-        /// This should contain EventHandlers which can interact with its parent
-        ///  
-        /// </summary>
-
-
-
         public delegate void ZoneHintEventHandler(object sender, ZoneHintEventArgs args);
         public event ZoneHintEventHandler OnZoneHintTriggerEnter;
         public event ZoneHintEventHandler OnZoneHintTriggerExit;
-        public event ZoneHintEventHandler OnZoneHintDisplay;
+
+        private const string TAG_PREDICTER = "ZoneHintPredicter";
+        private ZoneHintPredicterController _predicterCtrl;
 
         private BoxCollider _collider;
-
 
         #region Public methods
 
@@ -39,43 +36,79 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            //CheckRigidBody();
-            CheckBoxCollider();
+            _predicterCtrl = GetZoneHintPredicterControllerByGameObject(GetZoneHintPredicterGameObject());
+            _predicterCtrl.OnPredicterTriggerEnter += new ZoneHintPredicterController.ZoneHintPredicterEventHandler(HandlePredicterTriggerEnter);
+            _predicterCtrl.OnPredicterTriggerExit += new ZoneHintPredicterController.ZoneHintPredicterEventHandler(HandlePredicterTriggerExit);
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
-        void OnTriggerExit(Collider other)
+        // void OnTriggerExit(Collider other)
+        // {
+        //     OnZoneHintTriggerExit(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
+        // }
+        // void OnTriggerEnter(Collider other)
+        // {
+        //     OnZoneHintTriggerEnter(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
+        // }
+
+        #endregion
+
+        #region Private Event Handler Listener 
+
+        private void HandlePredicterTriggerEnter(object sender, ZoneHintPredicterEventArgs args)
         {
-            OnZoneHintTriggerExit(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
+            OnZoneHintTriggerEnter(this, new ZoneHintEventArgs { CollidedObject = args.CollidedObject });
         }
-        void OnTriggerEnter(Collider other)
+
+        private void HandlePredicterTriggerExit(object sender, ZoneHintPredicterEventArgs args)
         {
-            OnZoneHintTriggerEnter(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
+            OnZoneHintTriggerExit(this, new ZoneHintEventArgs { CollidedObject = args.CollidedObject });
         }
 
         #endregion
 
         #region Private Methods
-        private void CheckRigidBody()
+        // private void CheckRigidBody()
+        // {
+        //     if (GetComponent<Rigidbody>() == null)
+        //     {
+        //         gameObject.AddComponent<Rigidbody>();
+        //     }
+        // }
+        // private void CheckBoxCollider()
+        // {
+        //     _collider = GetComponent<BoxCollider>();
+        //     if (_collider == null)
+        //     {
+        //         _collider = gameObject.AddComponent<BoxCollider>();
+        //         _collider.isTrigger = true;
+        //     }
+        // }
+
+        #endregion
+
+        #region Private Get Methods
+
+        private GameObject GetZoneHintPredicterGameObject()
         {
-            if (GetComponent<Rigidbody>() == null)
+            for (int i = 0; i < transform.childCount; i++)
             {
-                gameObject.AddComponent<Rigidbody>();
+                if (transform.GetChild(i).gameObject.tag.CompareTo(TAG_PREDICTER) == 0)
+                {
+                    return transform.GetChild(i).gameObject;
+                }
             }
+            return null;
         }
-        private void CheckBoxCollider()
+
+        private ZoneHintPredicterController GetZoneHintPredicterControllerByGameObject(GameObject predicter)
         {
-            _collider = GetComponent<BoxCollider>();
-            if (_collider == null)
-            {
-                _collider = gameObject.AddComponent<BoxCollider>();
-                _collider.isTrigger = true;
-            }
+            return predicter.GetComponent<ZoneHintPredicterController>();
         }
 
         #endregion
