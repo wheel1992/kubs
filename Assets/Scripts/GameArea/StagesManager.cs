@@ -10,6 +10,15 @@ namespace Kubs
 		private const string CHARACTER_STAGE = "CharacterScene";
 		private const string STAGE_PREFIX = "KubScene";
 
+		public static int GetActiveStage()
+		{
+			var sceneName = SceneManager.GetActiveScene().name;
+			sceneName = sceneName == CHARACTER_STAGE ? STAGE_PREFIX : sceneName;
+
+			var stageString = sceneName.Substring(STAGE_PREFIX.Length);
+			return stageString == "" ? 0 : int.Parse(stageString);
+		}
+
 		public static void LoadStage(int stage)
 		{
 			var stageString = stage == 0 ? "" : stage.ToString();
@@ -18,12 +27,7 @@ namespace Kubs
 
 		public static void NextStage()
 		{
-			var sceneName = SceneManager.GetActiveScene().name;
-			sceneName = sceneName == CHARACTER_STAGE ? STAGE_PREFIX : sceneName;
-
-			var stageString = sceneName.Substring(STAGE_PREFIX.Length);
-			var stage = stageString == "" ? 0 : int.Parse(stageString);
-
+			var stage = GetActiveStage();
 			LoadStage(stage + 1);
 		}
 	}
