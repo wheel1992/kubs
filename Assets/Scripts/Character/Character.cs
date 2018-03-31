@@ -71,7 +71,7 @@ namespace Kubs
                 // Set 2
                 Invoke("RotateLeft", 1);
                 Invoke("Jump", 1);
-                Invoke("Forward", 1);
+                Invoke("Jump", 1);
             }
         }
 
@@ -325,6 +325,7 @@ namespace Kubs
 				Set(Animations.Idle);
 			}
 
+            _rigidbody.velocity = Vector3.zero;
             _isAnimating = false;
             yield break;
         }
