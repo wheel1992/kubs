@@ -54,10 +54,10 @@ namespace Kubs
         private KubsDebug _debugger;
 
         private ZoneBaseController _zoneBaseCtrl;
-        private GameObject _zoneContainerGameObject;
+        //private GameObject _zoneContainerGameObject;
         private ZoneHintController _zoneHintCtrl;
         private ZoneSnapController _zoneSnapCtrl;
-
+        private ProgramBlock _attachedProgramBlock;
 
         #region Public methods
 
@@ -115,7 +115,7 @@ namespace Kubs
 
             _zoneBaseCtrl = GetChildZoneBase();
 
-            _zoneContainerGameObject = GetChildByTagName(TAG_ZONE_CONTAINER);
+            //_zoneContainerGameObject = GetChildByTagName(TAG_ZONE_CONTAINER);
         }
 
         // Update is called once per frame
@@ -146,19 +146,19 @@ namespace Kubs
             {
                 args.WhichBlock.ResetCollidedZoneIndices();
                 args.WhichBlock.ZoneIndex = this.Index;
-                //args.WhichBlock.SetParent(_zoneContainerGameObject.transform);
+
+                _attachedProgramBlock = args.WhichBlock;
             }
             OnZoneSnapped(this, new ZoneEventArgs { Index = this.Index });
         }
         private void HandleZoneOnUnsnapped(object sender, ZoneSnapEventArgs args)
         {
-            //_zoneContainerGameObject.transform.DetachChildren();
             IsOccupied = false;
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
-                //args.WhichBlock.SetParent(null);
             }
+            _attachedProgramBlock = null;
             OnZoneUnsnapped(this, new ZoneEventArgs { Index = this.Index });
         }
         private void HandleZoneHintOnTriggerEnter(object sender, ZoneHintEventArgs args)
@@ -257,6 +257,13 @@ namespace Kubs
         //     GetChildZoneHint().OnZoneHintTriggerExit += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintTriggerExit);
         // }
 
+        public void SetAttachedProgramBlockPosition(Vector3 newPos)
+        {
+            if (_attachedProgramBlock != null)
+            {
+                _attachedProgramBlock.transform.position = newPos;
+            }
+        }
         GameObject GetGameObjectObjectByTag(string tag)
         {
             return GameObject.FindGameObjectWithTag(tag);

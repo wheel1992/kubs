@@ -132,17 +132,22 @@ namespace Kubs
             }
 
             var currentIndexPosition = _zones[index].transform.position;
-            var prevPosition = currentIndexPosition;
+            var currentIndexLocalPosition = _zones[index].transform.localPosition;
+            var prevLocalPosition = currentIndexLocalPosition;
             // Move position from index to last zones to right
             for (int i = index; i < _zones.Count; i++)
             {
                 var newPos = new Vector3(
-                    prevPosition.x,
-                    prevPosition.y,
-                    prevPosition.z + _zones[i].transform.localScale.z);
-                _zones[i].transform.position = newPos;
-                Debug.Log("Move zone " + i + " from " + prevPosition+ " to " + newPos);
-                prevPosition = _zones[i].transform.position;
+                    prevLocalPosition.x,
+                    prevLocalPosition.y,
+                    prevLocalPosition.z + _zones[i].transform.localScale.z);
+                _zones[i].transform.localPosition = newPos;
+
+                GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
+                    new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
+
+                //Debug.Log("Move zone " + i + " from " + prevPosition+ " to " + newPos);
+                prevLocalPosition = newPos;
             }
 
             Debug.Log("AddZoneAt: insert temp zone at index " + index);
