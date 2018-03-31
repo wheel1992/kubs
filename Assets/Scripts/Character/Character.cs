@@ -57,7 +57,6 @@ namespace Kubs
                 Invoke("Forward", 1);
 
                 // Set 1
-                /*
                 Invoke("Forward", 5);
                 Invoke("RotateLeft", 5);
                 Invoke("Forward", 5);
@@ -66,12 +65,13 @@ namespace Kubs
                 Invoke("RotateLeft", 10);
                 Invoke("Forward", 10);
                 Invoke("Jump", 10);
-                */
 
                 // Set 2
+                /*
                 Invoke("RotateLeft", 1);
                 Invoke("Jump", 1);
                 Invoke("Jump", 1);
+                */
             }
         }
 
