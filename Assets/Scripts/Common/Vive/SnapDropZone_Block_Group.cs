@@ -108,6 +108,7 @@ namespace Kubs
             if (e.snappedObject != null)
             {
                 e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                e.snappedObject.GetComponent<VRTK_InteractableObject>().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
             }
         }
 
@@ -117,6 +118,7 @@ namespace Kubs
             if (e.snappedObject != null)
             {
                 e.snappedObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+                e.snappedObject.GetComponent<VRTK_InteractableObject>().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
             }
         }
 
