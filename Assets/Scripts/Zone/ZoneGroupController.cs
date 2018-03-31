@@ -53,24 +53,28 @@ namespace Kubs
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
             var largestIndex = args.HoveredIndices.Max(index => index);
-            if (args.HoveredIndices.Count == 1 && 
-                !GetZoneControllerByGameObject(_zones[largestIndex]).IsOccupied)
+            if ((args.HoveredIndices.Count == 1 && !IsZoneEmpty(largestIndex)) ||
+                (args.HoveredIndices.Count > 1 && IsNextZoneEmpty(largestIndex)))
             {
                 return;
             }
             AddZoneAt(largestIndex);
+            UpdateZoneIndices();
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
-            if (args.HoveredIndices.Count > 0) {
-                var largestIndex = args.HoveredIndices.Max(index => index);
+            Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
+            if (args.UnhoveredIndex != -1)
+            {
+                //var largestIndex = args.HoveredIndices.Max(index => index);
+                RemoveZoneAt(args.UnhoveredIndex);
+                UpdateZoneIndices();
             }
-            
-            UpdateZoneIndices();
+
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
-            if (isNextZoneNull(args.Index))
+            if (IsNextZoneNull(args.Index))
             {
                 Debug.Log("HandleZoneSnapped: Add next zone from " + args.Index);
                 AddZone(args.Index);
@@ -96,7 +100,6 @@ namespace Kubs
         private void RegisterZoneEventHandler(ZoneController zone)
         {
             //Debug.Log("RegisterZoneEventHandler: zone index " + zone.Index);
-
             zone.OnZonesHovered += new ZoneController.ZoneHoverEventHandler(HandleZonesHovered);
             zone.OnZonesUnhovered += new ZoneController.ZoneHoverEventHandler(HandleZonesUnhovered);
             zone.OnZoneSnapped += new ZoneController.ZoneEventHandler(HandleZoneSnapped);
@@ -146,7 +149,7 @@ namespace Kubs
                 GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
                     new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
 
-                //Debug.Log("Move zone " + i + " from " + prevPosition+ " to " + newPos);
+                //Debug.Log("Move zone " + i + " from " + prevLocalPosition+ " to " + newPos);
                 prevLocalPosition = newPos;
             }
 
@@ -155,11 +158,10 @@ namespace Kubs
             var tempZone = CreateZoneGameObject(currentIndexPosition, index);
             var tempZoneCtrl = GetZoneControllerByGameObject(tempZone);
             tempZoneCtrl.IsTemporary = true;
+            tempZoneCtrl.IsOccupied = false;
             //Debug.Log("AddNextZone nextZoneCtrl index = " + nextZoneCtrl.Index);
             RegisterZoneEventHandler(tempZoneCtrl);
             _zones.Insert(index, tempZone);
-
-            UpdateZoneIndices();
         }
         private void UpdateZoneIndices()
         {
@@ -192,8 +194,40 @@ namespace Kubs
             }
 
             var zoneCtrl = GetZoneControllerByGameObject(_zones[index]);
+           // Debug.Log("RemoveZoneAt: index " + index + " IsTemporary = " + zoneCtrl.IsTemporary + " IsOccupied = " + zoneCtrl.IsOccupied);
             if (zoneCtrl.IsTemporary && !zoneCtrl.IsOccupied)
             {
+                var prevLocalPosition = _zones[index].transform.localPosition;
+                // Revert position from index to last zones to left
+                for (int i = index + 1; i < _zones.Count; i++)
+                {
+                    var currentIndexLocalPosition = _zones[index].transform.localPosition;
+
+                    var newPos = new Vector3(
+                        prevLocalPosition.x,
+                        prevLocalPosition.y,
+                        prevLocalPosition.z);
+                    _zones[i].transform.localPosition = newPos;
+
+                    GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
+                        new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
+
+                   // Debug.Log("Revert zone " + i + " from " + currentIndexLocalPosition + " to " + prevLocalPosition);
+
+                    prevLocalPosition = newPos;
+                }
+
+                Debug.Log("RemoveZoneAt: remove temp zone at index " + index);
+
+                var tempZoneCtrl = GetZoneControllerByGameObject(_zones[index]);
+                Destroy(tempZoneCtrl);
+                _zones.RemoveAt(index);
+
+                // Left only 1 zone
+                // Add one empty zone to right
+                if (_zones.Count == 1) {
+                    AddZone(0);
+                }
 
             }
         }
@@ -212,15 +246,23 @@ namespace Kubs
             return obj.GetComponent<ZoneController>();
         }
 
-        private bool isNextZoneNull(int index)
+        private bool IsNextZoneNull(int index)
         {
-            if (index + 1 >= _zones.Count) { return true; }
-            return _zones[index + 1] == null;
+            return IsZoneNull(index + 1);
         }
         private bool IsNextZoneEmpty(int index)
         {
-            if (index + 1 >= _zones.Count) { return false; }
-            return GetZoneControllerByGameObject(_zones[index + 1]).IsOccupied;
+            return IsZoneEmpty(index + 1);
+        }
+        private bool IsZoneNull(int index)
+        {
+            if (index < 0 || index >= _zones.Count) { return false; }
+            return _zones[index] == null;
+        }
+        private bool IsZoneEmpty(int index)
+        {
+            if (index < 0 || index >= _zones.Count) { return false; }
+            return GetZoneControllerByGameObject(_zones[index]).IsOccupied;
         }
 
         #endregion
