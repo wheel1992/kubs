@@ -65,7 +65,7 @@ namespace Kubs
         {
             _zoneSnapCtrl.Snap(block.gameObject);
         }
-        public ProgramBlock Unattach()
+        public ProgramBlock Detach()
         {
             var unattachedBlock = _attachedProgramBlock;
             _zoneSnapCtrl.Unsnap();
