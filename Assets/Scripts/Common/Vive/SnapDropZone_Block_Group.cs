@@ -253,8 +253,8 @@ namespace Kubs
         }
         private void SnapRemove(ProgramBlock block)
         {
-            VRTK_SnapDropZone currentVrtkZone = block.GetVRTKSnapDropZone();
-            currentVrtkZone.ForceUnsnap();
+            // VRTK_SnapDropZone currentVrtkZone = block.GetVRTKSnapDropZone();
+            // currentVrtkZone.ForceUnsnap();
         }
         private void SnapAt(ProgramBlock block, int newZoneIndex)
         {
@@ -352,12 +352,14 @@ namespace Kubs
         }
         private SnapDropZone GetProgramBlockSnappedDropZone(ProgramBlock block)
         {
-            return block.GetSnapDropZone();
+            return null;
+            //return block.GetSnapDropZone();
         }
 
         private VRTK_SnapDropZone GetProgramBlockVRTKSnappedDropZone(ProgramBlock block)
         {
-            return block.GetVRTKSnapDropZone();
+            return null;
+            //return block.GetVRTKSnapDropZone();
         }
         private GameObject GetGameObjectBySnapIndex(int snapIndex)
         {

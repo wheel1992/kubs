@@ -12,6 +12,13 @@ namespace Kubs
         //public GameObject OtherObject;
         public int Index;
     }
+
+    public struct ZoneHoverEventArgs
+    {
+        //public GameObject OtherObject;
+        public IList<int> HoveredIndices;
+        public int UnhoveredIndex;
+    }
     /// <summary>
     /// This contains both ZoneBaseController and ZoneHintController
     /// 
@@ -23,26 +30,34 @@ namespace Kubs
     public class ZoneController : MonoBehaviour
     {
         public delegate void ZoneEventHandler(object sender, ZoneEventArgs args);
+        public delegate void ZoneHoverEventHandler(object sender, ZoneHoverEventArgs args);
+
         public event ZoneEventHandler OnZoneSnapped;
         public event ZoneEventHandler OnZoneUnsnapped;
+        public event ZoneHoverEventHandler OnZonesHovered;
+        public event ZoneHoverEventHandler OnZonesUnhovered;
 
         [HideInInspector]
         public bool IsOccupied = false;
+        [HideInInspector]
+        public bool IsTemporary = false;
 
         const string TAG_ZONE_BASE = "ZoneBase";
         const string TAG_ZONE_HINT = "ZoneHint";
         const string TAG_ZONE_SNAP = "ZoneSnap";
+        const string TAG_ZONE_CONTAINER = "ZoneContainer";
+
         const bool IS_DEBUG = true;
 
         public int Index { get; set; }
 
         private KubsDebug _debugger;
-        // private GameObject _attachedObject;
-   
 
+        private ZoneBaseController _zoneBaseCtrl;
+        private GameObject _zoneContainerGameObject;
         private ZoneHintController _zoneHintCtrl;
         private ZoneSnapController _zoneSnapCtrl;
-        private ZoneBaseController _zoneBaseCtrl;
+
 
         #region Public methods
 
@@ -80,7 +95,7 @@ namespace Kubs
 
         #endregion
 
-        #region Private Lifecycle methods
+        #region Private Lifecycle Methods
         void Awake()
         {
             _debugger = new KubsDebug(IS_DEBUG);
@@ -88,8 +103,6 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            //RegisterZoneHintEvents();
-            //CheckRigidBody();
             _zoneHintCtrl = GetChildZoneHint();
             _zoneHintCtrl.OnZoneHintTriggerEnter += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintOnTriggerEnter);
             _zoneHintCtrl.OnZoneHintTriggerExit += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintOnTriggerExit);
@@ -101,6 +114,8 @@ namespace Kubs
             _zoneSnapCtrl.OnUnsnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnUnsnapped);
 
             _zoneBaseCtrl = GetChildZoneBase();
+
+            _zoneContainerGameObject = GetChildByTagName(TAG_ZONE_CONTAINER);
         }
 
         // Update is called once per frame
@@ -114,29 +129,84 @@ namespace Kubs
 
         private void HandleZoneOnEntered(object sender, ZoneSnapEventArgs args)
         {
-        
+
         }
         private void HandleZoneOnExited(object sender, ZoneSnapEventArgs args)
         {
-
+            if (args.WhichBlock != null)
+            {
+                args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+            }
         }
         private void HandleZoneOnSnapped(object sender, ZoneSnapEventArgs args)
         {
+            Debug.Log("HandleZoneOnSnapped at " + Index);
             IsOccupied = true;
+            if (args.WhichBlock != null)
+            {
+                args.WhichBlock.ResetCollidedZoneIndices();
+                args.WhichBlock.ZoneIndex = this.Index;
+                //args.WhichBlock.SetParent(_zoneContainerGameObject.transform);
+            }
             OnZoneSnapped(this, new ZoneEventArgs { Index = this.Index });
         }
         private void HandleZoneOnUnsnapped(object sender, ZoneSnapEventArgs args)
         {
+            //_zoneContainerGameObject.transform.DetachChildren();
             IsOccupied = false;
+            if (args.WhichBlock != null)
+            {
+                args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
+                //args.WhichBlock.SetParent(null);
+            }
             OnZoneUnsnapped(this, new ZoneEventArgs { Index = this.Index });
         }
-        private void HandleZoneHintOnTriggerEnter(object sender, ZoneHintEventArgs args) {
-            if (args.CollidedObject != null) {
+        private void HandleZoneHintOnTriggerEnter(object sender, ZoneHintEventArgs args)
+        {
+            if (args.CollidedObject != null)
+            {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
+                if (collidedBlock != null && !collidedBlock.HasZoneIndex())
+                {
+                    if (collidedBlock.HasCollidedZoneIndex(this.Index))
+                    {
+                        // ProgramBlock keeps hovering on top of this zone
+                        // Do not repeat the code below
+                        return;
+                    }
+
+                    //Debug.Log("HandleZoneHintOnTriggerEnter: collided is ProgramBlock!");
+                    collidedBlock.AddCollidedZoneIndex(this.Index);
+                    collidedBlock.PrintCollidedZoneIndices();
+
+                    OnZonesHovered(this,
+                        new ZoneHoverEventArgs
+                        {
+                            HoveredIndices = collidedBlock.GetCollidedZoneIndices(),
+                            UnhoveredIndex = -1
+                        });
+                }
             }
         }
-        private void HandleZoneHintOnTriggerExit(object sender, ZoneHintEventArgs args) {
+        private void HandleZoneHintOnTriggerExit(object sender, ZoneHintEventArgs args)
+        {
+            if (args.CollidedObject != null)
+            {
+                var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
+                if (collidedBlock != null)
+                {
+                    //Debug.Log("HandleZoneHintOnTriggerExit: collided is ProgramBlock!");
+                    collidedBlock.RemoveCollidedZoneIndex(this.Index);
+                    collidedBlock.PrintCollidedZoneIndices();
 
+                    OnZonesUnhovered(this,
+                        new ZoneHoverEventArgs
+                        {
+                            HoveredIndices = collidedBlock.GetCollidedZoneIndices(),
+                            UnhoveredIndex = this.Index
+                        });
+                }
+            }
         }
 
         #endregion
@@ -229,4 +299,5 @@ namespace Kubs
 
         #endregion
     }
+
 }

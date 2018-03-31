@@ -18,212 +18,309 @@ namespace Kubs
         public int ZoneId { get; set; }
         [HideInInspector]
         public int HoverZoneId = -1;
-        [HideInInspector]
-        //public bool isCloned = true;
-        private Rigidbody _rb;
-        private VRTK_InteractableObject _interactableObject;
+        // private Rigidbody _rb;
+        // private VRTK_InteractableObject _interactableObject;
 
-        #region Lifecycle
+        // v2 here
+
+        [HideInInspector]
+        public int ZoneIndex = -1;
+        private List<int> _collidedZoneIndices;
+
+        //#region Lifecycle
 
         void Awake()
         {
             Category = BlockCategory.Program;
-            ZoneId = -1;
-            State = State.UnsnapIdle;
         }
-
-        // Use this for initialization
         void Start()
         {
-            //Debug.Log("ProgramBlock Start");
-            _rb = GetComponent<Rigidbody>();
-            _interactableObject = GetComponentInteractableObject();
 
-            // Sweep child block by default is not triggered
-            // Only triggered when it is attached
-            PauseSweepChildTrigger();
+            _collidedZoneIndices = new List<int>();
 
-            GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
-            GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
-
-            // Fire off event
-            // To register block program events such as Hover, Unhover and Snap
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, gameObject);
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, gameObject);
-
-            // Set its type again by checking its name
-            GetProgramBlockByGameObject(gameObject).Type = GetProgramBlockTypeByName(gameObject.name);
-        }
-        private void OnTriggerExit(Collider other)
-        {
-            if (other == null) { return; }
-            // I am an Unsnap BlockProgram
-            if (State == State.UnsnapHover)
+            for (int i = 0; i < transform.childCount; i++)
             {
-                if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+                if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
                 {
-                    // I am exiting from current zone!
-                    Unhover(HoverZoneId);
-                    HoverZoneId = -1;
-                }
-            }
-        }
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other == null) { return; }
-            // I am an Unsnap BlockProgram
-            if (State == State.UnsnapHover)
-            {
-                if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
-                {
-                    // I am still colliding at the current zone!
+                    transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
         }
         private void Update()
         {
-            // Only blocks with isCloned will check for SnapDropZone
-            if (GetComponentInteractableObject().IsInSnapDropZone() && GetVRTKSnapDropZone().CompareTag(Constant.TAG_SNAP_DROP_ZONE_PLATE))
-            {
-                StartSweepChildTrigger();
-                ZoneId = GetSnapDropZone().ZoneId;
-            }
-            else
-            {
-                PauseSweepChildTrigger();
-                ZoneId = -1;
-            }
+
         }
-        private void DoChildTriggeredEnter(Collider other)
+
+        public void AddCollidedZoneIndex(int index)
         {
-            // My SweepTestChild collide with other.gameobject which is a ProgramBlock
-            if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+            foreach (int item in _collidedZoneIndices)
             {
-                ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
-
-                if (otherBlock.IsGrabbed())
+                if (item == index)
                 {
-                    Debug.Log("DoChildTriggeredEnter: other program block HoverZoneId " + otherBlock.HoverZoneId);
-                    if (ZoneId > -1 && ZoneId != otherBlock.HoverZoneId)
-                    {
-                        if (otherBlock.HoverZoneId > -1)
-                        {
-                            // has hovered on other zone currently
-                            Unhover(otherBlock.HoverZoneId);
-                            otherBlock.HoverZoneId = -1;
-                        }
-
-                        Hover(ZoneId);
-                        // Set my current state to SnapTempMove
-                        State = State.SnapTempMove;
-
-                        // Set other block HoverZoneId and state to UnsnapHover
-                        otherBlock.HoverZoneId = ZoneId;
-                        otherBlock.State = State.UnsnapHover;
-                    }
+                    // Found there exists the similar index value
+                    // Break the loop
+                    return;
                 }
-                else
+            }
+            Debug.Log("AddCollidedZoneIndex " + index);
+            _collidedZoneIndices.Add(index);
+        }
+        public void RemoveCollidedZoneIndex(int index)
+        {
+            Debug.Log("RemoveCollidedZoneIndex " + index);
+            foreach (int item in _collidedZoneIndices)
+            {
+                if (item == index)
                 {
-                    if (ZoneId > -1 && ZoneId == otherBlock.HoverZoneId)
-                    {
-                        Snap(other.gameObject, ZoneId);
-                    }
+                    var a = _collidedZoneIndices.IndexOf(item);
+                    _collidedZoneIndices.RemoveAt(a);
+                    break;
                 }
             }
         }
-        private void DoChildTriggerExit(Collider other)
+        public void ResetCollidedZoneIndices()
         {
-            if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+            _collidedZoneIndices = new List<int>();
+        }
+        public void ResetZoneIndex() {
+            ZoneIndex = -1;
+        }
+        // public int GetLargestCollidedZoneIndex()
+        // {
+        //     return _collidedZoneIndices.Max(index => index);
+        // }
+        public void PrintCollidedZoneIndices()
+        {
+            string msg = "";
+            foreach (int item in _collidedZoneIndices)
             {
-                ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
-                if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && otherBlock.State == State.UnsnapHover && State == State.SnapIdle)
+                msg += item + ", ";
+            }
+            Debug.Log(msg);
+        }
+        public void SetParent(Transform parent) {
+            
+            transform.SetParent(parent);
+        }
+        public List<int> GetCollidedZoneIndices()
+        {
+            return _collidedZoneIndices;
+        }
+        public VRTK_InteractableObject GetVRTKInteractableObject()
+        {
+            return gameObject.GetComponent<VRTK_InteractableObject>();
+        }
+        public bool HasCollidedZoneIndex(int index)
+        {
+            foreach (int item in _collidedZoneIndices)
+            {
+                if (item == index)
                 {
-                    otherBlock.HoverZoneId = -1;
-                    Unhover(ZoneId);
+                    return true;
                 }
             }
+            return false;
+        }
+        public bool HasZoneIndex() {
+            return ZoneIndex != -1;
         }
 
-        #endregion
+        // void Awake()
+        // {
+        //     Category = BlockCategory.Program;
+        //     ZoneId = -1;
+        //     State = State.UnsnapIdle;
+        // }
 
-        #region Public methods
+        // // Use this for initialization
+        // void Start()
+        // {
+        //     //Debug.Log("ProgramBlock Start");
+        //     _rb = GetComponent<Rigidbody>();
+        //     _interactableObject = GetComponentInteractableObject();
 
-        public void PauseSweepChildTrigger()
-        {
-            var child = GetSweepChild();
-            if (child != null)
-            {
-                child.PauseTrigger();
-            }
-        }
+        //     // Sweep child block by default is not triggered
+        //     // Only triggered when it is attached
+        //     PauseSweepChildTrigger();
 
-        public void StartSweepChildTrigger()
-        {
-            var child = GetSweepChild();
-            if (child != null)
-            {
-                child.StartTrigger();
-            }
-        }
+        //     GetSweepChild().OnEnter += new SweepChildBlock.TriggerEventHandler(DoChildTriggeredEnter);
+        //     GetSweepChild().OnExit += new SweepChildBlock.TriggerEventHandler(DoChildTriggerExit);
 
-        public SnapDropZone GetSnapDropZone()
-        {
-            return GetComponentInteractableObject().GetStoredSnapDropZone().GetComponent<SnapDropZone>();
-        }
+        //     // Fire off event
+        //     // To register block program events such as Hover, Unhover and Snap
+        //     EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, gameObject);
+        //     EventManager.TriggerEvent(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, gameObject);
 
-        public VRTK_SnapDropZone GetVRTKSnapDropZone()
-        {
-            return GetComponentInteractableObject().GetStoredSnapDropZone();
-        }
+        //     // Set its type again by checking its name
+        //     GetProgramBlockByGameObject(gameObject).Type = GetProgramBlockTypeByName(gameObject.name);
+        // }
+        // private void OnTriggerExit(Collider other)
+        // {
+        //     if (other == null) { return; }
+        //     // I am an Unsnap BlockProgram
+        //     if (State == State.UnsnapHover)
+        //     {
+        //         if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+        //         {
+        //             // I am exiting from current zone!
+        //             Unhover(HoverZoneId);
+        //             HoverZoneId = -1;
+        //         }
+        //     }
+        // }
+        // private void OnTriggerEnter(Collider other)
+        // {
+        //     if (other == null) { return; }
+        //     // I am an Unsnap BlockProgram
+        //     if (State == State.UnsnapHover)
+        //     {
+        //         if (other.gameObject.tag.CompareTo(Constant.TAG_TEMPORARY_POSITION_OBJECT) == 0)
+        //         {
+        //             // I am still colliding at the current zone!
+        //         }
+        //     }
+        // }
+        // private void Update()
+        // {
+        //     // Only blocks with isCloned will check for SnapDropZone
+        //     if (GetComponentInteractableObject().IsInSnapDropZone() && GetVRTKSnapDropZone().CompareTag(Constant.TAG_SNAP_DROP_ZONE_PLATE))
+        //     {
+        //         StartSweepChildTrigger();
+        //         ZoneId = GetSnapDropZone().ZoneId;
+        //     }
+        //     else
+        //     {
+        //         PauseSweepChildTrigger();
+        //         ZoneId = -1;
+        //     }
+        // }
+        // private void DoChildTriggeredEnter(Collider other)
+        // {
+        //     // My SweepTestChild collide with other.gameobject which is a ProgramBlock
+        //     if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+        //     {
+        //         ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
 
-        public bool IsGrabbed()
-        {
-            return GetComponentInteractableObject().IsGrabbed();
-        }
+        //         if (otherBlock.IsGrabbed())
+        //         {
+        //             Debug.Log("DoChildTriggeredEnter: other program block HoverZoneId " + otherBlock.HoverZoneId);
+        //             if (ZoneId > -1 && ZoneId != otherBlock.HoverZoneId)
+        //             {
+        //                 if (otherBlock.HoverZoneId > -1)
+        //                 {
+        //                     // has hovered on other zone currently
+        //                     Unhover(otherBlock.HoverZoneId);
+        //                     otherBlock.HoverZoneId = -1;
+        //                 }
 
-        public bool IsSnappedToZone()
-        {
-            return GetComponentInteractableObject().IsInSnapDropZone();
-        }
+        //                 Hover(ZoneId);
+        //                 // Set my current state to SnapTempMove
+        //                 State = State.SnapTempMove;
 
-        #endregion
+        //                 // Set other block HoverZoneId and state to UnsnapHover
+        //                 otherBlock.HoverZoneId = ZoneId;
+        //                 otherBlock.State = State.UnsnapHover;
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if (ZoneId > -1 && ZoneId == otherBlock.HoverZoneId)
+        //             {
+        //                 Snap(other.gameObject, ZoneId);
+        //             }
+        //         }
+        //     }
+        // }
+        // private void DoChildTriggerExit(Collider other)
+        // {
+        //     if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
+        //     {
+        //         ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
+        //         if (otherBlock.IsGrabbed() && otherBlock.HoverZoneId == ZoneId && otherBlock.State == State.UnsnapHover && State == State.SnapIdle)
+        //         {
+        //             otherBlock.HoverZoneId = -1;
+        //             Unhover(ZoneId);
+        //         }
+        //     }
+        // }
 
-        private VRTK_InteractableObject GetComponentInteractableObject()
-        {
-            return GetComponent<VRTK_InteractableObject>();
-        }
-        private ProgramBlockType GetProgramBlockTypeByName(string name)
-        {
-            if (name.Contains(Constant.NAME_PROGRAM_BLOCK_FORWARD))
-            {
-                return ProgramBlockType.Forward;
-            }
-            else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_JUMP))
-            {
-                return ProgramBlockType.Jump;
-            }
-            else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT))
-            {
-                return ProgramBlockType.RotateLeft;
-            }
-            return ProgramBlockType.RotateRight;
-        }
-        private ProgramBlock GetProgramBlockByGameObject(GameObject obj)
-        {
-            return obj.GetComponent<ProgramBlock>();
-        }
-        private SweepChildBlock GetSweepChild()
-        {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
-                {
-                    return transform.GetChild(i).gameObject.GetComponent<SweepChildBlock>();
-                }
+        // #endregion
 
-            }
-            return null;
-        }
+        // #region Public methods
+
+        // public void PauseSweepChildTrigger()
+        // {
+        //     var child = GetSweepChild();
+        //     if (child != null)
+        //     {
+        //         child.PauseTrigger();
+        //     }
+        // }
+
+        // public void StartSweepChildTrigger()
+        // {
+        //     var child = GetSweepChild();
+        //     if (child != null)
+        //     {
+        //         child.StartTrigger();
+        //     }
+        // }
+
+        // public SnapDropZone GetSnapDropZone()
+        // {
+        //     return GetComponentInteractableObject().GetStoredSnapDropZone().GetComponent<SnapDropZone>();
+        // }
+
+        // public VRTK_SnapDropZone GetVRTKSnapDropZone()
+        // {
+        //     return GetComponentInteractableObject().GetStoredSnapDropZone();
+        // }
+
+        // public bool IsGrabbed()
+        // {
+        //     return GetComponentInteractableObject().IsGrabbed();
+        // }
+
+        // public bool IsSnappedToZone()
+        // {
+        //     return GetComponentInteractableObject().IsInSnapDropZone();
+        // }
+
+        // #endregion
+
+
+        // private ProgramBlockType GetProgramBlockTypeByName(string name)
+        // {
+        //     if (name.Contains(Constant.NAME_PROGRAM_BLOCK_FORWARD))
+        //     {
+        //         return ProgramBlockType.Forward;
+        //     }
+        //     else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_JUMP))
+        //     {
+        //         return ProgramBlockType.Jump;
+        //     }
+        //     else if (name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT))
+        //     {
+        //         return ProgramBlockType.RotateLeft;
+        //     }
+        //     return ProgramBlockType.RotateRight;
+        // }
+        // private ProgramBlock GetProgramBlockByGameObject(GameObject obj)
+        // {
+        //     return obj.GetComponent<ProgramBlock>();
+        // }
+        // private SweepChildBlock GetSweepChild()
+        // {
+        //     for (int i = 0; i < transform.childCount; i++)
+        //     {
+        //         if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
+        //         {
+        //             return transform.GetChild(i).gameObject.GetComponent<SweepChildBlock>();
+        //         }
+
+        //     }
+        //     return null;
+        // }
     }
 
     public enum ProgramBlockType
