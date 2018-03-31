@@ -244,7 +244,6 @@ namespace Kubs
             }
         }
 
-
         #region Private Get Methods
 
         private GameObject GetChildAt(int index)
@@ -252,12 +251,14 @@ namespace Kubs
             if (transform.childCount == 0) { return null; }
             return transform.GetChild(index).gameObject;
         }
-
         private ZoneController GetZoneControllerByGameObject(GameObject obj)
         {
             return obj.GetComponent<ZoneController>();
         }
-
+        private bool IsTailEmpty()
+        {
+            return GetZoneControllerByGameObject(_zones[_zones.Count - 1]).IsOccupied;
+        }
         private bool IsNextZoneNull(int index)
         {
             return IsZoneNull(index + 1);
