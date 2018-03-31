@@ -28,6 +28,9 @@ namespace Kubs
         public event ZoneHintEventHandler OnZoneHintTriggerExit;
         public event ZoneHintEventHandler OnZoneHintDisplay;
 
+        private BoxCollider _collider;
+
+
         #region Public methods
 
         #endregion
@@ -36,21 +39,43 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
+            //CheckRigidBody();
+            CheckBoxCollider();
         }
 
         // Update is called once per frame
         void Update()
         {
+            
         }
 
         void OnTriggerExit(Collider other)
         {
-
             OnZoneHintTriggerExit(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
         }
         void OnTriggerEnter(Collider other)
         {
             OnZoneHintTriggerEnter(this, new ZoneHintEventArgs { OtherObject = other.gameObject });
+        }
+
+        #endregion
+
+        #region Private Methods
+        private void CheckRigidBody()
+        {
+            if (GetComponent<Rigidbody>() == null)
+            {
+                gameObject.AddComponent<Rigidbody>();
+            }
+        }
+        private void CheckBoxCollider()
+        {
+            _collider = GetComponent<BoxCollider>();
+            if (_collider == null)
+            {
+                _collider = gameObject.AddComponent<BoxCollider>();
+                _collider.isTrigger = true;
+            }
         }
 
         #endregion
