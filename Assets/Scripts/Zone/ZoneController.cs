@@ -61,6 +61,18 @@ namespace Kubs
 
         #region Public methods
 
+        public void Attach(ProgramBlock block)
+        {
+            _zoneSnapCtrl.Snap(block.gameObject);
+        }
+        public ProgramBlock Unattach()
+        {
+            var unattachedBlock = _attachedProgramBlock;
+            _zoneSnapCtrl.Unsnap();
+            return unattachedBlock;
+        }
+
+
         // public bool Attach(GameObject obj)
         // {
         //     _debugger.Log("Attach: ");

@@ -26,6 +26,18 @@ namespace Kubs
 
         private GameObject _child_Vrtk_SnapDropZone;
 
+        #region Public Methods
+
+        public void Snap(GameObject obj) {
+            _child_Vrtk_SnapDropZone.GetComponent<VRTK_SnapDropZone>().ForceSnap(obj);
+        }
+        public void Unsnap() {
+            _child_Vrtk_SnapDropZone.GetComponent<VRTK_SnapDropZone>().ForceUnsnap();
+        }
+
+        #endregion
+
+
         void Start()
         {
             _child_Vrtk_SnapDropZone = gameObject.transform.GetChild(CHILD_INDEX_VRTKSNAPDROPZONE).gameObject;
