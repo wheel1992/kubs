@@ -161,15 +161,6 @@ namespace Kubs
         }
         private void AddZoneAt(int index)
         {
-            Debug.Log("AddZoneAt: index " + index);
-            if (index < 0 || index >= _zones.Count)
-            {
-                throw new IndexOutOfRangeException("AddZoneAt: index " + index + " is out of range");
-            }
-
-
-
-
             // var currentIndexPosition = _zones[index].transform.position;
             // var currentIndexLocalPosition = _zones[index].transform.localPosition;
             // var prevLocalPosition = currentIndexLocalPosition;
@@ -242,29 +233,6 @@ namespace Kubs
                     To = index + 1
                 });
         }
-        private void UpdateZoneIndices()
-        {
-            for (int i = 0; i < _zones.Count; i++)
-            {
-                var zone = GetZoneControllerByGameObject(_zones[i]);
-                zone.Index = i;
-            }
-        }
-        private GameObject CreateZoneGameObject(Vector3 availablePosition, int availableIndex)
-        {
-            //Debug.Log("CreateZoneGameObject: new zone index " + availableIndex);
-
-            var zone = (GameObject)Instantiate(
-             zonePrefab,
-             availablePosition,
-             Quaternion.identity);
-            zone.GetComponent<ZoneController>().Index = availableIndex;
-
-            // Put new zone under this gameobject (parent)
-            zone.transform.SetParent(gameObject.transform);
-
-            return zone;
-        }
         private void RemoveZoneAt(int index)
         {
             if (index < 0 || index >= _zones.Count)
@@ -311,9 +279,31 @@ namespace Kubs
 
             }
         }
+        private void UpdateZoneIndices()
+        {
+            for (int i = 0; i < _zones.Count; i++)
+            {
+                var zone = GetZoneControllerByGameObject(_zones[i]);
+                zone.Index = i;
+            }
+        }
 
         #region Private Get Methods
+        private GameObject CreateZoneGameObject(Vector3 availablePosition, int availableIndex)
+        {
+            //Debug.Log("CreateZoneGameObject: new zone index " + availableIndex);
 
+            var zone = (GameObject)Instantiate(
+             zonePrefab,
+             availablePosition,
+             Quaternion.identity);
+            zone.GetComponent<ZoneController>().Index = availableIndex;
+
+            // Put new zone under this gameobject (parent)
+            zone.transform.SetParent(gameObject.transform);
+
+            return zone;
+        }
         private GameObject GetChildAt(int index)
         {
             if (transform.childCount == 0) { return null; }
