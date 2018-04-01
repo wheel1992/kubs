@@ -23,6 +23,7 @@ namespace Kubs
 
         //private KubsDebug _debugger;
         private List<GameObject> _zones;
+        private Stack<ShiftRecord> _stackShifts;
 
         private const int INDEX_DEFAULT_CHILD_ZONE = 0;
         private const bool IS_DEBUG = true;
@@ -37,6 +38,7 @@ namespace Kubs
         void Start()
         {
             _zones = new List<GameObject>();
+            _stackShifts = new Stack<ShiftRecord>();
             Init();
         }
 
@@ -56,14 +58,28 @@ namespace Kubs
         #region Private Event Handler Listener 
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
+            var smallestIndex = args.HoveredIndices.Min(index => index);
+            if (IsZoneEmpty(smallestIndex))
+            {
+                // If there's two collided zones
+                // And the smallest index is not empty
+                // Suggest to user that the smallest index is available
+                // ...
+                return;
+            }
+
             var largestIndex = args.HoveredIndices.Max(index => index);
             if ((args.HoveredIndices.Count == 1 && !IsZoneEmpty(largestIndex)) ||
                 (args.HoveredIndices.Count > 1 && IsNextZoneEmpty(largestIndex)))
             {
                 return;
             }
-            AddZoneAt(largestIndex);
+            Shift(largestIndex);
             UpdateZoneIndices();
+            if (!IsTailEmpty())
+            {
+                AddZoneTail();
+            }
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
@@ -81,7 +97,7 @@ namespace Kubs
             if (IsNextZoneNull(args.Index))
             {
                 Debug.Log("HandleZoneSnapped: Add next zone from " + args.Index);
-                AddZone(args.Index);
+                AddZoneNext(args.Index);
             }
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
@@ -112,8 +128,11 @@ namespace Kubs
 
         #endregion
 
-
-        private void AddZone(int currentIndex)
+        private void AddZoneTail()
+        {
+            AddZoneNext(_zones.Count - 1);
+        }
+        private void AddZoneNext(int currentIndex)
         {
             var nextIndex = currentIndex + 1;
             var currentZone = _zones[currentIndex];
@@ -128,7 +147,17 @@ namespace Kubs
             //Debug.Log("AddNextZone nextZoneCtrl index = " + nextZoneCtrl.Index);
             RegisterZoneEventHandler(nextZoneCtrl);
 
-            _zones.Insert(nextIndex, nextZone);
+            if (nextIndex == _zones.Count)
+            {
+                // New index is the list size
+                // Use Add instead of Insert
+                _zones.Add(nextZone);
+            }
+            else
+            {
+                _zones.Insert(nextIndex, nextZone);
+            }
+
         }
         private void AddZoneAt(int index)
         {
@@ -138,14 +167,6 @@ namespace Kubs
                 throw new IndexOutOfRangeException("AddZoneAt: index " + index + " is out of range");
             }
 
-            for (int i = index; i < _zones.Count; i++)
-            {
-                // Create one at right of index
-                AddZone(index);
-                UpdateZoneIndices();
-
-                //_zones[index]
-            }
 
 
 
@@ -177,6 +198,40 @@ namespace Kubs
 
             // RegisterZoneEventHandler(tempZoneCtrl);
             // _zones.Insert(index, tempZone);
+        }
+        private void Shift(int index)
+        {
+            if (IsZoneEmpty(index))
+            {
+                // Current index is not occupied
+                // Does not need to shift
+                return;
+            }
+
+            if (!IsNextZoneEmpty(index))
+            {
+                Shift(index + 1);
+            }
+
+            // Execute shifting when...
+            // 1. Current index is not empty
+            // 2. Next index is empty
+
+            /* 
+            * Detach block from current index
+            * Attach block to next index
+            * Add a shift record in stack for keeping track
+            */
+            var block = GetZoneControllerByGameObject(_zones[index]).Detach();
+            GetZoneControllerByGameObject(_zones[index + 1]).Attach(block);
+
+            // Add to stack
+            _stackShifts.Push(
+                new ShiftRecord
+                {
+                    From = index,
+                    To = index + 1
+                });
         }
         private void UpdateZoneIndices()
         {
@@ -242,7 +297,7 @@ namespace Kubs
                 // Add one empty zone to right
                 if (_zones.Count == 1)
                 {
-                    AddZone(0);
+                    AddZoneNext(0);
                 }
 
             }
@@ -261,7 +316,8 @@ namespace Kubs
         }
         private bool IsTailEmpty()
         {
-            return GetZoneControllerByGameObject(_zones[_zones.Count - 1]).IsOccupied;
+            if (_zones.Count == 0) { return false; }
+            return IsZoneEmpty(_zones.Count - 1);
         }
         private bool IsNextZoneNull(int index)
         {
