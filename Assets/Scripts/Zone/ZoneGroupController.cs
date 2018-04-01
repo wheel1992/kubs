@@ -23,7 +23,8 @@ namespace Kubs
 
         //private KubsDebug _debugger;
         private List<GameObject> _zones;
-        private Stack<ShiftRecord> _stackShifts;
+        private Dictionary<int, Stack<ShiftRecord>> _mapShifts;
+        //private Stack<ShiftRecord> _stackShifts;
 
         private const int INDEX_DEFAULT_CHILD_ZONE = 0;
         private const bool IS_DEBUG = true;
@@ -38,7 +39,8 @@ namespace Kubs
         void Start()
         {
             _zones = new List<GameObject>();
-            _stackShifts = new Stack<ShiftRecord>();
+            _mapShifts = new Dictionary<int, Stack<ShiftRecord>>();
+            //_stackShifts = new Stack<ShiftRecord>();
             Init();
         }
 
@@ -74,30 +76,28 @@ namespace Kubs
             {
                 return;
             }
-            Shift(largestIndex);
+            Shift(largestIndex, largestIndex);
             UpdateZoneIndices();
-            if (!IsTailEmpty())
-            {
-                AddZoneTail();
-            }
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
             Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
             if (args.UnhoveredIndex != -1)
             {
-                //var largestIndex = args.HoveredIndices.Max(index => index);
                 RemoveZoneAt(args.UnhoveredIndex);
                 UpdateZoneIndices();
             }
-
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
-            if (IsNextZoneNull(args.Index))
+            // if (IsNextZoneNull(args.Index))
+            // {
+            //     Debug.Log("HandleZoneSnapped: Add next zone from " + args.Index);
+            //     AddZoneNext(args.Index);
+            // }
+            if (!IsTailEmpty())
             {
-                Debug.Log("HandleZoneSnapped: Add next zone from " + args.Index);
-                AddZoneNext(args.Index);
+                AddZoneTail();
             }
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
@@ -199,7 +199,16 @@ namespace Kubs
             // RegisterZoneEventHandler(tempZoneCtrl);
             // _zones.Insert(index, tempZone);
         }
-        private void Shift(int index)
+        private void Unshift(int hoveredIndex)
+        {
+            while (!IsStackShiftsEmpty(hoveredIndex))
+            {
+                var record = GetStackShiftsByHoveredIndex(hoveredIndex).Pop();
+                var block = GetZoneControllerByGameObject(_zones[record.To]).Detach();
+                GetZoneControllerByGameObject(_zones[record.From]).Attach(block);
+            }
+        }
+        private void Shift(int hoveredIndex, int index)
         {
             if (IsZoneEmpty(index))
             {
@@ -210,7 +219,7 @@ namespace Kubs
 
             if (!IsNextZoneEmpty(index))
             {
-                Shift(index + 1);
+                Shift(hoveredIndex, index + 1);
             }
 
             // Execute shifting when...
@@ -226,7 +235,7 @@ namespace Kubs
             GetZoneControllerByGameObject(_zones[index + 1]).Attach(block);
 
             // Add to stack
-            _stackShifts.Push(
+            InsertStackShifts(hoveredIndex,
                 new ShiftRecord
                 {
                     From = index,
@@ -318,6 +327,27 @@ namespace Kubs
         {
             if (_zones.Count == 0) { return false; }
             return IsZoneEmpty(_zones.Count - 1);
+        }
+        private void InsertStackShifts(int index, ShiftRecord record)
+        {
+            var stackShifts = GetStackShiftsByHoveredIndex(index);
+            stackShifts.Push(record);
+            _mapShifts[index] = stackShifts;
+        }
+        private Stack<ShiftRecord> GetStackShiftsByHoveredIndex(int index)
+        {
+            //var stackShifts = _mapShifts.get
+            Stack<ShiftRecord> stackShifts;
+            if (_mapShifts.TryGetValue(index, out stackShifts))
+            {
+                return stackShifts;
+            }
+            return new Stack<ShiftRecord>();
+        }
+        private bool IsStackShiftsEmpty(int index)
+        {
+            var stackShifts = GetStackShiftsByHoveredIndex(index);
+            return stackShifts.Count == 0;
         }
         private bool IsNextZoneNull(int index)
         {
