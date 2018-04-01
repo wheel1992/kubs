@@ -326,7 +326,6 @@ namespace Kubs
         }
         private Stack<ShiftRecord> GetStackShiftsByHoveredIndex(int index)
         {
-            //var stackShifts = _mapShifts.get
             Stack<ShiftRecord> stackShifts;
             if (_mapShifts.TryGetValue(index, out stackShifts))
             {

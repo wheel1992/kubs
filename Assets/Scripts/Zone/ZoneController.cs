@@ -9,13 +9,11 @@ namespace Kubs
 {
     public struct ZoneEventArgs
     {
-        //public GameObject OtherObject;
         public int Index;
     }
 
     public struct ZoneHoverEventArgs
     {
-        //public GameObject OtherObject;
         public IList<int> HoveredIndices;
         public int UnhoveredIndex;
     }
@@ -31,28 +29,21 @@ namespace Kubs
     {
         public delegate void ZoneEventHandler(object sender, ZoneEventArgs args);
         public delegate void ZoneHoverEventHandler(object sender, ZoneHoverEventArgs args);
-
         public event ZoneEventHandler OnZoneSnapped;
         public event ZoneEventHandler OnZoneUnsnapped;
         public event ZoneHoverEventHandler OnZonesHovered;
         public event ZoneHoverEventHandler OnZonesUnhovered;
-
         [HideInInspector]
         public bool IsOccupied = false;
         [HideInInspector]
         public bool IsTemporary = false;
-
-        const string TAG_ZONE_BASE = "ZoneBase";
-        const string TAG_ZONE_HINT = "ZoneHint";
-        const string TAG_ZONE_SNAP = "ZoneSnap";
-        const string TAG_ZONE_CONTAINER = "ZoneContainer";
-
-        const bool IS_DEBUG = true;
-
         public int Index { get; set; }
-
+        private const string TAG_ZONE_BASE = "ZoneBase";
+        private const string TAG_ZONE_HINT = "ZoneHint";
+        private const string TAG_ZONE_SNAP = "ZoneSnap";
+        private const string TAG_ZONE_CONTAINER = "ZoneContainer";
+        private const bool IS_DEBUG = true;
         private KubsDebug _debugger;
-
         private ZoneBaseController _zoneBaseCtrl;
         //private GameObject _zoneContainerGameObject;
         private ZoneHintController _zoneHintCtrl;
@@ -63,51 +54,20 @@ namespace Kubs
 
         public void Attach(ProgramBlock block)
         {
-            _zoneSnapCtrl.Snap(block.gameObject);
             IsOccupied = true;
+            // Return result in callback HandleZoneOnSnapped
+            _zoneSnapCtrl.Snap(block.gameObject);
             //_attachedProgramBlock = block;
             //SetAttachedProgramBlockPosition(new Vector3(transform.position.x, 0.9f, transform.position.z));
         }
         public ProgramBlock Detach()
         {
             var unattachedBlock = _attachedProgramBlock;
+            // Return result in callback HandleZoneOnUnsnapped
             _zoneSnapCtrl.Unsnap();
             IsOccupied = false;
             return unattachedBlock;
         }
-
-
-        // public bool Attach(GameObject obj)
-        // {
-        //     _debugger.Log("Attach: ");
-        //     if (obj == null)
-        //     {
-        //         isOccupied = false;
-        //         throw new ArgumentException("Attach: GameObject parameter is null");
-        //     }
-
-        //     var interactableObject = GetVRTKInteractableObject(obj);
-        //     if (interactableObject == null)
-        //     {
-        //         throw new NullReferenceException("Attach: GameObject does not have VRTK_InteractableObject script");
-        //     }
-
-        //     obj.transform.position = GetChildZoneHint().transform.position;
-        //     isOccupied = true;
-        //     return true;
-        // }
-        // public bool Detach()
-        // {
-        //     // Unparent attached object from here
-        //     // ...
-        //     // _attachedObject = null;
-        //     // isOccupied = false;
-        //     return true;
-        // }
-        // public GameObject GetAttachedObject()
-        // {
-        //     return _attachedObject;
-        // }
 
         #endregion
 
@@ -130,8 +90,6 @@ namespace Kubs
             _zoneSnapCtrl.OnUnsnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnUnsnapped);
 
             _zoneBaseCtrl = GetChildZoneBase();
-
-            //_zoneContainerGameObject = GetChildByTagName(TAG_ZONE_CONTAINER);
         }
 
         // Update is called once per frame
@@ -227,52 +185,7 @@ namespace Kubs
 
         #endregion
 
-
         #region Private methods
-
-        // private IEnumerator AttemptAttach(GameObject objToAttach)
-        // {
-        //     _debugger.Log("AttemptAttach");
-        //     yield return new WaitForEndOfFrame();
-        //     // Do the attach block to zone here
-        //     // ...
-        // }
-        // private void CheckRigidBody()
-        // {
-        //     if (GetComponent<Rigidbody>() == null)
-        //     {
-        //         gameObject.AddComponent<Rigidbody>();
-        //     }
-        // }
-        // private void HandleZoneHintDisplay(object sender, ZoneHintEventArgs args)
-        // {
-        // }
-        // private void HandleZoneHintTriggerEnter(object sender, ZoneHintEventArgs args)
-        // {
-        //     _debugger.Log("HandleZoneHintTriggerEnter");
-        //     if (sender != null && sender is ZoneHintController)
-        //     {
-        //         //var zoneHint = ((GameObject)sender).GetComponent<ZoneHintController>();
-        //         _debugger.Log("HandleZoneHintTriggerEnter: other object = " + args.OtherObject.name);
-        //         if (!isOccupied &&
-        //             args.OtherObject != null &&
-        //             args.OtherObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORWARD) == 0)
-        //         {
-        //             Attach(args.OtherObject);
-        //         }
-        //     }
-        // }
-        // private void HandleZoneHintTriggerExit(object sender, ZoneHintEventArgs args)
-        // {
-
-        // }
-        // private void RegisterZoneHintEvents()
-        // {
-        //     GetChildZoneHint().OnZoneHintDisplay += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintDisplay);
-        //     GetChildZoneHint().OnZoneHintTriggerEnter += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintTriggerEnter);
-        //     GetChildZoneHint().OnZoneHintTriggerExit += new ZoneHintController.ZoneHintEventHandler(HandleZoneHintTriggerExit);
-        // }
-
         public void SetAttachedProgramBlockPosition(Vector3 newPos)
         {
             if (_attachedProgramBlock != null)
@@ -315,10 +228,6 @@ namespace Kubs
             }
             return null;
         }
-        // private Vector3 GetPosition()
-        // {
-        //     return transform.position;
-        // }
 
         #endregion
     }
