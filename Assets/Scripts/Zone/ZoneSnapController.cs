@@ -37,6 +37,7 @@ namespace Kubs
 
         #endregion
 
+        #region Private Lifecycle Methods
 
         void Start()
         {
@@ -46,6 +47,11 @@ namespace Kubs
         void Update()
         {
         }
+
+        #endregion
+
+        #region Private Methods
+
         private void RegisterVRTKSnapDropZoneEventHandler(GameObject snapDropZone)
         {
             snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneEntered);
@@ -98,8 +104,9 @@ namespace Kubs
             }
         }
 
-        #region Private Get methods
+        #endregion
 
+        #region Private Get methods
         private ProgramBlock GetProgramBlockByObject(GameObject obj)
         {
             return obj.GetComponent<ProgramBlock>();
