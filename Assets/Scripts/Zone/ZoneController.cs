@@ -64,11 +64,15 @@ namespace Kubs
         public void Attach(ProgramBlock block)
         {
             _zoneSnapCtrl.Snap(block.gameObject);
+            IsOccupied = true;
+            //_attachedProgramBlock = block;
+            //SetAttachedProgramBlockPosition(new Vector3(transform.position.x, 0.9f, transform.position.z));
         }
         public ProgramBlock Detach()
         {
             var unattachedBlock = _attachedProgramBlock;
             _zoneSnapCtrl.Unsnap();
+            IsOccupied = false;
             return unattachedBlock;
         }
 
