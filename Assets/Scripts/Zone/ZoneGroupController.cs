@@ -8,8 +8,12 @@ namespace Kubs
 {
     public struct ZoneGroupEventArgs
     {
-        //public GameObject OtherObject;
         public int Index;
+    }
+    public class ShiftRecord
+    {
+        public int From { get; set; }
+        public int To { get; set; }
     }
     public class ZoneGroupController : MonoBehaviour
     {
