@@ -35,8 +35,14 @@ namespace Kubs
 		{
 			if (Array.TrueForAll(_stageTriggers, t => t.isTriggered))
 			{
-				StagesManager.LoadStage(stage);
+				var time = GetComponent<Fading>().BeginFade(1);
+				Invoke("LoadStage", time);
 			}
+		}
+
+		private void LoadStage()
+		{
+			StagesManager.LoadStage(stage);
 		}
 	}
 }
