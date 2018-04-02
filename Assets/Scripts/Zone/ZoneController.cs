@@ -57,15 +57,13 @@ namespace Kubs
             IsOccupied = true;
             // Return result in callback HandleZoneOnSnapped
             _zoneSnapCtrl.Snap(block.gameObject);
-            //_attachedProgramBlock = block;
-            //SetAttachedProgramBlockPosition(new Vector3(transform.position.x, 0.9f, transform.position.z));
         }
         public ProgramBlock Detach()
         {
+            IsOccupied = false;
             var unattachedBlock = _attachedProgramBlock;
             // Return result in callback HandleZoneOnUnsnapped
             _zoneSnapCtrl.Unsnap();
-            IsOccupied = false;
             return unattachedBlock;
         }
 
@@ -120,7 +118,7 @@ namespace Kubs
             {
                 args.WhichBlock.ResetCollidedZoneIndices();
                 args.WhichBlock.ZoneIndex = this.Index;
-
+                args.WhichBlock.State = State.Attach;
                 _attachedProgramBlock = args.WhichBlock;
             }
             OnZoneSnapped(this, new ZoneEventArgs { Index = this.Index });
@@ -131,6 +129,7 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
+                args.WhichBlock.State = State.Detach;
             }
             _attachedProgramBlock = null;
             OnZoneUnsnapped(this, new ZoneEventArgs { Index = this.Index });
@@ -140,8 +139,10 @@ namespace Kubs
             if (args.CollidedObject != null)
             {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
-                if (collidedBlock != null && !collidedBlock.HasZoneIndex())
+                // if (collidedBlock != null && !collidedBlock.HasZoneIndex())
+                if (collidedBlock != null && collidedBlock.State == State.Detach)
                 {
+                    Debug.Log("HandleZoneHintOnTriggerEnter:");
                     if (collidedBlock.HasCollidedZoneIndex(this.Index))
                     {
                         // ProgramBlock keeps hovering on top of this zone
@@ -167,8 +168,10 @@ namespace Kubs
             if (args.CollidedObject != null)
             {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
-                if (collidedBlock != null)
+                // if (collidedBlock != null && collidedBlock.HasZoneIndex())
+                if (collidedBlock != null && collidedBlock.State == State.Detach)
                 {
+                    Debug.Log("HandleZoneHintOnTriggerExit:");
                     //Debug.Log("HandleZoneHintOnTriggerExit: collided is ProgramBlock!");
                     collidedBlock.RemoveCollidedZoneIndex(this.Index);
                     collidedBlock.PrintCollidedZoneIndices();

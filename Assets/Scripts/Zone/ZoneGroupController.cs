@@ -14,7 +14,8 @@ namespace Kubs
     {
         public int From { get; set; }
         public int To { get; set; }
-        public override string ToString() {
+        public override string ToString()
+        {
             return "ShiftRecord: From " + From + " To " + To;
         }
     }
@@ -43,14 +44,12 @@ namespace Kubs
         {
             _zones = new List<GameObject>();
             _mapShifts = new Dictionary<int, Stack<ShiftRecord>>();
-            //_stackShifts = new Stack<ShiftRecord>();
             Init();
         }
 
         // Update is called once per frame
         void Update()
         {
-
         }
 
         #endregion
@@ -80,6 +79,7 @@ namespace Kubs
                 Debug.Log("HandleZonesHovered: largest zone = " + largestIndex + " is empty");
                 return;
             }
+            //StartCoroutine();
             Shift(largestIndex, largestIndex);
             UpdateZoneIndices();
         }
@@ -88,18 +88,12 @@ namespace Kubs
             Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
             if (args.UnhoveredIndex != -1)
             {
-                //RemoveZoneAt(args.UnhoveredIndex);
-                Unshift(args.UnhoveredIndex);
+                StartCoroutine(Unshift(args.UnhoveredIndex));
                 UpdateZoneIndices();
             }
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
-            // if (IsNextZoneNull(args.Index))
-            // {
-            //     Debug.Log("HandleZoneSnapped: Add next zone from " + args.Index);
-            //     AddZoneNext(args.Index);
-            // }
             if (!IsTailEmpty())
             {
                 AddZoneTail();
@@ -107,7 +101,6 @@ namespace Kubs
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
-
         }
         #endregion
 
@@ -166,47 +159,18 @@ namespace Kubs
             }
 
         }
-        private void AddZoneAt(int index)
-        {
-            // var currentIndexPosition = _zones[index].transform.position;
-            // var currentIndexLocalPosition = _zones[index].transform.localPosition;
-            // var prevLocalPosition = currentIndexLocalPosition;
-            // // Move position from index to last zones to right
-            // for (int i = index; i < _zones.Count; i++)
-            // {
-            //     var newPos = new Vector3(
-            //         prevLocalPosition.x,
-            //         prevLocalPosition.y,
-            //         prevLocalPosition.z + _zones[i].transform.localScale.z);
-            //     _zones[i].transform.localPosition = newPos;
-
-            //     GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
-            //         new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
-
-            //     //Debug.Log("Move zone " + i + " from " + prevLocalPosition+ " to " + newPos);
-            //     prevLocalPosition = newPos;
-            // }
-
-            // Debug.Log("AddZoneAt: insert temp zone at index " + index);
-
-            // var tempZone = CreateZoneGameObject(currentIndexPosition, index);
-            // var tempZoneCtrl = GetZoneControllerByGameObject(tempZone);
-            // tempZoneCtrl.IsTemporary = true;
-            // tempZoneCtrl.IsOccupied = false;
-
-            // RegisterZoneEventHandler(tempZoneCtrl);
-            // _zones.Insert(index, tempZone);
-        }
-        private void Unshift(int hoveredIndex)
+        private IEnumerator Unshift(int hoveredIndex)
         {
             while (!IsStackShiftsEmpty(hoveredIndex))
             {
                 var record = GetStackShiftsByHoveredIndex(hoveredIndex).Pop();
                 Debug.Log("Unshift: " + record.ToString());
+                yield return null;
                 var block = GetZoneControllerByGameObject(_zones[record.To]).Detach();
                 Debug.Log("Unshift: Detach block = " + block);
                 GetZoneControllerByGameObject(_zones[record.From]).Attach(block);
             }
+            yield break;
         }
         private void Shift(int hoveredIndex, int index)
         {
@@ -249,52 +213,52 @@ namespace Kubs
                     To = index + 1
                 });
         }
-        private void RemoveZoneAt(int index)
-        {
-            if (index < 0 || index >= _zones.Count)
-            {
-                throw new IndexOutOfRangeException("RemoveZone: index " + index + " is out of range");
-            }
+        // private void RemoveZoneAt(int index)
+        // {
+        //     if (index < 0 || index >= _zones.Count)
+        //     {
+        //         throw new IndexOutOfRangeException("RemoveZone: index " + index + " is out of range");
+        //     }
 
-            var zoneCtrl = GetZoneControllerByGameObject(_zones[index]);
-            // Debug.Log("RemoveZoneAt: index " + index + " IsTemporary = " + zoneCtrl.IsTemporary + " IsOccupied = " + zoneCtrl.IsOccupied);
-            if (zoneCtrl.IsTemporary && !zoneCtrl.IsOccupied)
-            {
-                var prevLocalPosition = _zones[index].transform.localPosition;
-                // Revert position from index to last zones to left
-                for (int i = index + 1; i < _zones.Count; i++)
-                {
-                    var currentIndexLocalPosition = _zones[index].transform.localPosition;
+        //     var zoneCtrl = GetZoneControllerByGameObject(_zones[index]);
+        //     // Debug.Log("RemoveZoneAt: index " + index + " IsTemporary = " + zoneCtrl.IsTemporary + " IsOccupied = " + zoneCtrl.IsOccupied);
+        //     if (zoneCtrl.IsTemporary && !zoneCtrl.IsOccupied)
+        //     {
+        //         var prevLocalPosition = _zones[index].transform.localPosition;
+        //         // Revert position from index to last zones to left
+        //         for (int i = index + 1; i < _zones.Count; i++)
+        //         {
+        //             var currentIndexLocalPosition = _zones[index].transform.localPosition;
 
-                    var newPos = new Vector3(
-                        prevLocalPosition.x,
-                        prevLocalPosition.y,
-                        prevLocalPosition.z);
-                    _zones[i].transform.localPosition = newPos;
+        //             var newPos = new Vector3(
+        //                 prevLocalPosition.x,
+        //                 prevLocalPosition.y,
+        //                 prevLocalPosition.z);
+        //             _zones[i].transform.localPosition = newPos;
 
-                    GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
-                        new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
+        //             GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
+        //                 new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
 
-                    // Debug.Log("Revert zone " + i + " from " + currentIndexLocalPosition + " to " + prevLocalPosition);
+        //             // Debug.Log("Revert zone " + i + " from " + currentIndexLocalPosition + " to " + prevLocalPosition);
 
-                    prevLocalPosition = newPos;
-                }
+        //             prevLocalPosition = newPos;
+        //         }
 
-                Debug.Log("RemoveZoneAt: remove temp zone at index " + index);
+        //         Debug.Log("RemoveZoneAt: remove temp zone at index " + index);
 
-                var tempZoneCtrl = GetZoneControllerByGameObject(_zones[index]);
-                Destroy(tempZoneCtrl);
-                _zones.RemoveAt(index);
+        //         var tempZoneCtrl = GetZoneControllerByGameObject(_zones[index]);
+        //         Destroy(tempZoneCtrl);
+        //         _zones.RemoveAt(index);
 
-                // Left only 1 zone
-                // Add one empty zone to right
-                if (_zones.Count == 1)
-                {
-                    AddZoneNext(0);
-                }
+        //         // Left only 1 zone
+        //         // Add one empty zone to right
+        //         if (_zones.Count == 1)
+        //         {
+        //             AddZoneNext(0);
+        //         }
 
-            }
-        }
+        //     }
+        // }
         private void UpdateZoneIndices()
         {
             for (int i = 0; i < _zones.Count; i++)

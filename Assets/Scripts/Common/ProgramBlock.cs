@@ -14,7 +14,7 @@ namespace Kubs
         public event HoverEventHandler Unhover;
         public event SnapEventHandler Snap;
         public ProgramBlockType Type { get; set; }
-        public State State { get; set; }
+
         public int ZoneId { get; set; }
         [HideInInspector]
         public int HoverZoneId = -1;
@@ -22,7 +22,7 @@ namespace Kubs
         // private VRTK_InteractableObject _interactableObject;
 
         // v2 here
-
+        public State State { get; set; }
         [HideInInspector]
         public int ZoneIndex = -1;
         private List<int> _collidedZoneIndices;
@@ -35,7 +35,6 @@ namespace Kubs
         }
         void Start()
         {
-
             _collidedZoneIndices = new List<int>();
 
             for (int i = 0; i < transform.childCount; i++)
@@ -45,6 +44,8 @@ namespace Kubs
                     transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
+            
+            State = State.Detach;
         }
         private void Update()
         {
@@ -82,13 +83,10 @@ namespace Kubs
         {
             _collidedZoneIndices = new List<int>();
         }
-        public void ResetZoneIndex() {
+        public void ResetZoneIndex()
+        {
             ZoneIndex = -1;
         }
-        // public int GetLargestCollidedZoneIndex()
-        // {
-        //     return _collidedZoneIndices.Max(index => index);
-        // }
         public void PrintCollidedZoneIndices()
         {
             string msg = "";
@@ -98,8 +96,9 @@ namespace Kubs
             }
             Debug.Log(msg);
         }
-        public void SetParent(Transform parent) {
-            
+        public void SetParent(Transform parent)
+        {
+
             transform.SetParent(parent);
         }
         public List<int> GetCollidedZoneIndices()
@@ -121,7 +120,9 @@ namespace Kubs
             }
             return false;
         }
-        public bool HasZoneIndex() {
+        public bool HasZoneIndex()
+        {
+            Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
             return ZoneIndex != -1;
         }
 
@@ -335,9 +336,10 @@ namespace Kubs
 
     public enum State
     {
-        UnsnapIdle = 0,
-        UnsnapHover = 1,
-        SnapIdle = 2,
-        SnapTempMove = 3
+        // UnsnapIdle = 0,
+        // UnsnapHover = 1,
+        Detach = 1,
+        Attach = 2,
+        AttachMove = 3
     }
 }

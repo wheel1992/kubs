@@ -105,7 +105,7 @@ namespace Kubs
                 //Debug.Log("BEFORE PRINT ");
                 //PrintBlockTypes();
 
-                if (block.State != State.SnapTempMove)
+                if (block.State != State.AttachMove)
                 {
                     if (IsPreviousZoneEmpty(zoneId))
                     {
@@ -166,7 +166,7 @@ namespace Kubs
             // By right all items in stack are still alive
             foreach (StackItemMoveZone item in _stackMoveZones)
             {
-                GetProgramBlockByObject(GetGameObjectBySnapIndex(item.To)).State = State.SnapIdle;
+                GetProgramBlockByObject(GetGameObjectBySnapIndex(item.To)).State = State.Attach;
             }
 
             ClearStackMoveZone();
@@ -271,11 +271,11 @@ namespace Kubs
 
             if (isTemporary)
             {
-                block.State = State.SnapTempMove;
+                block.State = State.AttachMove;
             }
             else
             {
-                block.State = State.SnapIdle;
+                block.State = State.Attach;
             }
         }
         private void ClearStackMoveZone()
