@@ -91,12 +91,12 @@ namespace Kubs
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
             Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
-            PrintZones();
             if (args.UnhoveredIndex != -1)
             {
                 //StartCoroutine(Unshift(args.UnhoveredIndex));
                 Reposition();
                 AddZoneTailIfEmpty();
+                PrintZones();
                 //UpdateZoneIndices();
 
                 if (HasShiftTemporary)
@@ -106,7 +106,6 @@ namespace Kubs
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
             Debug.Log("HandleZoneSnapped");
-            PrintZones();
             if (HasShiftTemporary)
             {
                 HasShiftTemporary = false;
@@ -115,6 +114,8 @@ namespace Kubs
 
             Reposition();
             AddZoneTailIfEmpty();
+            PrintZones();
+
             //StartCoroutine(FlushLeft(args.Index));
             //UpdateZoneIndices();
             // //Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
@@ -129,6 +130,7 @@ namespace Kubs
         {
             Debug.Log("HandleZoneUnsnapped");
             PrintZones();
+            UpdateZoneIndices();
             // if (!HasShiftTemporary)
             // {
             //     if (IsZoneEmpty(args.Index))
@@ -136,7 +138,7 @@ namespace Kubs
             //         DestroyZone(args.Index);
             //     }
             // }
-            UpdateZoneIndices();
+            
         }
         #endregion
 
@@ -323,10 +325,14 @@ namespace Kubs
                 var i = 0;
                 foreach (var zone in _zones)
                 {
-                    var pos = new Vector3(
+                    // Set new position
+                    zone.transform.position = new Vector3(
                         _defaultFirstZonePosition.x,
                         _defaultFirstZonePosition.y,
                         _defaultFirstZonePosition.z + (zone.transform.localScale.z * i));
+                    // Update zone index
+                    GetZoneControllerByGameObject(zone).Index = i;
+                    // Increment counter
                     i++;
                 }
             }
