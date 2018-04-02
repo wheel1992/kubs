@@ -84,8 +84,6 @@ namespace Kubs
             StartCoroutine(Shift(largestIndex, largestIndex));
             UpdateZoneIndices();
             HasShiftTemporary = true;
-            //RemoveExtraTails();
-            //UpdateZoneIndices();
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
@@ -94,9 +92,8 @@ namespace Kubs
             {
                 StartCoroutine(Unshift(args.UnhoveredIndex));
                 UpdateZoneIndices();
-                HasShiftTemporary = false;
-                //RemoveExtraTails();
-                //UpdateZoneIndices();
+                if (HasShiftTemporary)
+                    HasShiftTemporary = false;
             }
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
@@ -109,7 +106,8 @@ namespace Kubs
 
             StartCoroutine(FlushLeft(args.Index));
             UpdateZoneIndices();
-            Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
+            //Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
+            PrintZones();
             if (!IsTailEmpty())
             {
                 AddZoneTail();
@@ -188,11 +186,14 @@ namespace Kubs
             if (IsPreviousZoneEmpty(index))
             {
                 var block = GetZoneControllerByGameObject(_zones[index]).Detach(true);
-                Debug.Log("Unshift: Detach block = " + block);
+                Debug.Log("FlushLeft: Detach block = " + block);
                 yield return null;
                 GetZoneControllerByGameObject(_zones[index - 1]).Attach(block);
                 yield return null;
-                DestroyZone(index);
+                // if (IsNextZoneEmpty(index))
+                // {
+                //     DestroyZone(index);
+                // }
             }
             yield break;
         }
@@ -228,7 +229,7 @@ namespace Kubs
 
             if (IsTail(index))
             {
-                Debug.Log("Shift: index = " + index + " is the last zone. Not shifting anything");
+                //Debug.Log("Shift: index = " + index + " is the last zone. Not shifting anything");
                 yield break;
             }
             // Execute shifting when...
@@ -241,7 +242,7 @@ namespace Kubs
             * Add a shift record in stack for keeping track
             */
             var block = GetZoneControllerByGameObject(_zones[index]).Detach(true);
-            Debug.Log("Shift: Detach block = " + block);
+            //Debug.Log("Shift: Detach block = " + block);
             yield return null;
             GetZoneControllerByGameObject(_zones[index + 1]).Attach(block);
             yield return null;
@@ -254,52 +255,6 @@ namespace Kubs
                 });
             yield break;
         }
-        // private void RemoveZoneAt(int index)
-        // {
-        //     if (index < 0 || index >= _zones.Count)
-        //     {
-        //         throw new IndexOutOfRangeException("RemoveZone: index " + index + " is out of range");
-        //     }
-
-        //     var zoneCtrl = GetZoneControllerByGameObject(_zones[index]);
-        //     // Debug.Log("RemoveZoneAt: index " + index + " IsTemporary = " + zoneCtrl.IsTemporary + " IsOccupied = " + zoneCtrl.IsOccupied);
-        //     if (zoneCtrl.IsTemporary && !zoneCtrl.IsOccupied)
-        //     {
-        //         var prevLocalPosition = _zones[index].transform.localPosition;
-        //         // Revert position from index to last zones to left
-        //         for (int i = index + 1; i < _zones.Count; i++)
-        //         {
-        //             var currentIndexLocalPosition = _zones[index].transform.localPosition;
-
-        //             var newPos = new Vector3(
-        //                 prevLocalPosition.x,
-        //                 prevLocalPosition.y,
-        //                 prevLocalPosition.z);
-        //             _zones[i].transform.localPosition = newPos;
-
-        //             GetZoneControllerByGameObject(_zones[i]).SetAttachedProgramBlockPosition(
-        //                 new Vector3(_zones[i].transform.position.x, 0.9f, _zones[i].transform.position.z));
-
-        //             // Debug.Log("Revert zone " + i + " from " + currentIndexLocalPosition + " to " + prevLocalPosition);
-
-        //             prevLocalPosition = newPos;
-        //         }
-
-        //         Debug.Log("RemoveZoneAt: remove temp zone at index " + index);
-
-        //         var tempZoneCtrl = GetZoneControllerByGameObject(_zones[index]);
-        //         Destroy(tempZoneCtrl);
-        //         _zones.RemoveAt(index);
-
-        //         // Left only 1 zone
-        //         // Add one empty zone to right
-        //         if (_zones.Count == 1)
-        //         {
-        //             AddZoneNext(0);
-        //         }
-
-        //     }
-        // }
         private void DestroyZone(int index)
         {
             if (index < 0 || index >= _zones.Count) { return; }
@@ -343,7 +298,6 @@ namespace Kubs
         private GameObject CreateZoneGameObject(Vector3 availablePosition, int availableIndex)
         {
             //Debug.Log("CreateZoneGameObject: new zone index " + availableIndex);
-
             var zone = (GameObject)Instantiate(
              zonePrefab,
              availablePosition,
@@ -378,6 +332,22 @@ namespace Kubs
             var stackShifts = GetStackShiftsByHoveredIndex(index);
             stackShifts.Push(record);
             _mapShifts[index] = stackShifts;
+        }
+        private void PrintZones()
+        {
+            string msg = "";
+            foreach (var zone in _zones)
+            {
+                if (GetZoneControllerByGameObject(zone).IsOccupied)
+                {
+                    msg += " [x]";
+                }
+                else
+                {
+                    msg += " [_]";
+                }
+            }
+            Debug.Log(msg);
         }
         private Stack<ShiftRecord> GetStackShiftsByHoveredIndex(int index)
         {
