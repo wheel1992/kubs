@@ -6,22 +6,15 @@ namespace Kubs
 {
 	public class StageTrigger : MonoBehaviour
 	{
-		public bool autoSetNextStage = true;
-		public int stage;
-
-		void Start()
-		{
-			if (autoSetNextStage)
-			{
-				stage = StagesManager.GetActiveStage() + 1;
-			}
-		}
+		public bool isTriggered;
 
 		void OnTriggerEnter(Collider other)
         {
 			if (other.gameObject.name == "Character")
 			{
-				StagesManager.LoadStage(stage);
+				if (isTriggered) return;
+				isTriggered = true;
+				SendMessageUpwards("OnChildTriggerEnter", this);
 			}
 		}
 	}
