@@ -33,6 +33,8 @@ namespace Kubs
         private const int INDEX_DEFAULT_CHILD_ZONE = 0;
         private const bool IS_DEBUG = true;
 
+        private bool HasShiftTemporary = false;
+
         #region Private Lifecycle Methods
         void Awake()
         {
@@ -80,8 +82,10 @@ namespace Kubs
                 return;
             }
             StartCoroutine(Shift(largestIndex, largestIndex));
-            //Shift(largestIndex, largestIndex);
             UpdateZoneIndices();
+            HasShiftTemporary = true;
+            //RemoveExtraTails();
+            //UpdateZoneIndices();
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
@@ -90,17 +94,38 @@ namespace Kubs
             {
                 StartCoroutine(Unshift(args.UnhoveredIndex));
                 UpdateZoneIndices();
+                HasShiftTemporary = false;
+                //RemoveExtraTails();
+                //UpdateZoneIndices();
             }
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
+            if (HasShiftTemporary)
+            {
+                HasShiftTemporary = false;
+                return;
+            }
+
+            StartCoroutine(FlushLeft(args.Index));
+            UpdateZoneIndices();
+            Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
             if (!IsTailEmpty())
             {
                 AddZoneTail();
             }
+            UpdateZoneIndices();
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
+            // if (!HasShiftTemporary)
+            // {
+            //     if (IsZoneEmpty(args.Index))
+            //     {
+            //         DestroyZone(args.Index);
+            //     }
+            // }
+            UpdateZoneIndices();
         }
         #endregion
 
@@ -114,7 +139,6 @@ namespace Kubs
 
             _zones.Insert(INDEX_DEFAULT_CHILD_ZONE, _defaultZoneObject);
         }
-
         private void RegisterZoneEventHandler(ZoneController zone)
         {
             //Debug.Log("RegisterZoneEventHandler: zone index " + zone.Index);
@@ -157,6 +181,20 @@ namespace Kubs
             {
                 _zones.Insert(nextIndex, nextZone);
             }
+        }
+        private IEnumerator FlushLeft(int index)
+        {
+            if (index == 0) { yield break; }
+            if (IsPreviousZoneEmpty(index))
+            {
+                var block = GetZoneControllerByGameObject(_zones[index]).Detach(true);
+                Debug.Log("Unshift: Detach block = " + block);
+                yield return null;
+                GetZoneControllerByGameObject(_zones[index - 1]).Attach(block);
+                yield return null;
+                DestroyZone(index);
+            }
+            yield break;
         }
         private IEnumerator Unshift(int hoveredIndex)
         {
@@ -262,6 +300,36 @@ namespace Kubs
 
         //     }
         // }
+        private void DestroyZone(int index)
+        {
+            if (index < 0 || index >= _zones.Count) { return; }
+            var zone = _zones[index];
+            _zones.RemoveAt(index);
+            Destroy(zone);
+        }
+        private void RemoveExtraTails()
+        {
+            bool isPreviousEmpty = false;
+            for (int i = _zones.Count - 1; i >= 0; i--)
+            {
+                if (IsZoneEmpty(i))
+                {
+                    if (isPreviousEmpty)
+                    {
+                        Debug.Log("RemoveExtraTails: i=" + i + " destroy previous=" + (i - 1));
+                        // destroy the previous zone
+                        DestroyZone(i - 1);
+                        isPreviousEmpty = false;
+                    }
+                    else
+                    {
+                        isPreviousEmpty = true;
+                    }
+
+                }
+
+            }
+        }
         private void UpdateZoneIndices()
         {
             for (int i = 0; i < _zones.Count; i++)
@@ -332,6 +400,10 @@ namespace Kubs
         private bool IsNextZoneEmpty(int index)
         {
             return IsZoneEmpty(index + 1);
+        }
+        private bool IsPreviousZoneEmpty(int index)
+        {
+            return IsZoneEmpty(index - 1);
         }
         private bool IsZoneNull(int index)
         {
