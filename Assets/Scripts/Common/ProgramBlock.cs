@@ -8,29 +8,26 @@ namespace Kubs
 {
     public class ProgramBlock : Block
     {
-        public delegate void HoverEventHandler(int targetZoneId);
-        public delegate void SnapEventHandler(GameObject block, int zoneId);
-        public event HoverEventHandler Hover;
-        public event HoverEventHandler Unhover;
-        public event SnapEventHandler Snap;
+        // public delegate void HoverEventHandler(int targetZoneId);
+        // public delegate void SnapEventHandler(GameObject block, int zoneId);
+        // public event HoverEventHandler Hover;
+        // public event HoverEventHandler Unhover;
+        // public event SnapEventHandler Snap;
         public ProgramBlockType Type { get; set; }
 
-        public int ZoneId { get; set; }
-        [HideInInspector]
-        public int HoverZoneId = -1;
-        // private Rigidbody _rb;
-        // private VRTK_InteractableObject _interactableObject;
+        // public int ZoneId { get; set; }
+        // [HideInInspector]
+        // public int HoverZoneId = -1;
 
         // v2 here
-        public State State { get; set; }
+        // public State State { get; set; }
         [HideInInspector]
         public int ZoneIndex = -1;
         [HideInInspector]
         public bool IsAttachedMove = false;
         private List<int> _collidedZoneIndices;
 
-        //#region Lifecycle
-
+        #region Lifecycle
         void Awake()
         {
             Category = BlockCategory.Program;
@@ -52,8 +49,9 @@ namespace Kubs
         }
         private void Update()
         {
-
         }
+
+        #endregion
 
         public void AddCollidedZoneIndex(int index)
         {

@@ -20,27 +20,27 @@ namespace Kubs
         [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
         private AudioSource _mAudioSource;
-        private UnityAction<object> onBlockProgramRegisterHoverEventListener;
-        private UnityAction<object> onBlockProgramRegisterSnapEventListener;
+        // private UnityAction<object> onBlockProgramRegisterHoverEventListener;
+        // private UnityAction<object> onBlockProgramRegisterSnapEventListener;
 
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
             _mAudioSource.Play();
 
-            onBlockProgramRegisterHoverEventListener = new UnityAction<object>(HandleBlockProgramRegisterHoverEventListener);
-            onBlockProgramRegisterSnapEventListener = new UnityAction<object>(HandleBlockProgramRegisterSnapEventListener);
+            // onBlockProgramRegisterHoverEventListener = new UnityAction<object>(HandleBlockProgramRegisterHoverEventListener);
+            // onBlockProgramRegisterSnapEventListener = new UnityAction<object>(HandleBlockProgramRegisterSnapEventListener);
         }
-        void OnEnable()
-        {
-            EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
-            EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
-        }
-        void OnDisable()
-        {
-            EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
-            EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
-        }
+        // void OnEnable()
+        // {
+        //     EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
+        //     EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
+        // }
+        // void OnDisable()
+        // {
+        //     EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
+        //     EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
+        // }
         // Use this for initialization
         void Start()
         {
@@ -60,43 +60,43 @@ namespace Kubs
         {
             // ...
         }
-        private void DoProgramBlockHover(int targetZoneId)
-        {
-            ProgramBlockShiftRightWhenHover(targetZoneId);
-        }
-        private void DoProgramBlockUnhover(int targetZoneId)
-        {
-            ProgramBlockShiftRevert(targetZoneId);
-        }
-        private void DoProgramBlockSnap(GameObject block, int zoneId)
-        {
-            ProgramBlockSnap(block, zoneId);
-        }
-        private void HandleBlockProgramRegisterHoverEventListener(object item)
-        {
-            if (item is GameObject)
-            {
-                GameObject obj = (GameObject)item;
-                RegisterProgramBlockHoverEventHandler(obj.GetComponent<ProgramBlock>());
-            }
-        }
-        private void HandleBlockProgramRegisterSnapEventListener(object item)
-        {
-            if (item is GameObject)
-            {
-                GameObject obj = (GameObject)item;
-                RegisterProgramBlockSnapEventHandler(obj.GetComponent<ProgramBlock>());
-            }
-        }
-        private void RegisterProgramBlockHoverEventHandler(ProgramBlock block)
-        {
-            block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
-            block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
-        }
-        private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
-        {
-            block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
-        }
+        // private void DoProgramBlockHover(int targetZoneId)
+        // {
+        //     ProgramBlockShiftRightWhenHover(targetZoneId);
+        // }
+        // private void DoProgramBlockUnhover(int targetZoneId)
+        // {
+        //     ProgramBlockShiftRevert(targetZoneId);
+        // }
+        // private void DoProgramBlockSnap(GameObject block, int zoneId)
+        // {
+        //     ProgramBlockSnap(block, zoneId);
+        // }
+        // private void HandleBlockProgramRegisterHoverEventListener(object item)
+        // {
+        //     if (item is GameObject)
+        //     {
+        //         GameObject obj = (GameObject)item;
+        //         RegisterProgramBlockHoverEventHandler(obj.GetComponent<ProgramBlock>());
+        //     }
+        // }
+        // private void HandleBlockProgramRegisterSnapEventListener(object item)
+        // {
+        //     if (item is GameObject)
+        //     {
+        //         GameObject obj = (GameObject)item;
+        //         RegisterProgramBlockSnapEventHandler(obj.GetComponent<ProgramBlock>());
+        //     }
+        // }
+        // private void RegisterProgramBlockHoverEventHandler(ProgramBlock block)
+        // {
+        //     block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
+        //     block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
+        // }
+        // private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
+        // {
+        //     block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
+        // }
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(
@@ -108,8 +108,7 @@ namespace Kubs
             ProgramBlock block = forwardBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
             //block.PauseSweepChildTrigger();
-
-            RegisterProgramBlockHoverEventHandler(block);
+            //RegisterProgramBlockHoverEventHandler(block);
 
             return forwardBlock;
         }
@@ -124,8 +123,7 @@ namespace Kubs
             ProgramBlock block = jumpBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Jump;
             //block.PauseSweepChildTrigger();
-
-            RegisterProgramBlockHoverEventHandler(block);
+            //RegisterProgramBlockHoverEventHandler(block);
 
             return jumpBlock;
         }
@@ -140,8 +138,7 @@ namespace Kubs
             ProgramBlock block = rotateleftBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
             //block.PauseSweepChildTrigger();
-
-            RegisterProgramBlockHoverEventHandler(block);
+            //RegisterProgramBlockHoverEventHandler(block);
 
             return rotateleftBlock;
         }
@@ -155,9 +152,8 @@ namespace Kubs
 
             ProgramBlock block = rotateRightBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateRight;
-            //block.PauseSweepChildTrigger();
-            
-            RegisterProgramBlockHoverEventHandler(block);
+            //block.PauseSweepChildTrigger(); 
+            //RegisterProgramBlockHoverEventHandler(block);
 
             return rotateRightBlock;
         }
