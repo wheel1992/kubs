@@ -33,6 +33,7 @@ namespace Kubs
         private const int INDEX_DEFAULT_CHILD_ZONE = 0;
         private const bool IS_DEBUG = true;
 
+        private Vector3 _defaultFirstZonePosition;
         private bool HasShiftTemporary = false;
 
         #region Private Lifecycle Methods
@@ -93,8 +94,11 @@ namespace Kubs
             PrintZones();
             if (args.UnhoveredIndex != -1)
             {
-                StartCoroutine(Unshift(args.UnhoveredIndex));
-                UpdateZoneIndices();
+                //StartCoroutine(Unshift(args.UnhoveredIndex));
+                Reposition();
+                AddZoneTailIfEmpty();
+                //UpdateZoneIndices();
+
                 if (HasShiftTemporary)
                     HasShiftTemporary = false;
             }
@@ -109,8 +113,10 @@ namespace Kubs
                 return;
             }
 
-            StartCoroutine(FlushLeft(args.Index));
-            UpdateZoneIndices();
+            Reposition();
+            AddZoneTailIfEmpty();
+            //StartCoroutine(FlushLeft(args.Index));
+            //UpdateZoneIndices();
             // //Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
             // PrintZones();
             // if (!IsTailEmpty())
@@ -140,6 +146,7 @@ namespace Kubs
             // By default, there's one child Zone in ZoneGroup
             var _defaultZoneObject = GetChildAt(INDEX_DEFAULT_CHILD_ZONE);
             var _defaultZoneCtrl = GetZoneControllerByGameObject(_defaultZoneObject);
+            _defaultFirstZonePosition = _defaultZoneObject.transform.position;
             RegisterZoneEventHandler(_defaultZoneCtrl);
 
             _zones.Insert(INDEX_DEFAULT_CHILD_ZONE, _defaultZoneObject);
@@ -155,11 +162,12 @@ namespace Kubs
 
         #endregion
 
-        private void AddZoneTail()
+        private void AddZoneTailIfEmpty()
         {
-            Debug.Log("AddZoneTail");
-            AddZoneNext(_zones.Count - 1);
-            PrintZones();
+            Debug.Log("AddZoneTailIfEmpty");
+            if(!IsTailEmpty()) {
+                AddZoneNext(_zones.Count - 1);
+            }   
         }
         private void AddZoneNext(int currentIndex)
         {
@@ -203,8 +211,7 @@ namespace Kubs
             {
                 RemoveExtraTails();
                 UpdateZoneIndices();
-                if (!IsTailEmpty())
-                    AddZoneTail();
+                AddZoneTailIfEmpty();
             }
             yield break;
         }
@@ -297,29 +304,33 @@ namespace Kubs
             _zones.RemoveAt(index);
             Destroy(zone);
         }
-        // private void RemoveExtraTails()
-        // {
-        //     bool isPreviousEmpty = false;
-        //     for (int i = _zones.Count - 1; i >= 0; i--)
-        //     {
-        //         if (IsZoneEmpty(i))
-        //         {
-        //             if (isPreviousEmpty)
-        //             {
-        //                 Debug.Log("RemoveExtraTails: i=" + i + " destroy previous=" + (i - 1));
-        //                 // destroy the previous zone
-        //                 DestroyZone(i - 1);
-        //                 isPreviousEmpty = false;
-        //             }
-        //             else
-        //             {
-        //                 isPreviousEmpty = true;
-        //             }
+        private void Reposition()
+        {
+            // _zones.RemoveAll(zone => !GetZoneControllerByGameObject(zone).IsOccupied);
+            foreach (var zone in _zones.ToList())
+            {
+                if (!GetZoneControllerByGameObject(zone).IsOccupied)
+                {
+                    _zones.Remove(zone);
+                    Destroy(zone);
+                }
+            }
 
-        //         }
+            UpdateZoneIndices();
 
-        //     }
-        // }
+            if (_zones.Count > 0)
+            {
+                var i = 0;
+                foreach (var zone in _zones)
+                {
+                    var pos = new Vector3(
+                        _defaultFirstZonePosition.x,
+                        _defaultFirstZonePosition.y,
+                        _defaultFirstZonePosition.z + (zone.transform.localScale.z * i));
+                    i++;
+                }
+            }
+        }
         private void UpdateZoneIndices()
         {
             for (int i = 0; i < _zones.Count; i++)
