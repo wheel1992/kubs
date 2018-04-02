@@ -42,7 +42,7 @@ namespace Kubs
 
 		private void LoadStage()
 		{
-			StagesManager.LoadStage(stage);
+			StagesManager.LoadStageAsync(stage, this);
 		}
 	}
 }
