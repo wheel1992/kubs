@@ -14,6 +14,9 @@ namespace Kubs
     {
         public int From { get; set; }
         public int To { get; set; }
+        public override string ToString() {
+            return "ShiftRecord: From " + From + " To " + To;
+        }
     }
     public class ZoneGroupController : MonoBehaviour
     {
@@ -63,6 +66,7 @@ namespace Kubs
             var smallestIndex = args.HoveredIndices.Min(index => index);
             if (IsZoneEmpty(smallestIndex))
             {
+                Debug.Log("HandleZonesHovered: smallest zone " + smallestIndex + " is empty");
                 // If there's two collided zones
                 // And the smallest index is not empty
                 // Suggest to user that the smallest index is available
@@ -71,9 +75,9 @@ namespace Kubs
             }
 
             var largestIndex = args.HoveredIndices.Max(index => index);
-            if ((args.HoveredIndices.Count == 1 && !IsZoneEmpty(largestIndex)) ||
-                (args.HoveredIndices.Count > 1 && IsNextZoneEmpty(largestIndex)))
+            if (IsZoneEmpty(largestIndex))
             {
+                Debug.Log("HandleZonesHovered: largest zone = " + largestIndex + " is empty");
                 return;
             }
             Shift(largestIndex, largestIndex);
@@ -84,7 +88,8 @@ namespace Kubs
             Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
             if (args.UnhoveredIndex != -1)
             {
-                RemoveZoneAt(args.UnhoveredIndex);
+                //RemoveZoneAt(args.UnhoveredIndex);
+                Unshift(args.UnhoveredIndex);
                 UpdateZoneIndices();
             }
         }
@@ -144,6 +149,8 @@ namespace Kubs
 
             var nextZone = CreateZoneGameObject(nextPosition, nextIndex);
             var nextZoneCtrl = GetZoneControllerByGameObject(nextZone);
+            nextZoneCtrl.IsOccupied = false;
+            nextZoneCtrl.IsTemporary = false;
             //Debug.Log("AddNextZone nextZoneCtrl index = " + nextZoneCtrl.Index);
             RegisterZoneEventHandler(nextZoneCtrl);
 
@@ -195,12 +202,16 @@ namespace Kubs
             while (!IsStackShiftsEmpty(hoveredIndex))
             {
                 var record = GetStackShiftsByHoveredIndex(hoveredIndex).Pop();
+                Debug.Log("Unshift: " + record.ToString());
                 var block = GetZoneControllerByGameObject(_zones[record.To]).Detach();
+                Debug.Log("Unshift: Detach block = " + block);
                 GetZoneControllerByGameObject(_zones[record.From]).Attach(block);
             }
         }
         private void Shift(int hoveredIndex, int index)
         {
+            Debug.Log("Shift: hoveredIndex = " + hoveredIndex + ", index" + index);
+            Debug.Log("Shift: IsZoneEmpty(index) = " + IsZoneEmpty(index) + ", IsNextZoneEmpty(index) = " + IsNextZoneEmpty(index));
             if (IsZoneEmpty(index))
             {
                 // Current index is not occupied
@@ -213,6 +224,11 @@ namespace Kubs
                 Shift(hoveredIndex, index + 1);
             }
 
+            if (IsTail(index))
+            {
+                Debug.Log("Shift: index = " + index + " is the last zone. Not shifting anything");
+                return;
+            }
             // Execute shifting when...
             // 1. Current index is not empty
             // 2. Next index is empty
@@ -318,6 +334,10 @@ namespace Kubs
             if (_zones.Count == 0) { return false; }
             return IsZoneEmpty(_zones.Count - 1);
         }
+        private bool IsTail(int index)
+        {
+            return index == _zones.Count - 1;
+        }
         private void InsertStackShifts(int index, ShiftRecord record)
         {
             var stackShifts = GetStackShiftsByHoveredIndex(index);
@@ -348,13 +368,13 @@ namespace Kubs
         }
         private bool IsZoneNull(int index)
         {
-            if (index < 0 || index >= _zones.Count) { return false; }
+            if (index < 0 || index >= _zones.Count) { return true; }
             return _zones[index] == null;
         }
         private bool IsZoneEmpty(int index)
         {
-            if (index < 0 || index >= _zones.Count) { return false; }
-            return GetZoneControllerByGameObject(_zones[index]).IsOccupied;
+            if (index < 0 || index >= _zones.Count) { return true; }
+            return !GetZoneControllerByGameObject(_zones[index]).IsOccupied;
         }
 
         #endregion
