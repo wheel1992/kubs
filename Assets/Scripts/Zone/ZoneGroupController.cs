@@ -64,10 +64,12 @@ namespace Kubs
         #region Private Event Handler Listener 
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
+            Debug.Log("HandleZonesHovered");
+            PrintZones();
             var smallestIndex = args.HoveredIndices.Min(index => index);
             if (IsZoneEmpty(smallestIndex))
             {
-                Debug.Log("HandleZonesHovered: smallest zone " + smallestIndex + " is empty");
+                //Debug.Log("HandleZonesHovered: smallest zone " + smallestIndex + " is empty");
                 // If there's two collided zones
                 // And the smallest index is not empty
                 // Suggest to user that the smallest index is available
@@ -78,7 +80,7 @@ namespace Kubs
             var largestIndex = args.HoveredIndices.Max(index => index);
             if (IsZoneEmpty(largestIndex))
             {
-                Debug.Log("HandleZonesHovered: largest zone = " + largestIndex + " is empty");
+                //Debug.Log("HandleZonesHovered: largest zone = " + largestIndex + " is empty");
                 return;
             }
             StartCoroutine(Shift(largestIndex, largestIndex));
@@ -88,6 +90,7 @@ namespace Kubs
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
             Debug.Log("HandleZonesUnhovered: Unhover index " + args.UnhoveredIndex);
+            PrintZones();
             if (args.UnhoveredIndex != -1)
             {
                 StartCoroutine(Unshift(args.UnhoveredIndex));
@@ -98,6 +101,8 @@ namespace Kubs
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
+            Debug.Log("HandleZoneSnapped");
+            PrintZones();
             if (HasShiftTemporary)
             {
                 HasShiftTemporary = false;
@@ -106,16 +111,18 @@ namespace Kubs
 
             StartCoroutine(FlushLeft(args.Index));
             UpdateZoneIndices();
-            //Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
-            PrintZones();
-            if (!IsTailEmpty())
-            {
-                AddZoneTail();
-            }
-            UpdateZoneIndices();
+            // //Debug.Log("HandleZoneSnapped: IsTailEmpty = " + IsTailEmpty());
+            // PrintZones();
+            // if (!IsTailEmpty())
+            // {
+            //     AddZoneTail();
+            // }
+            // UpdateZoneIndices();
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
+            Debug.Log("HandleZoneUnsnapped");
+            PrintZones();
             // if (!HasShiftTemporary)
             // {
             //     if (IsZoneEmpty(args.Index))
@@ -150,7 +157,9 @@ namespace Kubs
 
         private void AddZoneTail()
         {
+            Debug.Log("AddZoneTail");
             AddZoneNext(_zones.Count - 1);
+            PrintZones();
         }
         private void AddZoneNext(int currentIndex)
         {
@@ -182,20 +191,46 @@ namespace Kubs
         }
         private IEnumerator FlushLeft(int index)
         {
-            if (index == 0) { yield break; }
-            if (IsPreviousZoneEmpty(index))
+            if (index != 0 && IsPreviousZoneEmpty(index))
             {
                 var block = GetZoneControllerByGameObject(_zones[index]).Detach(true);
-                Debug.Log("FlushLeft: Detach block = " + block);
+                //Debug.Log("FlushLeft: Detach block = " + block);
                 yield return null;
                 GetZoneControllerByGameObject(_zones[index - 1]).Attach(block);
                 yield return null;
-                // if (IsNextZoneEmpty(index))
-                // {
-                //     DestroyZone(index);
-                // }
+            }
+            else
+            {
+                RemoveExtraTails();
+                UpdateZoneIndices();
+                if (!IsTailEmpty())
+                    AddZoneTail();
             }
             yield break;
+        }
+        private void RemoveExtraTails()
+        {
+            Debug.Log("RemoveExtraTails");
+            PrintZones();
+            bool isPreviousEmpty = false;
+            int prev = 0;
+            for (int b = _zones.Count - 1; b >= 0; b--)
+            {
+                if (isPreviousEmpty)
+                {
+                    DestroyZone(prev);
+                    isPreviousEmpty = false;
+                }
+                if (IsZoneEmpty(b))
+                {
+                    isPreviousEmpty = true;
+                }
+                else
+                {
+                    break;
+                }
+                prev = b;
+            }
         }
         private IEnumerator Unshift(int hoveredIndex)
         {
@@ -262,29 +297,29 @@ namespace Kubs
             _zones.RemoveAt(index);
             Destroy(zone);
         }
-        private void RemoveExtraTails()
-        {
-            bool isPreviousEmpty = false;
-            for (int i = _zones.Count - 1; i >= 0; i--)
-            {
-                if (IsZoneEmpty(i))
-                {
-                    if (isPreviousEmpty)
-                    {
-                        Debug.Log("RemoveExtraTails: i=" + i + " destroy previous=" + (i - 1));
-                        // destroy the previous zone
-                        DestroyZone(i - 1);
-                        isPreviousEmpty = false;
-                    }
-                    else
-                    {
-                        isPreviousEmpty = true;
-                    }
+        // private void RemoveExtraTails()
+        // {
+        //     bool isPreviousEmpty = false;
+        //     for (int i = _zones.Count - 1; i >= 0; i--)
+        //     {
+        //         if (IsZoneEmpty(i))
+        //         {
+        //             if (isPreviousEmpty)
+        //             {
+        //                 Debug.Log("RemoveExtraTails: i=" + i + " destroy previous=" + (i - 1));
+        //                 // destroy the previous zone
+        //                 DestroyZone(i - 1);
+        //                 isPreviousEmpty = false;
+        //             }
+        //             else
+        //             {
+        //                 isPreviousEmpty = true;
+        //             }
 
-                }
+        //         }
 
-            }
-        }
+        //     }
+        // }
         private void UpdateZoneIndices()
         {
             for (int i = 0; i < _zones.Count; i++)
