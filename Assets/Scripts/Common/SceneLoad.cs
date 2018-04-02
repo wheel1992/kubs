@@ -15,6 +15,8 @@ namespace Kubs
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
         [SerializeField] private GameObject _forwardBlockPrefab;
+        [SerializeField] private GameObject _forLoopStartBlockPrefab;
+        [SerializeField] private GameObject _forLoopEndBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
         [SerializeField] private GameObject _rotateRightBlockPrefab;
         [SerializeField] private GameObject _jumpBlockPrefab;
@@ -45,11 +47,13 @@ namespace Kubs
         void Start()
         {
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
+            var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
             var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
             var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
 
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
+            GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
@@ -112,6 +116,19 @@ namespace Kubs
 
             return forwardBlock;
         }
+        GameObject CreateForStartBlock(Vector3 position)
+        {
+            var forStartBlock = (GameObject)Instantiate(
+               _forLoopStartBlockPrefab,
+               position,
+               Quaternion.identity);
+            forStartBlock.tag = Constant.TAG_BLOCK_PROGRAM;
+
+            ProgramBlock block = forStartBlock.GetComponent<ProgramBlock>();
+            block.Type = ProgramBlockType.ForLoopStart;
+
+            return forStartBlock;
+        }
         GameObject CreateJumpBlock(Vector3 position)
         {
             var jumpBlock = (GameObject)Instantiate(
@@ -160,6 +177,10 @@ namespace Kubs
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FORWARD).GetComponent<VRTK_SnapDropZone>();
+        }
+        VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForStartEnd()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_FOR_START_END).GetComponent<VRTK_SnapDropZone>();
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneJump()
         {

@@ -23,6 +23,7 @@ namespace Kubs
         public static string TAG_SNAP_DROP_ZONE_GROUP = "SnapDropZoneGroup";
         public static string TAG_SNAP_DROP_ZONE_PLATE = "SnapDropZonePlate";
         public static string TAG_SNAP_DROP_ZONE_CLONE_FORWARD = "SnapDropZoneCloneForward";
+        public static string TAG_SNAP_DROP_ZONE_CLONE_FOR_START_END = "SnapDropZoneCloneForStartEnd";
         public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT = "SnapDropZoneCloneRotateLeft";
         public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT = "SnapDropZoneCloneRotateRight";
         public static string TAG_SNAP_DROP_ZONE_CLONE_JUMP = "SnapDropZoneCloneJump";

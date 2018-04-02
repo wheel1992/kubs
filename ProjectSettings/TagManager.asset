@@ -37,6 +37,7 @@ TagManager:
   - ZoneSnap
   - ZoneHintPredicter
   - ZoneContainer
+  - SnapDropZoneCloneForStartEnd
   layers:
   - Default
   - TransparentFX
