@@ -25,6 +25,8 @@ namespace Kubs
         public State State { get; set; }
         [HideInInspector]
         public int ZoneIndex = -1;
+        [HideInInspector]
+        public bool IsAttachedMove = false;
         private List<int> _collidedZoneIndices;
 
         //#region Lifecycle
@@ -45,7 +47,8 @@ namespace Kubs
                 }
             }
             
-            State = State.Detach;
+            //State = State.Detach;
+            IsAttachedMove = false;
         }
         private void Update()
         {

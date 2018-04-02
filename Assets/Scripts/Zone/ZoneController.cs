@@ -58,10 +58,11 @@ namespace Kubs
             // Return result in callback HandleZoneOnSnapped
             _zoneSnapCtrl.Snap(block.gameObject);
         }
-        public ProgramBlock Detach()
-        {
+        public ProgramBlock Detach(bool isAttachedMove)
+        {  
             IsOccupied = false;
             var unattachedBlock = _attachedProgramBlock;
+            unattachedBlock.IsAttachedMove = isAttachedMove;
             // Return result in callback HandleZoneOnUnsnapped
             _zoneSnapCtrl.Unsnap();
             return unattachedBlock;
@@ -101,13 +102,17 @@ namespace Kubs
 
         private void HandleZoneOnEntered(object sender, ZoneSnapEventArgs args)
         {
-
+            Debug.Log("HandleZoneOnEntered");
         }
         private void HandleZoneOnExited(object sender, ZoneSnapEventArgs args)
         {
+            Debug.Log("HandleZoneOnExited");
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+                // if (args.WhichBlock.State == State.Attach) {
+                //     args.WhichBlock.State = State.Detach;
+                // }
             }
         }
         private void HandleZoneOnSnapped(object sender, ZoneSnapEventArgs args)
@@ -118,10 +123,10 @@ namespace Kubs
             {
                 args.WhichBlock.ResetCollidedZoneIndices();
                 args.WhichBlock.ZoneIndex = this.Index;
-                args.WhichBlock.State = State.Attach;
                 _attachedProgramBlock = args.WhichBlock;
+
+                OnZoneSnapped(this, new ZoneEventArgs { Index = this.Index });
             }
-            OnZoneSnapped(this, new ZoneEventArgs { Index = this.Index });
         }
         private void HandleZoneOnUnsnapped(object sender, ZoneSnapEventArgs args)
         {
@@ -129,10 +134,9 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
-                args.WhichBlock.State = State.Detach;
+                _attachedProgramBlock = null;
+                OnZoneUnsnapped(this, new ZoneEventArgs { Index = this.Index });
             }
-            _attachedProgramBlock = null;
-            OnZoneUnsnapped(this, new ZoneEventArgs { Index = this.Index });
         }
         private void HandleZoneHintOnTriggerEnter(object sender, ZoneHintEventArgs args)
         {
@@ -140,7 +144,7 @@ namespace Kubs
             {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 // if (collidedBlock != null && !collidedBlock.HasZoneIndex())
-                if (collidedBlock != null && collidedBlock.State == State.Detach)
+                if (collidedBlock != null && !collidedBlock.IsAttachedMove)
                 {
                     Debug.Log("HandleZoneHintOnTriggerEnter:");
                     if (collidedBlock.HasCollidedZoneIndex(this.Index))
@@ -152,7 +156,7 @@ namespace Kubs
 
                     //Debug.Log("HandleZoneHintOnTriggerEnter: collided is ProgramBlock!");
                     collidedBlock.AddCollidedZoneIndex(this.Index);
-                    collidedBlock.PrintCollidedZoneIndices();
+                    //collidedBlock.PrintCollidedZoneIndices();
 
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
@@ -169,12 +173,12 @@ namespace Kubs
             {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 // if (collidedBlock != null && collidedBlock.HasZoneIndex())
-                if (collidedBlock != null && collidedBlock.State == State.Detach)
+                if (collidedBlock != null && !collidedBlock.IsAttachedMove)
                 {
                     Debug.Log("HandleZoneHintOnTriggerExit:");
                     //Debug.Log("HandleZoneHintOnTriggerExit: collided is ProgramBlock!");
                     collidedBlock.RemoveCollidedZoneIndex(this.Index);
-                    collidedBlock.PrintCollidedZoneIndices();
+                    //collidedBlock.PrintCollidedZoneIndices();
 
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs
