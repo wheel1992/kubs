@@ -39,6 +39,9 @@ namespace Kubs
         public bool IsOccupied = false;
         [HideInInspector]
         public bool IsTemporary = false;
+        [HideInInspector]
+        public bool IsProcessing = false;
+
         public int Index { get; set; }
         private const string TAG_ZONE_BASE = "ZoneBase";
         private const string TAG_ZONE_HINT = "ZoneHint";
@@ -57,17 +60,27 @@ namespace Kubs
         public void Attach(ProgramBlock block)
         {
             IsOccupied = true;
+            IsProcessing = true;
             // Return result in callback HandleZoneOnSnapped
-            _zoneSnapCtrl.Snap(block.gameObject);
+            GetChildZoneSnap().Snap(block.gameObject);
         }
         public ProgramBlock Detach(bool isAttachedMove)
         {
-            IsOccupied = false;
-            var unattachedBlock = _attachedProgramBlock;
-            unattachedBlock.IsAttachedMove = isAttachedMove;
-            // Return result in callback HandleZoneOnUnsnapped
-            _zoneSnapCtrl.Unsnap();
-            return unattachedBlock;
+            try
+            {
+                IsProcessing = true;
+                IsOccupied = false;
+                var unattachedBlock = _attachedProgramBlock;
+                unattachedBlock.IsAttachedMove = isAttachedMove;
+                // Return result in callback HandleZoneOnUnsnapped
+                GetChildZoneSnap().Unsnap();
+                return unattachedBlock;
+            }
+            catch (Exception)
+            {
+                IsProcessing = false;
+                return null;
+            }
         }
 
         #endregion
@@ -91,6 +104,8 @@ namespace Kubs
             _zoneSnapCtrl.OnUnsnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnUnsnapped);
 
             _zoneBaseCtrl = GetChildZoneBase();
+
+            IsProcessing = false;
         }
 
         // Update is called once per frame
@@ -112,10 +127,9 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
-                // if (args.WhichBlock.State == State.Attach) {
-                //     args.WhichBlock.State = State.Detach;
-                // }
             }
+
+            IsProcessing = false;
         }
         private void HandleZoneOnSnapped(object sender, ZoneSnapEventArgs args)
         {
@@ -125,7 +139,12 @@ namespace Kubs
             {
                 args.WhichBlock.ResetCollidedZoneIndices();
                 args.WhichBlock.ZoneIndex = this.Index;
+                // Attach block (child) to this zone (parent)
+                args.WhichBlock.SetParent(this.transform);
+                
                 _attachedProgramBlock = args.WhichBlock;
+
+                IsProcessing = false;
 
                 OnZoneSnapped(this,
                     new ZoneEventArgs
@@ -142,6 +161,8 @@ namespace Kubs
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
                 _attachedProgramBlock = null;
+
+                IsProcessing = false;
 
                 OnZoneUnsnapped(this,
                     new ZoneEventArgs
@@ -171,6 +192,8 @@ namespace Kubs
                     collidedBlock.AddCollidedZoneIndex(this.Index);
                     //collidedBlock.PrintCollidedZoneIndices();
 
+                    IsProcessing = false;
+
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
                         {
@@ -186,13 +209,13 @@ namespace Kubs
             if (args.CollidedObject != null)
             {
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
-                // if (collidedBlock != null && collidedBlock.HasZoneIndex())
                 if (collidedBlock != null && !collidedBlock.IsAttachedMove)
                 {
                     Debug.Log("HandleZoneHintOnTriggerExit:");
                     //Debug.Log("HandleZoneHintOnTriggerExit: collided is ProgramBlock!");
                     collidedBlock.RemoveCollidedZoneIndex(this.Index);
-                    //collidedBlock.PrintCollidedZoneIndices();
+
+                    IsProcessing = false;
 
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs

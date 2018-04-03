@@ -28,7 +28,8 @@ namespace Kubs
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
-            _mAudioSource.Play();
+            _mAudioSource.Stop();
+            //_mAudioSource.Play();
 
             // onBlockProgramRegisterHoverEventListener = new UnityAction<object>(HandleBlockProgramRegisterHoverEventListener);
             // onBlockProgramRegisterSnapEventListener = new UnityAction<object>(HandleBlockProgramRegisterSnapEventListener);

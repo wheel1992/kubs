@@ -99,7 +99,6 @@ namespace Kubs
         }
         public void SetParent(Transform parent)
         {
-
             transform.SetParent(parent);
         }
         public List<int> GetCollidedZoneIndices()

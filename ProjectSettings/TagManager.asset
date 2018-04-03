@@ -38,6 +38,7 @@ TagManager:
   - ZoneHintPredicter
   - ZoneContainer
   - SnapDropZoneCloneForStartEnd
+  - ZoneStartDummy
   layers:
   - Default
   - TransparentFX

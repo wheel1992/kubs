@@ -23,16 +23,16 @@ namespace Kubs
 
         const string NAME_CHILD_VRTKSNAPDROPZONE = "VRTKSnapDropZone";
         const int CHILD_INDEX_VRTKSNAPDROPZONE = 0;
-
-        private GameObject _child_Vrtk_SnapDropZone;
-
+        
         #region Public Methods
 
-        public void Snap(GameObject obj) {
-            _child_Vrtk_SnapDropZone.GetComponent<VRTK_SnapDropZone>().ForceSnap(obj);
+        public void Snap(GameObject obj)
+        {
+            GetChildVRTKSnapDropZone().ForceSnap(obj);
         }
-        public void Unsnap() {
-            _child_Vrtk_SnapDropZone.GetComponent<VRTK_SnapDropZone>().ForceUnsnap();
+        public void Unsnap()
+        {
+            GetChildVRTKSnapDropZone().ForceUnsnap();
         }
 
         #endregion
@@ -41,8 +41,7 @@ namespace Kubs
 
         void Start()
         {
-            _child_Vrtk_SnapDropZone = gameObject.transform.GetChild(CHILD_INDEX_VRTKSNAPDROPZONE).gameObject;
-            RegisterVRTKSnapDropZoneEventHandler(_child_Vrtk_SnapDropZone);
+            RegisterVRTKSnapDropZoneEventHandler(GetChildVRTKSnapDropZone());
         }
         void Update()
         {
@@ -52,12 +51,12 @@ namespace Kubs
 
         #region Private Methods
 
-        private void RegisterVRTKSnapDropZoneEventHandler(GameObject snapDropZone)
+        private void RegisterVRTKSnapDropZoneEventHandler(VRTK_SnapDropZone snapDropZone)
         {
-            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneEntered);
-            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectSnappedToDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneSnapped);
-            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectExitedSnapDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneExited);
-            snapDropZone.GetComponent<VRTK_SnapDropZone>().ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneUnsnapped);
+            snapDropZone.ObjectEnteredSnapDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneEntered);
+            snapDropZone.ObjectSnappedToDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneSnapped);
+            snapDropZone.ObjectExitedSnapDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneExited);
+            snapDropZone.ObjectUnsnappedFromDropZone += new SnapDropZoneEventHandler(DoSnapDropZoneUnsnapped);
         }
         private void DoSnapDropZoneEntered(object sender, SnapDropZoneEventArgs e)
         {
@@ -110,6 +109,10 @@ namespace Kubs
         private ProgramBlock GetProgramBlockByObject(GameObject obj)
         {
             return obj.GetComponent<ProgramBlock>();
+        }
+        private VRTK_SnapDropZone GetChildVRTKSnapDropZone()
+        {
+            return gameObject.transform.GetChild(CHILD_INDEX_VRTKSNAPDROPZONE).GetComponent<VRTK_SnapDropZone>();
         }
 
         #endregion
