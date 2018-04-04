@@ -8,7 +8,11 @@ namespace Kubs
     {
         public TutorialManager tutorialManager;
 
+        // Components
         private Animator _animator;
+        private Rigidbody _rigidbody;
+
+        // Animation
         private bool _isAnimating;
         private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
         private ProgramBlockType _type;
@@ -24,20 +28,26 @@ namespace Kubs
         private Quaternion endRot;
         private Quaternion _originalRot;
 
+        // Flags and miscellaneous
         private bool _isDebug = false;
         private bool _isStopped;
         public float _scale;
+
+        // Audio
         public AudioClip audioClipWalk;
 		public AudioClip audioClipChewFood;
 		public AudioClip audioClipJump;
         private AudioSource _audioSourceWalk;
 		private AudioSource _audioSourceChewFood;
 		private AudioSource _audioSourceJump;
+
         // Use this for initialization
         void Start()
         {
             _animator = GetComponent<Animator>();
-            _originalPos = transform.position;
+            _rigidbody = GetComponent<Rigidbody>();
+            _originalPos = transform.localPosition;
+            _originalRot = transform.localRotation;
             _scale = transform.lossyScale.x;
 
 			InitAudioClips();
@@ -53,6 +63,7 @@ namespace Kubs
             {
                 Invoke("Forward", 1);
 
+                // Set 1
                 Invoke("Forward", 5);
                 Invoke("RotateLeft", 5);
                 Invoke("Forward", 5);
@@ -61,6 +72,13 @@ namespace Kubs
                 Invoke("RotateLeft", 10);
                 Invoke("Forward", 10);
                 Invoke("Jump", 10);
+
+                // Set 2
+                /*
+                Invoke("RotateLeft", 1);
+                Invoke("Jump", 1);
+                Invoke("Jump", 1);
+                */
             }
         }
 
@@ -84,6 +102,10 @@ namespace Kubs
                         break;
                 }
             }
+            else if (IsFalling())
+            {
+                // No action
+            }
             else if (_queue.Count > 0)
             {
                 switch (_queue.Dequeue())
@@ -104,11 +126,31 @@ namespace Kubs
                         break;
                 }
             }
+
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+        }
+
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_GAME_AREA_DID_SCALE, UpdateScale);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_GAME_AREA_DID_SCALE, UpdateScale);
         }
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.tag == "Hole")
+            if (other.gameObject.tag == "Grass")
+            {
+                _isStopped = true;
+                _queue.Clear();
+
+                Set(Animations.Die2);
+                StopCoroutine("UpdatePosition");
+            }
+            else if (other.gameObject.tag == "Hole")
             {
                 _isStopped = true;
             }
@@ -159,8 +201,19 @@ namespace Kubs
             }
 
             startPos = transform.position;
-            endPos = transform.position + transform.forward * _scale * 2;
-            trajectoryHeight = 0.5f;
+
+            if (IsBlocked())
+            {
+                // Jump up
+                endPos = transform.position + (transform.forward + transform.up) * _scale;
+                trajectoryHeight = 1f;
+            }
+            else
+            {
+                // Jump over
+                endPos = transform.position + (transform.forward + transform.forward) * _scale;
+                trajectoryHeight = 0.5f;
+            }
 
             Set(Animations.Jump);
             _type = ProgramBlockType.Jump;
@@ -215,6 +268,19 @@ namespace Kubs
             }
         }
 
+        private bool IsBlocked()
+        {
+            var maxDistance = _scale;
+            var position = transform.position;
+            position.y += 0.5f * _scale;
+            return Physics.Raycast(position, transform.forward, maxDistance);
+        }
+
+        private bool IsFalling()
+        {
+            return _rigidbody.velocity.y < -0.1;
+        }
+
 		private void InitAudioClips() {
             _audioSourceWalk = gameObject.AddComponent<AudioSource>();
             _audioSourceWalk.clip = audioClipWalk;
@@ -237,8 +303,8 @@ namespace Kubs
 
         private void Reset()
         {
-            transform.position = _originalPos;
-            transform.rotation = _originalRot;
+            transform.localPosition = _originalPos;
+            transform.localRotation = _originalRot;
 
 			Set(Animations.Idle);
         }
@@ -278,6 +344,7 @@ namespace Kubs
 				Set(Animations.Idle);
 			}
 
+            _rigidbody.velocity = Vector3.zero;
             _isAnimating = false;
             yield break;
         }
@@ -309,6 +376,12 @@ namespace Kubs
 
             _isAnimating = false;
             yield break;
+        }
+
+        private void UpdateScale(object localScale)
+        {
+            _scale = ((Vector3)localScale).x;
+            DebugLog(_scale);
         }
     }
 }
