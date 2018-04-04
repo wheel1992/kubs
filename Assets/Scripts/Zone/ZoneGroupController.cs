@@ -112,11 +112,10 @@ namespace Kubs
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
             if (attachedBlock != null && attachedBlock.Type == ProgramBlockType.ForLoopStart)
             {
-                if (GetZoneIndexWithForEndLoopBlock() != -1)
+                if (GetZoneIndexWithForEndLoopBlock() == -1)
                 {
                     // A ForStartLoop block is attached
                     // Display and attached ForEndLoop at the end of zones
-                    //_defaultForEndLoopBlock.gameObject.GetComponentInChildren<MeshRenderer>().enabled = true;
                     _defaultForEndLoopBlock.gameObject.SetActive(true);
                     AddZoneTail();
                     GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
