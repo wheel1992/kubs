@@ -62,6 +62,14 @@ namespace Kubs
         {
             GetChildZoneSnap().Enable();
         }
+        public void HideHint()
+        {
+            GetChildZoneHint().HideHighlight();
+        }
+        public void ShowHint(bool isValid)
+        {
+            GetChildZoneHint().DisplayHighlight(isValid);
+        }
         public ProgramBlock GetAttachedProgramBlock()
         {
             var blockObj = GetChildByTagName(Constant.TAG_BLOCK_PROGRAM);
@@ -90,6 +98,8 @@ namespace Kubs
             _zoneSnapCtrl.OnUnsnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnUnsnapped);
 
             _zoneBaseCtrl = GetChildZoneBase();
+
+            HideHint();
         }
 
         // Update is called once per frame

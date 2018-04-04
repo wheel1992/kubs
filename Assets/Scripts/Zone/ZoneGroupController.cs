@@ -64,6 +64,7 @@ namespace Kubs
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
             Debug.Log("Hover: at " + args.ZoneIndex + "");
+            var currentZone = GetZoneControllerByGameObject(_zones[args.ZoneIndex]);
 
             // Test For loop
             var testBlock = GetProgramBlockByGameObject(args.CollidedObject);
@@ -77,7 +78,8 @@ namespace Kubs
                     if (currentForEndIndex != -1 && args.ZoneIndex > currentForEndIndex)
                     {
                         Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
-                        GetZoneControllerByGameObject(_zones[args.ZoneIndex]).DisableSnap();
+                        currentZone.DisableSnap();
+                        currentZone.ShowHint(false);
 
                         // Start incorrect position audio
                         _audioSourceIncorrectPosition.Play();
@@ -93,7 +95,8 @@ namespace Kubs
                     if (currentForStartIndex != -1 && args.ZoneIndex < currentForStartIndex)
                     {
                         Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
-                        GetZoneControllerByGameObject(_zones[args.ZoneIndex]).DisableSnap();
+                        currentZone.DisableSnap();
+                        currentZone.ShowHint(false);
 
                         // Start incorrect position audio
                         _audioSourceIncorrectPosition.Play();
@@ -101,9 +104,9 @@ namespace Kubs
                         return;
                     }
                 }
-
             }
 
+            currentZone.ShowHint(true);
 
             // Current zone is empty, do nothing
             if (IsZoneEmpty(args.ZoneIndex))
@@ -140,6 +143,8 @@ namespace Kubs
                 GetZoneControllerByGameObject(_zones[args.ZoneIndex]).EnableSnap();
             }
 
+            GetZoneControllerByGameObject(_zones[args.ZoneIndex]).HideHint();
+
             // Current unhovered zone is occupied, do nothing  
             if (!IsZoneEmpty(args.ZoneIndex))
             {
@@ -160,6 +165,8 @@ namespace Kubs
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
             Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
+
+             GetZoneControllerByGameObject(_zones[args.Index]).HideHint();
 
             _audioSourceInsertBlock.Play();
 
