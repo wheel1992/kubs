@@ -22,6 +22,16 @@ namespace Kubs
         {
         }
 
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
+        }
+
         //Called after program blocks are encoded
         //Calls Character api
         //Decodes the program blocks that were encoded according to the type of program block
@@ -101,6 +111,10 @@ namespace Kubs
             }
             return true;
         }
+
+        private void SetCharacter(object character)
+        {
+            _character = (Character)character;
+        }
     }
 }
-

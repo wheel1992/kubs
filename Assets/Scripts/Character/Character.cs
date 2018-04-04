@@ -46,8 +46,8 @@ namespace Kubs
         {
             _animator = GetComponent<Animator>();
             _rigidbody = GetComponent<Rigidbody>();
-            _originalPos = transform.position;
-            _originalRot = transform.rotation;
+            _originalPos = transform.localPosition;
+            _originalRot = transform.localRotation;
             _scale = transform.lossyScale.x;
 
 			InitAudioClips();
@@ -119,6 +119,18 @@ namespace Kubs
                         break;
                 }
             }
+
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+        }
+
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_GAME_AREA_DID_SCALE, UpdateScale);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_GAME_AREA_DID_SCALE, UpdateScale);
         }
 
         void OnTriggerEnter(Collider other)
@@ -284,8 +296,8 @@ namespace Kubs
 
         private void Reset()
         {
-            transform.position = _originalPos;
-            transform.rotation = _originalRot;
+            transform.localPosition = _originalPos;
+            transform.localRotation = _originalRot;
 
 			Set(Animations.Idle);
         }
@@ -357,6 +369,12 @@ namespace Kubs
 
             _isAnimating = false;
             yield break;
+        }
+
+        private void UpdateScale(object localScale)
+        {
+            _scale = ((Vector3)localScale).x;
+            DebugLog(_scale);
         }
     }
 }

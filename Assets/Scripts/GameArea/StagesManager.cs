@@ -7,6 +7,9 @@ namespace Kubs
 {
 	public static class StagesManager
 	{
+		public static Vector3 loadPos { get; set; }
+		public static Vector3 loadScale { get; set; }
+
 		private const string CHARACTER_STAGE = "CharacterScene";
 		private const string STAGE_PREFIX = "KubScene";
 
@@ -19,22 +22,10 @@ namespace Kubs
 			return stageString == "" ? 0 : int.Parse(stageString);
 		}
 
-		public static void LoadStage(int stage)
-		{
-			var stageString = stage == 0 ? "" : stage.ToString();
-			SceneManager.LoadScene(STAGE_PREFIX + stageString);
-		}
-
 		public static void LoadStageAsync(int stage, MonoBehaviour monoBehaviour)
 		{
-			var stageString = stage == 0 ? "" : stage.ToString();
+			var stageString = stage.ToString();
 			monoBehaviour.StartCoroutine(LoadSceneAsync(STAGE_PREFIX + stageString));
-		}
-
-		public static void NextStage()
-		{
-			var stage = GetActiveStage();
-			LoadStage(stage + 1);
 		}
 
 		private static IEnumerator LoadSceneAsync(string sceneName)
@@ -83,7 +74,15 @@ namespace Kubs
 			// Destroy non-GameArea objects in scene
 			foreach (var go in scene.GetRootGameObjects())
 			{
-				if (go.name != "GameArea")
+				if (go.name == "GameArea")
+				{
+					go.transform.localScale = loadScale;
+					go.transform.position = loadPos;
+
+					// EventManager.TriggerEvent(Constant.EVENT_NAME_GAME_AREA_DID_SCALE, loadScale); // Not working
+					go.GetComponentInChildren<Character>()._scale = loadScale.x;
+				}
+				else
 				{
 					Object.Destroy(go);
 				}
