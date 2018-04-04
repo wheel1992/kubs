@@ -14,13 +14,16 @@ namespace Kubs
     {
         [SerializeField] private GameObject zonePrefab;
         [SerializeField] private GameObject forLoopEndBlockPrefab;
+        [SerializeField] private AudioClip audioClipIncorrectPosition;
+        [SerializeField] private AudioClip audioClipInsertBlock;
 
         //private KubsDebug _debugger;
         private List<GameObject> _zones;
         private const int DEFAULT_INDEX_ZONE = 0;
         private const float DEFAULT_ZONE_SIZE = 1.0f;
         private const bool IS_DEBUG = true;
-
+        private AudioSource _audioSourceIncorrectPosition;
+        private AudioSource _audioSourceInsertBlock;
         private GameObject _defaultFirstZone;
         private ProgramBlock _defaultForEndLoopBlock;
         private Vector3 _defaultFirstZonePosition;
@@ -35,6 +38,8 @@ namespace Kubs
         void Start()
         {
             _zones = new List<GameObject>();
+
+            InitAudioClips();
             InitDefaultFirstZone();
 
             // Create a ForEndLoop block and set hidden
@@ -74,6 +79,8 @@ namespace Kubs
                         Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         GetZoneControllerByGameObject(_zones[args.ZoneIndex]).DisableSnap();
 
+                        // Start incorrect position audio
+                        _audioSourceIncorrectPosition.Play();
 
                         return;
                     }
@@ -88,6 +95,8 @@ namespace Kubs
                         Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         GetZoneControllerByGameObject(_zones[args.ZoneIndex]).DisableSnap();
 
+                        // Start incorrect position audio
+                        _audioSourceIncorrectPosition.Play();
 
                         return;
                     }
@@ -152,6 +161,8 @@ namespace Kubs
         {
             Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
 
+            _audioSourceInsertBlock.Play();
+
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
             if (attachedBlock != null && attachedBlock.Type == ProgramBlockType.ForLoopStart)
             {
@@ -181,6 +192,20 @@ namespace Kubs
         #endregion
 
         #region Private Initization Methods
+        private void InitAudioClips()
+        {
+            _audioSourceIncorrectPosition = gameObject.AddComponent<AudioSource>();
+            _audioSourceIncorrectPosition.clip = audioClipIncorrectPosition;
+            _audioSourceIncorrectPosition.loop = false;
+            _audioSourceIncorrectPosition.playOnAwake = false;
+            _audioSourceIncorrectPosition.volume = 1.0f;
+
+            _audioSourceInsertBlock = gameObject.AddComponent<AudioSource>();
+            _audioSourceInsertBlock.clip = audioClipInsertBlock;
+            _audioSourceInsertBlock.loop = false;
+            _audioSourceInsertBlock.playOnAwake = false;
+            _audioSourceInsertBlock.volume = 1.0f;
+        }
         private void InitDefaultFirstZone()
         {
             // By default, there's one child Zone in ZoneGroup
