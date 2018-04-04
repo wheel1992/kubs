@@ -58,10 +58,10 @@ namespace Kubs
 
         private void Run()
         {
-            var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
-            //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
+            // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
+            // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
-            GetDecoder().Decode(listBlocks);
+            // GetDecoder().Decode(listBlocks);
         }
         private void ChangeColor() {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
