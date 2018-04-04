@@ -42,6 +42,13 @@ namespace Kubs
 
 			InitAudioClips();
 
+            //Test Blockchain Movement
+            var bcc = GameObject.Find("BlockChain").GetComponent<BlockChainController>();
+            bcc.MoveBlockChain();
+
+            //bcc.enabled = true;
+            //bcc.MoveBlockChain();
+
             if (_isDebug)
             {
                 Invoke("Forward", 1);
