@@ -8,6 +8,7 @@ namespace Kubs
 {
     public class ProgramBlock : Block
     {
+
         // public delegate void HoverEventHandler(int targetZoneId);
         // public delegate void SnapEventHandler(GameObject block, int zoneId);
         // public event HoverEventHandler Hover;
@@ -25,7 +26,8 @@ namespace Kubs
         public int ZoneIndex = -1;
         [HideInInspector]
         public bool IsAttachedMove = false;
-        private List<int> _collidedZoneIndices;
+        // private List<int> _collidedZoneIndices;
+        public int CollidedZoneIndex { get; set; }
 
         #region Lifecycle
         void Awake()
@@ -34,7 +36,7 @@ namespace Kubs
         }
         void Start()
         {
-            _collidedZoneIndices = new List<int>();
+            // _collidedZoneIndices = new List<int>();
 
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -43,83 +45,93 @@ namespace Kubs
                     transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
-            
+
+            GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
+
             //State = State.Detach;
             IsAttachedMove = false;
+
+            CollidedZoneIndex = -1;
+
         }
         private void Update()
         {
         }
 
+        private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            //ResetCollidedZoneIndices();
+        }
+
         #endregion
 
-        public void AddCollidedZoneIndex(int index)
-        {
-            foreach (int item in _collidedZoneIndices)
-            {
-                if (item == index)
-                {
-                    // Found there exists the similar index value
-                    // Break the loop
-                    return;
-                }
-            }
-            Debug.Log("AddCollidedZoneIndex " + index);
-            _collidedZoneIndices.Add(index);
-        }
-        public void RemoveCollidedZoneIndex(int index)
-        {
-            Debug.Log("RemoveCollidedZoneIndex " + index);
-            foreach (int item in _collidedZoneIndices)
-            {
-                if (item == index)
-                {
-                    var a = _collidedZoneIndices.IndexOf(item);
-                    _collidedZoneIndices.RemoveAt(a);
-                    break;
-                }
-            }
-        }
-        public void ResetCollidedZoneIndices()
-        {
-            _collidedZoneIndices = new List<int>();
-        }
+        // public void AddCollidedZoneIndex(int index)
+        // {
+        //     foreach (int item in _collidedZoneIndices)
+        //     {
+        //         if (item == index)
+        //         {
+        //             // Found there exists the similar index value
+        //             // Break the loop
+        //             return;
+        //         }
+        //     }
+        //     //Debug.Log("AddCollidedZoneIndex " + index);
+        //     _collidedZoneIndices.Add(index);
+        // }
+        // public void RemoveCollidedZoneIndex(int index)
+        // {
+        //     foreach (int item in _collidedZoneIndices)
+        //     {
+        //         if (item == index)
+        //         {
+        //             // Debug.Log("RemoveCollidedZoneIndex " + index);
+        //             var a = _collidedZoneIndices.IndexOf(item);
+        //             _collidedZoneIndices.RemoveAt(a);
+        //             break;
+        //         }
+        //     }
+        // }
+        // public void ResetCollidedZoneIndices()
+        // {
+        //     _collidedZoneIndices = new List<int>();
+        // }
         public void ResetZoneIndex()
         {
             ZoneIndex = -1;
         }
-        public void PrintCollidedZoneIndices()
-        {
-            string msg = "";
-            foreach (int item in _collidedZoneIndices)
-            {
-                msg += item + ", ";
-            }
-            Debug.Log(msg);
-        }
+        // public void PrintCollidedZoneIndices()
+        // {
+        //     string msg = "";
+        //     foreach (int item in _collidedZoneIndices)
+        //     {
+        //         msg += item + ", ";
+        //     }
+        //     Debug.Log(msg);
+        // }
         public void SetParent(Transform parent)
         {
             transform.SetParent(parent);
         }
-        public List<int> GetCollidedZoneIndices()
-        {
-            return _collidedZoneIndices;
-        }
+        // public List<int> GetCollidedZoneIndices()
+        // {
+        //     return _collidedZoneIndices;
+        // }
         public VRTK_InteractableObject GetVRTKInteractableObject()
         {
             return gameObject.GetComponent<VRTK_InteractableObject>();
         }
-        public bool HasCollidedZoneIndex(int index)
-        {
-            foreach (int item in _collidedZoneIndices)
-            {
-                if (item == index)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        // public bool HasCollidedZoneIndex(int index)
+        // {
+        //     // foreach (int item in _collidedZoneIndices)
+        //     // {
+        //     //     if (item == index)
+        //     //     {
+        //     //         return true;
+        //     //     }
+        //     // }
+        //     // return false;
+        // }
         public bool HasZoneIndex()
         {
             Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
