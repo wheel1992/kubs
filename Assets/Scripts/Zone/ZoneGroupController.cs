@@ -57,6 +57,24 @@ namespace Kubs
 
         #region Public Methods
 
+        public List<ProgramBlock> CompileProgramBlocks()
+        {
+            string msg = "";
+            var list = new List<ProgramBlock>();
+            foreach (var zone in _zones)
+            {
+                var block = GetZoneControllerByGameObject(zone).GetAttachedProgramBlock();
+                if (block == null)
+                {
+                    msg += "[], ";
+                    continue;
+                }
+                list.Add(block);
+                msg += "[" + GetZoneControllerByGameObject(zone).GetAttachedProgramBlock().Type + "] ";
+            }
+            Debug.Log("CompileProgramBlocks: " + msg);
+            return list;
+        }
 
         #endregion
 
@@ -166,7 +184,7 @@ namespace Kubs
         {
             Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
 
-             GetZoneControllerByGameObject(_zones[args.Index]).HideHint();
+            GetZoneControllerByGameObject(_zones[args.Index]).HideHint();
 
             _audioSourceInsertBlock.Play();
 

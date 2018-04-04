@@ -28,7 +28,7 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
         private void OnTriggerExit(Collider other)
@@ -58,15 +58,19 @@ namespace Kubs
 
         private void Run()
         {
+
+            var list = GetZoneGroupController().CompileProgramBlocks();
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
-            // GetDecoder().Decode(listBlocks);
+            GetDecoder().Decode(list);
         }
-        private void ChangeColor() {
+        private void ChangeColor()
+        {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
         }
-        private Material GetCurrentMaterial() {
+        private Material GetCurrentMaterial()
+        {
             return gameObject.GetComponent<Renderer>().material;
         }
 
@@ -85,7 +89,7 @@ namespace Kubs
             }
 
             _isAnimating = true;
-            
+
             var startScale = transform.localScale;
             var endScale = startScale;
             endScale.y /= 2;
@@ -128,9 +132,13 @@ namespace Kubs
             return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
         }
 
-        private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
+        private ZoneGroupController GetZoneGroupController()
         {
-            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
+            return GameObject.Find(Constant.NAME_ZONES).GetComponent<ZoneGroupController>();
         }
+        // private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
+        // {
+        //     return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
+        // }
     }
 }
