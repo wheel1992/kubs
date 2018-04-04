@@ -13,6 +13,7 @@ namespace Kubs
     public class ZoneGroupController : MonoBehaviour
     {
         [SerializeField] private GameObject zonePrefab;
+        [SerializeField] private GameObject forLoopEndBlockPrefab;
 
         //private KubsDebug _debugger;
         private List<GameObject> _zones;
@@ -21,6 +22,7 @@ namespace Kubs
         private const bool IS_DEBUG = true;
 
         private GameObject _defaultFirstZone;
+        private ProgramBlock _defaultForEndLoopBlock;
         private Vector3 _defaultFirstZonePosition;
 
         #region Private Lifecycle Methods
@@ -33,7 +35,12 @@ namespace Kubs
         void Start()
         {
             _zones = new List<GameObject>();
-            Init();
+            InitDefaultFirstZone();
+
+            // Create a ForEndLoop block and set hidden
+            _defaultForEndLoopBlock = CreateForEndBlock(new Vector3(0, 0, 0));
+            // _defaultForEndLoopBlock.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+            _defaultForEndLoopBlock.gameObject.SetActive(false);
         }
 
         // Update is called once per frame
@@ -102,11 +109,27 @@ namespace Kubs
         {
             Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
 
+            var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
+            if (attachedBlock != null && attachedBlock.Type == ProgramBlockType.ForLoopStart)
+            {
+                if (GetZoneIndexWithForEndLoopBlock() != -1)
+                {
+                    // A ForStartLoop block is attached
+                    // Display and attached ForEndLoop at the end of zones
+                    //_defaultForEndLoopBlock.gameObject.GetComponentInChildren<MeshRenderer>().enabled = true;
+                    _defaultForEndLoopBlock.gameObject.SetActive(true);
+                    AddZoneTail();
+                    GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
+                    return;
+                }
+            }
+
             if (IsZoneTail(args.Index))
             {
                 AddZoneTail();
                 UpdateZoneIndices();
             }
+
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
@@ -116,7 +139,7 @@ namespace Kubs
         #endregion
 
         #region Private Initization Methods
-        private void Init()
+        private void InitDefaultFirstZone()
         {
             // By default, there's one child Zone in ZoneGroup
             _defaultFirstZone = GetChildAt(DEFAULT_INDEX_ZONE);
@@ -223,7 +246,8 @@ namespace Kubs
         }
         private void Shift(int index)
         {
-            for(int i = index; i < _zones.Count; i++) {
+            for (int i = index; i < _zones.Count; i++)
+            {
                 Debug.Log("Shift: at = " + i);
                 MoveZoneToRight(i);
             }
@@ -246,6 +270,16 @@ namespace Kubs
         }
 
         #region Private Get Methods
+        private ProgramBlock CreateForEndBlock(Vector3 pos)
+        {
+            var blockObj = (GameObject)Instantiate(
+                forLoopEndBlockPrefab,
+                pos,
+                Quaternion.identity);
+            var block = blockObj.GetComponent<ProgramBlock>();
+            block.Type = ProgramBlockType.ForLoopEnd;
+            return block;
+        }
         private GameObject CreateZoneGameObject(Vector3 availablePosition, int availableIndex)
         {
             //Debug.Log("CreateZoneGameObject: new zone index " + availableIndex);
@@ -268,6 +302,22 @@ namespace Kubs
         private ZoneController GetZoneControllerByGameObject(GameObject obj)
         {
             return obj.GetComponent<ZoneController>();
+        }
+        private ZoneController GetZoneTail()
+        {
+            return GetZoneControllerByGameObject(_zones[_zones.Count - 1]);
+        }
+        private int GetZoneIndexWithForEndLoopBlock()
+        {
+            for (int i = 0; i < _zones.Count; i++)
+            {
+                var block = GetZoneControllerByGameObject(_zones[i]).GetAttachedProgramBlock();
+                if (block != null && block.Type == ProgramBlockType.ForLoopEnd)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
         private bool IsZoneTailEmpty()
         {

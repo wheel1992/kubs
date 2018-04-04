@@ -22,29 +22,13 @@ namespace Kubs
         [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
         private AudioSource _mAudioSource;
-        // private UnityAction<object> onBlockProgramRegisterHoverEventListener;
-        // private UnityAction<object> onBlockProgramRegisterSnapEventListener;
 
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
             _mAudioSource.Stop();
             //_mAudioSource.Play();
-
-            // onBlockProgramRegisterHoverEventListener = new UnityAction<object>(HandleBlockProgramRegisterHoverEventListener);
-            // onBlockProgramRegisterSnapEventListener = new UnityAction<object>(HandleBlockProgramRegisterSnapEventListener);
         }
-        // void OnEnable()
-        // {
-        //     EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
-        //     EventManager.StartListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
-        // }
-        // void OnDisable()
-        // {
-        //     EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT, onBlockProgramRegisterHoverEventListener);
-        //     EventManager.StopListening(Constant.EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT, onBlockProgramRegisterSnapEventListener);
-        // }
-        // Use this for initialization
         void Start()
         {
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));

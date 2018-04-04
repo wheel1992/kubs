@@ -28,6 +28,7 @@ namespace Kubs
 
         public void Snap(GameObject obj)
         {
+            Debug.Log("Snap: ");
             GetChildVRTKSnapDropZone().ForceSnap(obj);
         }
         public void Unsnap()

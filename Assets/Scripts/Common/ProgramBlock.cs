@@ -8,25 +8,9 @@ namespace Kubs
 {
     public class ProgramBlock : Block
     {
-
-        // public delegate void HoverEventHandler(int targetZoneId);
-        // public delegate void SnapEventHandler(GameObject block, int zoneId);
-        // public event HoverEventHandler Hover;
-        // public event HoverEventHandler Unhover;
-        // public event SnapEventHandler Snap;
         public ProgramBlockType Type { get; set; }
-
-        // public int ZoneId { get; set; }
-        // [HideInInspector]
-        // public int HoverZoneId = -1;
-
-        // v2 here
-        // public State State { get; set; }
         [HideInInspector]
         public int ZoneIndex = -1;
-        [HideInInspector]
-        public bool IsAttachedMove = false;
-        // private List<int> _collidedZoneIndices;
         public int CollidedZoneIndex { get; set; }
 
         #region Lifecycle
@@ -48,11 +32,7 @@ namespace Kubs
 
             GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
 
-            //State = State.Detach;
-            IsAttachedMove = false;
-
             CollidedZoneIndex = -1;
-
         }
         private void Update()
         {

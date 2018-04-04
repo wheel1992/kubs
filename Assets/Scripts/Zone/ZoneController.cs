@@ -10,15 +10,11 @@ namespace Kubs
     public struct ZoneEventArgs
     {
         public int Index;
-        public bool IsAttachedMove;
     }
 
     public struct ZoneHoverEventArgs
     {
-        //public IList<int> HoveredIndices;
         public int ZoneIndex;
-        //public int UnhoveredIndex;
-        public bool IsAttachedMove;
     }
     /// <summary>
     /// This contains both ZoneBaseController and ZoneHintController
@@ -51,6 +47,17 @@ namespace Kubs
         private ZoneSnapController _zoneSnapCtrl;
 
         #region Public methods
+
+        public void AttachBlock(ProgramBlock block) {
+            Debug.Log("AttachBlock: " + block.name);
+            GetChildZoneSnap().Snap(block.gameObject);
+        }
+
+        public ProgramBlock GetAttachedProgramBlock() {
+            var blockObj = GetChildByTagName(Constant.TAG_BLOCK_PROGRAM);
+            if (blockObj == null) { return null; }
+            return GetProgramBlockByGameObject(blockObj);
+        }
 
         #endregion
 
@@ -109,8 +116,7 @@ namespace Kubs
                 OnZoneSnapped(this,
                     new ZoneEventArgs
                     {
-                        Index = this.Index,
-                        IsAttachedMove = args.WhichBlock.IsAttachedMove
+                        Index = this.Index
                     });
             }
         }
@@ -120,12 +126,12 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
+                args.WhichBlock.SetParent(null);
 
                 OnZoneUnsnapped(this,
                     new ZoneEventArgs
                     {
-                        Index = this.Index,
-                        IsAttachedMove = args.WhichBlock.IsAttachedMove
+                        Index = this.Index
                     });
             }
         }
@@ -145,8 +151,7 @@ namespace Kubs
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
                         {
-                            ZoneIndex = collidedBlock.CollidedZoneIndex,
-                            IsAttachedMove = collidedBlock.IsAttachedMove
+                            ZoneIndex = collidedBlock.CollidedZoneIndex
                         });
                 }
             }
@@ -162,8 +167,7 @@ namespace Kubs
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs
                         {
-                            ZoneIndex = Index,
-                            IsAttachedMove = collidedBlock.IsAttachedMove
+                            ZoneIndex = Index
                         });
                 }
             }

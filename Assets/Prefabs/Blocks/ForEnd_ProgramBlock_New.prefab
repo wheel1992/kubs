@@ -92,7 +92,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 7118ab04aac9918499ed0933a8fc94c2, type: 2}
+  - {fileID: 2100000, guid: 67f71eeea76cf534bbe98c7ddb7bb04d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -169,9 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48111d783297d4729b536c68778bbcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HoverZoneId: -1
   ZoneIndex: -1
-  IsAttachedMove: 0
 --- !u!114 &114561122446507678
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -244,7 +242,7 @@ MonoBehaviour:
   secondaryGrabActionScript: {fileID: 114631485113901042}
   isUsable: 0
   holdButtonToUse: 1
-  useOnlyIfGrabbed: 0
+  useOnlyIfGrabbed: 1
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0
