@@ -26,6 +26,12 @@ namespace Kubs
         
         #region Public Methods
 
+        public void Disable() {
+            gameObject.SetActive(false);
+        }
+        public void Enable() {
+            gameObject.SetActive(true);
+        }
         public void Snap(GameObject obj)
         {
             Debug.Log("Snap: ");

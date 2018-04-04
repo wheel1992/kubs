@@ -14,6 +14,7 @@ namespace Kubs
 
     public struct ZoneHoverEventArgs
     {
+        public GameObject CollidedObject;
         public int ZoneIndex;
     }
     /// <summary>
@@ -48,12 +49,21 @@ namespace Kubs
 
         #region Public methods
 
-        public void AttachBlock(ProgramBlock block) {
+        public void AttachBlock(ProgramBlock block)
+        {
             Debug.Log("AttachBlock: " + block.name);
             GetChildZoneSnap().Snap(block.gameObject);
         }
-
-        public ProgramBlock GetAttachedProgramBlock() {
+        public void DisableSnap()
+        {
+            GetChildZoneSnap().Disable();
+        }
+        public void EnableSnap()
+        {
+            GetChildZoneSnap().Enable();
+        }
+        public ProgramBlock GetAttachedProgramBlock()
+        {
             var blockObj = GetChildByTagName(Constant.TAG_BLOCK_PROGRAM);
             if (blockObj == null) { return null; }
             return GetProgramBlockByGameObject(blockObj);
@@ -142,7 +152,8 @@ namespace Kubs
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 if (collidedBlock != null)
                 {
-                    if (collidedBlock.CollidedZoneIndex == Index) {
+                    if (collidedBlock.CollidedZoneIndex == Index)
+                    {
                         return;
                     }
 
@@ -151,6 +162,7 @@ namespace Kubs
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
                         {
+                            CollidedObject = args.CollidedObject,
                             ZoneIndex = collidedBlock.CollidedZoneIndex
                         });
                 }
@@ -167,6 +179,7 @@ namespace Kubs
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs
                         {
+                            CollidedObject = args.CollidedObject,
                             ZoneIndex = Index
                         });
                 }
