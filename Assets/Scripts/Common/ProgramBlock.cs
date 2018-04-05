@@ -210,6 +210,7 @@ namespace Kubs
         // private void DoChildTriggeredEnter(Collider other)
         // {
         //     // My SweepTestChild collide with other.gameobject which is a ProgramBlock
+        //     if (other != null && other.gameObject.tag.CompareTo(Constant.TAG_BLOCK_PROGRAM) == 0)
         //     {
         //         ProgramBlock otherBlock = other.gameObject.GetComponent<ProgramBlock>();
 

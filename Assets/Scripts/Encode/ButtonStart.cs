@@ -60,7 +60,15 @@ namespace Kubs
         {
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
-
+            //bool toggle = false;
+            //while(GameObject.Find("Zones").GetComponent<ZoneMovementController>().forward)
+            //{
+            //    if(!toggle)
+            //    {
+            //        GameObject.Find("Zones").GetComponent<ZoneMovementController>().MoveBlockChain();
+            //        toggle = true;
+            //    }
+            //}
             // GetDecoder().Decode(listBlocks);
         }
         private void ChangeColor() {

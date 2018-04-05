@@ -52,19 +52,19 @@ public class UIProgramBlockHints : MonoBehaviour {
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
-                miniChar = CreateMiniGameArea(2);
+                //miniChar = CreateMiniGameArea(2);
                 // Make character move
                 break;
             case ProgramBlockType.Jump:
-                miniChar = CreateMiniGameArea(3);
+                //miniChar = CreateMiniGameArea(3);
                 // Make character move
                 break;
             case ProgramBlockType.RotateLeft:
-                miniChar = CreateMiniGameArea(1);
+                //miniChar = CreateMiniGameArea(1);
                 // Make character move
                 break;
             case ProgramBlockType.RotateRight:
-                miniChar = CreateMiniGameArea(1);
+                //miniChar = CreateMiniGameArea(1);
                 // Make character move
                 break;
             default:
@@ -74,9 +74,7 @@ public class UIProgramBlockHints : MonoBehaviour {
         yield return new WaitForSeconds(3);
     }
 
-    private 
-
-     GameObject CreateMiniGameArea(int numTerrain)
+    private GameObject CreateMiniGameArea(int numTerrain)
     {
         GameObject UIProgramBlockHints = new GameObject();
         UIProgramBlockHints.transform.SetParent(this.gameObject.transform);

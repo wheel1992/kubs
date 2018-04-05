@@ -43,11 +43,9 @@ namespace Kubs
 			InitAudioClips();
 
             //Test Blockchain Movement
-            var bcc = GameObject.Find("BlockChain").GetComponent<BlockChainController>();
-            bcc.MoveBlockChain();
-
-            //bcc.enabled = true;
-            //bcc.MoveBlockChain();
+            var zoneMovementController = GameObject.Find("Zones").GetComponent<ZoneMovementController>();
+            Debug.Log("Character Script Run");
+            zoneMovementController.MoveBlockChain();
 
             if (_isDebug)
             {
@@ -241,6 +239,7 @@ namespace Kubs
             transform.rotation = _originalRot;
 
 			Set(Animations.Idle);
+
         }
 
 		private Animations GetAnimation()
