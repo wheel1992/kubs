@@ -51,7 +51,7 @@ namespace Kubs
                 }
             }
 
-            GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
+            //GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
 
             CollidedZoneIndex = -1;
         }
@@ -59,10 +59,10 @@ namespace Kubs
         {
         }
 
-        private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
-        {
-            //ResetCollidedZoneIndices();
-        }
+        // private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
+        // {
+        //     //ResetCollidedZoneIndices();
+        // }
 
         #endregion
 

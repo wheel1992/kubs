@@ -103,8 +103,6 @@ namespace Kubs
 
             ProgramBlock block = forwardBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Forward;
-            //block.PauseSweepChildTrigger();
-            //RegisterProgramBlockHoverEventHandler(block);
 
             return forwardBlock;
         }
@@ -131,8 +129,6 @@ namespace Kubs
 
             ProgramBlock block = jumpBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.Jump;
-            //block.PauseSweepChildTrigger();
-            //RegisterProgramBlockHoverEventHandler(block);
 
             return jumpBlock;
         }
@@ -146,8 +142,6 @@ namespace Kubs
 
             ProgramBlock block = rotateleftBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateLeft;
-            //block.PauseSweepChildTrigger();
-            //RegisterProgramBlockHoverEventHandler(block);
 
             return rotateleftBlock;
         }
@@ -161,8 +155,6 @@ namespace Kubs
 
             ProgramBlock block = rotateRightBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateRight;
-            //block.PauseSweepChildTrigger(); 
-            //RegisterProgramBlockHoverEventHandler(block);
 
             return rotateRightBlock;
         }
