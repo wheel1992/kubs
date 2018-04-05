@@ -9,6 +9,7 @@ public class UIProgramBlockHints : MonoBehaviour {
     private bool _onHover = false;
     private bool _animating = false;
     private GameObject currentGameObject;
+    private float scaleFactor = 0.1f;
 
 	// Use this for initialization
 	void Start () {
@@ -106,27 +107,42 @@ public class UIProgramBlockHints : MonoBehaviour {
 
     private void ArrangeGameArea(GameObject area)
     {
+        List<GameObject> cubeCollection;
+        Character miniChar;
         if (area != null)
         {
-            Character miniChar = new Character();
             if (GetCharacterFromGameArea(area) != null)
             {
-                GetCharacterFromGameArea(area);
+                miniChar = GetCharacterFromGameArea(area);
             }
             else
                 Debug.Log("UIProgramBlockHints.ArrangeGameArea: GetCharacterFromGameArea returns null");
 
             if (GetCubesFromGameArea(area).Count != 0)
             {
-                List<GameObject> cubeCollection = GetCubesFromGameArea(area);
+                cubeCollection = GetCubesFromGameArea(area);
                 switch (cubeCollection.Count)
                 {
                     case 1:
                         break;
                     case 2:
-
+                        if (cubeCollection.Count == 2)
+                        {
+                            GameObject cubeOne = cubeCollection[0];
+                            GameObject cubeTwo = cubeCollection[1];
+                            cubeOne.transform.localPosition -= new Vector3(0, 0, scaleFactor/2);
+                            cubeTwo.transform.localPosition += new Vector3(0, 0, scaleFactor / 2);
+                        }
+                        else
+                            Debug.Log("UIProgramBlockHints.ArrangeGameArea: CubeCollection Count Larger Than 2");
                         break;
                     case 3:
+                        if (cubeCollection.Count == 3)
+                        {
+
+                        }
+                        else
+                            Debug.Log("UIProgramBlockHints.ArrangeGameArea: CubeCollection Count Larger Than 3");
                         break;
                     default:
                         break;
