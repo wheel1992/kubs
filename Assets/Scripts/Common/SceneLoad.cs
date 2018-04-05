@@ -55,7 +55,7 @@ namespace Kubs
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
 
             // Load tutorial
-            StagesManager.loadPos = new Vector3(-6, 0, -8.5f);
+            StagesManager.loadPos = new Vector3(-15, 0, 0);
             StagesManager.loadScale = new Vector3(3, 3, 3);
             StagesManager.LoadStageAsync(0, this);
         }
