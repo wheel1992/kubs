@@ -376,6 +376,8 @@ namespace Kubs
 
             if (GetAnimation() != Animations.Victory)
             {
+                Set(Animations.Idle);
+            }
 
             _isAnimating = false;
             yield break;
