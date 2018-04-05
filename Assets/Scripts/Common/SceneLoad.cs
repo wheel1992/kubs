@@ -65,7 +65,7 @@ namespace Kubs
             // Set skybox
             GameObject.FindGameObjectWithTag("MainCamera").AddComponent<Skybox>().material = skybox;
 
-            StagesManager.loadPos = new Vector3(-15, 0, 0);
+            StagesManager.loadPos = new Vector3(-25, 0, 0);
             StagesManager.loadScale = new Vector3(3, 3, 3);
             StagesManager.LoadStageAsync(0, this);
         }
