@@ -425,7 +425,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!65 &65168831110922844
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -557,6 +557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HoverZoneId: -1
+  ZoneIndex: -1
 --- !u!114 &114863538058874060
 MonoBehaviour:
   m_ObjectHideFlags: 1
