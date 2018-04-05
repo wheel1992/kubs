@@ -27,6 +27,7 @@ namespace Kubs
         //Decodes the program blocks that were encoded according to the type of program block
         public bool Decode(List<ProgramBlock> blockchain)
         {
+            listForLoopStart  = new List<ProgramBlock>();
             blockEnumerator = blockchain.GetEnumerator();
             try
             {
