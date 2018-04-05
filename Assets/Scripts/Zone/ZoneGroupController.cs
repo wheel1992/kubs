@@ -56,7 +56,6 @@ namespace Kubs
         #endregion
 
         #region Public Methods
-
         public List<ProgramBlock> CompileProgramBlocks()
         {
             string msg = "";
@@ -70,7 +69,11 @@ namespace Kubs
                     continue;
                 }
                 list.Add(block);
-                msg += "[" + GetZoneControllerByGameObject(zone).GetAttachedProgramBlock().Type + "] ";
+                msg += "[" + block.Type + "] ";
+
+                if (block.Type == ProgramBlockType.ForLoopStart) {
+                    block.Value = 1;
+                }
             }
             Debug.Log("CompileProgramBlocks: " + msg);
             return list;
@@ -182,13 +185,14 @@ namespace Kubs
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
-            Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
+            //Debug.Log("HandleZoneSnapped: at " + args.Index + ", is occupied = " + GetZoneControllerByGameObject(_zones[args.Index]).IsOccupied);
 
             GetZoneControllerByGameObject(_zones[args.Index]).HideHint();
 
             _audioSourceInsertBlock.Play();
 
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
+            //Debug.Log("HandleZoneSnapped: type = " + attachedBlock.Type);
             if (attachedBlock != null && attachedBlock.Type == ProgramBlockType.ForLoopStart)
             {
                 if (GetZoneIndexWithForLoopEndBlock() == -1)
