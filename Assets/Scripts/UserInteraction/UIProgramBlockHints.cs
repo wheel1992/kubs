@@ -15,6 +15,7 @@ public class UIProgramBlockHints : MonoBehaviour {
 		if(this.gameObject.GetComponent<VRTK_InteractableObject>() != null) {
             var io = gameObject.GetComponent<VRTK_InteractableObject>();
             io.InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouch);
+            io.InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrab);
             io.InteractableObjectUntouched += new InteractableObjectEventHandler(HandleUnTouch);
             //if(gameObject.CompareTag("Block_Program"))
             //{
@@ -46,25 +47,34 @@ public class UIProgramBlockHints : MonoBehaviour {
         _onHover = false;
     }
 
+    void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
+    {
+        _onHover = false;
+    }
+
     private IEnumerator CreateProgramBlockUIHint(ProgramBlockType programBlockType)
     {
-        Character miniChar;
+        GameObject UIProgramBlockHints = new GameObject();
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
-                //miniChar = CreateMiniGameArea(2);
+                UIProgramBlockHints = CreateMiniGameArea(2);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.Jump:
-                //miniChar = CreateMiniGameArea(3);
+                UIProgramBlockHints = CreateMiniGameArea(3);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateLeft:
-                //miniChar = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateRight:
-                //miniChar = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             default:
@@ -87,8 +97,78 @@ public class UIProgramBlockHints : MonoBehaviour {
             cube.transform.SetParent(UIProgramBlockHints.transform);
             cube.tag = "Cubes";
         }
-        Character miniChar = new Character();
-        miniChar.transform.SetParent(UIProgramBlockHints.transform);
+        // Instatiate Character along with Parent
+        //Character miniChar = new Character();
+        //miniChar.tag = "UICharacter";
+        //miniChar.transform.SetParent(UIProgramBlockHints.transform);
         return UIProgramBlockHints;
+    }
+
+    private void ArrangeGameArea(GameObject area)
+    {
+        if (area != null)
+        {
+            Character miniChar = new Character();
+            if (GetCharacterFromGameArea(area) != null)
+            {
+                GetCharacterFromGameArea(area);
+            }
+            else
+                Debug.Log("UIProgramBlockHints.ArrangeGameArea: GetCharacterFromGameArea returns null");
+
+            if (GetCubesFromGameArea(area).Count != 0)
+            {
+                List<GameObject> cubeCollection = GetCubesFromGameArea(area);
+                switch (cubeCollection.Count)
+                {
+                    case 1:
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            else
+                Debug.Log("UIProgramBlockHints.ArrangeGameArea: GetCubesFromGameArea returns null");
+
+        }
+
+    }
+
+    private Character GetCharacterFromGameArea(GameObject area)
+    {
+        Character miniChar = new Character();
+        if (area != null)
+        {
+            foreach (Transform child in area.transform)
+            {
+                if(child.tag == "UICharacter")
+                {
+                    miniChar = child.gameObject.GetComponent<Character>();
+                }
+            }
+        }
+        return miniChar;
+    }
+
+    private List<GameObject> GetCubesFromGameArea(GameObject area)
+    {
+        List<GameObject> cubeCollection = new List<GameObject>();
+        if(area != null)
+        {
+            foreach (Transform child in area.transform)
+            {
+                if (child.tag == "Cubes")
+                {
+                    cubeCollection.Add(child.gameObject);
+                }
+            }
+        }
+        return cubeCollection;
     }
 }
