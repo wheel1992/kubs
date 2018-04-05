@@ -387,6 +387,7 @@ namespace Kubs
         {
             _scale = ((Vector3)localScale).x;
             DebugLog(_scale);
+        }
 
         private GameObject GetZonesGameObject()
         {
