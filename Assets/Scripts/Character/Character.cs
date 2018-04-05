@@ -43,9 +43,9 @@ namespace Kubs
 			InitAudioClips();
 
             //Test Blockchain Movement
-            var zoneMovementController = GameObject.Find("Zones").GetComponent<ZoneMovementController>();
-            Debug.Log("Character Script Run");
-            zoneMovementController.MoveBlockChain();
+            //var zoneMovementController = GameObject.Find("Zones").GetComponent<ZoneMovementController>();
+            //Debug.Log("Character Script Run");
+            //zoneMovementController.MoveBlockChain();
 
             if (_isDebug)
             {
@@ -239,10 +239,18 @@ namespace Kubs
             transform.rotation = _originalRot;
 
 			Set(Animations.Idle);
-
+            //bool toggle = false;
+            //while (!GameObject.Find("Zones").GetComponent<ZoneMovementController>().forward)
+            //{
+            //    if(!toggle)
+            //    {
+            //        GameObject.Find("Zones").GetComponent<ZoneMovementController>().MoveBlockChain();
+            //        toggle = true;
+            //    }
+            //}
         }
 
-		private Animations GetAnimation()
+        private Animations GetAnimation()
         {
             return (Animations)_animator.GetInteger("animation");
         }

@@ -6,8 +6,16 @@ using VRTK.UnityEventHelper;
 
 namespace Kubs
 {
+    //public struct ButtonStartEventArgs
+    //{
+    //    public int Index;
+    //    public bool IsAttachedMove;
+    //}
     public class ButtonStart : MonoBehaviour
     {
+        public delegate void ButtonStartEventHandler(object sender);
+        public event ButtonStartEventHandler OnPressed;
+
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
@@ -50,14 +58,16 @@ namespace Kubs
             StartCoroutine("Depress");
         }
 
-        private void HandlePush(object sender, Control3DEventArgs e)
-        {
-            VRTK_Logger.Info("Pushed");
-            Run();
-        }
+        //private void HandlePush(object sender, Control3DEventArgs e)
+        //{
+        //    VRTK_Logger.Info("Pushed");
+        //    Run();
+        //}
 
         private void Run()
         {
+            OnPressed(this);
+
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
             //bool toggle = false;

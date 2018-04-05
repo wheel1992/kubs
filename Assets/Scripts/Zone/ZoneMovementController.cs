@@ -95,9 +95,10 @@ private bool expand = false;
                     }
                     else if (currentWP == zonesWaypoints.Length - 1)
                     {
+                        moveValid = false;
                         currentWP = 8;
                         forward = false;
-                        zones.SetActive(false);
+                        //zones.SetActive(false);
                         return;
                     }
 
