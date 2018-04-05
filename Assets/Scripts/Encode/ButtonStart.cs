@@ -21,6 +21,8 @@ namespace Kubs
 
         private bool _isAnimating = false;
 
+        private GameObject _zonesObject;
+
         // Use this for initialization
         void Start()
         {
@@ -31,12 +33,14 @@ namespace Kubs
             // }
             // buttonEvents.OnPushed.AddListener(HandlePush);
             //_defaultMaterial = GetCurrentMaterial();
+
+             _zonesObject = GetZonesGameObject();
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
         private void OnTriggerExit(Collider other)
@@ -70,21 +74,24 @@ namespace Kubs
 
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
-            //bool toggle = false;
-            //while(GameObject.Find("Zones").GetComponent<ZoneMovementController>().forward)
-            //{
-            //    if(!toggle)
-            //    {
-            //        GameObject.Find("Zones").GetComponent<ZoneMovementController>().MoveBlockChain();
-            //        toggle = true;
-            //    }
-            //}
+            bool toggle = false;
+            while(_zonesObject.GetComponent<ZoneMovementController>().forward)
+            {
+               if(!toggle)
+               {
+                   _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+                   toggle = true;
+               }
+            }
+            _zonesObject.SetActive(false);
             // GetDecoder().Decode(listBlocks);
         }
-        private void ChangeColor() {
+        private void ChangeColor()
+        {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
         }
-        private Material GetCurrentMaterial() {
+        private Material GetCurrentMaterial()
+        {
             return gameObject.GetComponent<Renderer>().material;
         }
 
@@ -103,7 +110,7 @@ namespace Kubs
             }
 
             _isAnimating = true;
-            
+
             var startScale = transform.localScale;
             var endScale = startScale;
             endScale.y /= 2;
@@ -149,6 +156,10 @@ namespace Kubs
         private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
+        }
+        GameObject GetZonesGameObject()
+        {
+            return GameObject.Find("Zones");
         }
     }
 }

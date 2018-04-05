@@ -28,11 +28,12 @@ namespace Kubs
         private bool _isStopped;
         public float _scale;
         public AudioClip audioClipWalk;
-		public AudioClip audioClipChewFood;
-		public AudioClip audioClipJump;
+        public AudioClip audioClipChewFood;
+        public AudioClip audioClipJump;
         private AudioSource _audioSourceWalk;
-		private AudioSource _audioSourceChewFood;
-		private AudioSource _audioSourceJump;
+        private AudioSource _audioSourceChewFood;
+        private AudioSource _audioSourceJump;
+
         // Use this for initialization
         void Start()
         {
@@ -40,7 +41,7 @@ namespace Kubs
             _originalPos = transform.position;
             _scale = transform.lossyScale.x;
 
-			InitAudioClips();
+            InitAudioClips();
 
             //Test Blockchain Movement
             //var zoneMovementController = GameObject.Find("Zones").GetComponent<ZoneMovementController>();
@@ -112,7 +113,7 @@ namespace Kubs
             }
             else if (other.gameObject.tag == "Collectable")
             {
-				_audioSourceChewFood.Play();
+                _audioSourceChewFood.Play();
 
                 other.gameObject.SetActive(false);
 
@@ -121,7 +122,7 @@ namespace Kubs
                 {
                     tutorialManager.ShowStage(collectableBlock.nextStage);
 
-					Set(Animations.Victory);
+                    Set(Animations.Victory);
                     Invoke("Reset", 2f);
                 }
             }
@@ -163,7 +164,7 @@ namespace Kubs
             Set(Animations.Jump);
             _type = ProgramBlockType.Jump;
 
-			_audioSourceJump.Play();
+            _audioSourceJump.Play();
 
             StartCoroutine("UpdatePosition");
             return true;
@@ -213,7 +214,8 @@ namespace Kubs
             }
         }
 
-		private void InitAudioClips() {
+        private void InitAudioClips()
+        {
             _audioSourceWalk = gameObject.AddComponent<AudioSource>();
             _audioSourceWalk.clip = audioClipWalk;
             _audioSourceWalk.loop = false;
@@ -226,28 +228,30 @@ namespace Kubs
             _audioSourceChewFood.playOnAwake = false;
             _audioSourceChewFood.volume = 1.0f;
 
-		 	_audioSourceJump = gameObject.AddComponent<AudioSource>();
+            _audioSourceJump = gameObject.AddComponent<AudioSource>();
             _audioSourceJump.clip = audioClipJump;
             _audioSourceJump.loop = false;
             _audioSourceJump.playOnAwake = false;
             _audioSourceJump.volume = 0.8f;
-		}
+        }
 
         private void Reset()
         {
             transform.position = _originalPos;
             transform.rotation = _originalRot;
 
-			Set(Animations.Idle);
-            //bool toggle = false;
-            //while (!GameObject.Find("Zones").GetComponent<ZoneMovementController>().forward)
-            //{
-            //    if(!toggle)
-            //    {
-            //        GameObject.Find("Zones").GetComponent<ZoneMovementController>().MoveBlockChain();
-            //        toggle = true;
-            //    }
-            //}
+            Set(Animations.Idle);
+
+            bool toggle = false;
+            _zonesObject.SetActive(true);
+            while (!_zonesObject.GetComponent<ZoneMovementController>().forward)
+            {
+               if(!toggle)
+               {
+                    _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+                   toggle = true;
+               }
+            }
         }
 
         private Animations GetAnimation()
@@ -281,9 +285,9 @@ namespace Kubs
             }
 
             if (GetAnimation() != Animations.Victory)
-			{
-				Set(Animations.Idle);
-			}
+            {
+                Set(Animations.Idle);
+            }
 
             _isAnimating = false;
             yield break;
@@ -310,9 +314,9 @@ namespace Kubs
             }
 
             if (GetAnimation() != Animations.Victory)
-			{
-				Set(Animations.Idle);
-			}
+            {
+                Set(Animations.Idle);
+            }
 
             _isAnimating = false;
             yield break;

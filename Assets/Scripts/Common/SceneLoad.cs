@@ -61,48 +61,12 @@ namespace Kubs
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
 
-
-            _buttonStart = GetButtonStart();
-            _buttonStart.OnPressed += new ButtonStart.ButtonStartEventHandler(HandleOnButtonStartPressed);
-
-            _zonesObject = GetZonesGameObject();
         }
 
         // Update is called once per frame
         void Update()
         {
             // ...
-        }
-        private void HandleOnButtonStartPressed(object sender)
-        {
-            MoveZonesTowardsCharacter();
-        }
-        private void MoveZonesTowardsCharacter()
-        {
-            bool toggle = false;
-            while (_zonesObject.GetComponent<ZoneMovementController>().forward)
-            {
-                if (!toggle)
-                {
-                    _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-                    toggle = true;
-                }
-            }
-            _zonesObject.SetActive(false);
-        }
-        private void MoveZonesFromCharacter()
-        {
-            _zonesObject.SetActive(true);
-
-            bool toggle = false;
-            while (!_zonesObject.GetComponent<ZoneMovementController>().forward)
-            {
-                if (!toggle)
-                {
-                    _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-                    toggle = true;
-                }
-            }
         }
 
         // private void DoProgramBlockHover(int targetZoneId)
@@ -235,14 +199,5 @@ namespace Kubs
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT).GetComponent<VRTK_SnapDropZone>();
         }
-        ButtonStart GetButtonStart()
-        {
-            return GameObject.Find(Constant.NAME_BUTTON_START).GetComponent<ButtonStart>();
-        }
-        GameObject GetZonesGameObject()
-        {
-            return GameObject.Find("Zones");
-        }
-
     }
 }
