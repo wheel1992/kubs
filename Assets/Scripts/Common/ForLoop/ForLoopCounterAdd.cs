@@ -28,6 +28,7 @@ namespace Kubs
         }
         void OnTriggerEnter(Collider other)
         {
+            if (!IsController(other.gameObject)) return;
             if (!IsTriggered)
             {
                 IsTriggered = true;
@@ -39,6 +40,11 @@ namespace Kubs
             IsTriggered = false;
             OnExit(this, new CounterAddEventArgs { CollidedObject = other.gameObject });
         }
+        bool IsController(GameObject obj)
+        {
+            return obj.name.CompareTo("Head") == 0 || obj.name.CompareTo("SideA") == 0 || obj.name.CompareTo("SideB") == 0;
+        }
     }
+
 }
 

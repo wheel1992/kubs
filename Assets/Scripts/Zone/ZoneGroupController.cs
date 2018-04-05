@@ -73,7 +73,7 @@ namespace Kubs
 
                 if (block.Type == ProgramBlockType.ForLoopStart)
                 {
-                    block.Value = 1;
+                    block.Value = GetForLoopProgramBlock(block).loopCounter;
                 }
             }
             Debug.Log("CompileProgramBlocks: " + msg);
