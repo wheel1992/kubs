@@ -13,9 +13,6 @@ namespace Kubs
     //}
     public class ButtonStart : MonoBehaviour
     {
-        public delegate void ButtonStartEventHandler(object sender);
-        public event ButtonStartEventHandler OnPressed;
-
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
@@ -73,8 +70,6 @@ namespace Kubs
 
         private void Run()
         {
-            OnPressed(this);
-
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 

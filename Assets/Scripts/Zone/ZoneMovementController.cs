@@ -214,9 +214,11 @@ private bool expand = false;
     private IEnumerator Depress()
     {
         var incrementor = 0f;
+        var scalingFactor = 5; // Bigger for slower
+
         while (this.transform.localScale != (Vector3.one * TargetSmallScale))
         {
-            incrementor += 0.001f;
+            incrementor += Time.deltaTime / scalingFactor;
             Vector3 currentScale = Vector3.Lerp(Vector3.one * InitScale, Vector3.one * TargetSmallScale, incrementor);
             transform.localScale = currentScale;
             yield return null;
