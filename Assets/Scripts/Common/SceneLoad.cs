@@ -32,15 +32,22 @@ namespace Kubs
         void Start()
         {
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
-            var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
-            var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
-            var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
-            var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
-
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
-            GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
+
+            // For Friday 6 April 2018 demo, we do not allow clone ForLoop
+            // var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
+            // GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
+            var block = GetForLoopStartProgramBlock();
+            if (block != null)
+                block.Type = ProgramBlockType.ForLoopStart;
+
+            var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
+
+            var rotateLeftBlock = CreateRotateLeftBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
+
+            var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
         }
 
@@ -158,6 +165,18 @@ namespace Kubs
             //RegisterProgramBlockHoverEventHandler(block);
 
             return rotateRightBlock;
+        }
+        ProgramBlock GetForLoopStartProgramBlock()
+        {
+            var area = GameObject.Find("SnapCloneBlockArea");
+            for (int i = 0; i < area.transform.childCount; i++)
+            {
+                if (area.transform.GetChild(i).gameObject.name.CompareTo("ForStart_ProgramBlock_New") == 0)
+                {
+                    return area.transform.GetChild(i).gameObject.GetComponent<ProgramBlock>();
+                }
+            }
+            return null;
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {
