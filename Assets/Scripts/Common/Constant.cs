@@ -26,7 +26,9 @@ namespace Kubs
         public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATELEFT = "SnapDropZoneCloneRotateLeft";
         public static string TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT = "SnapDropZoneCloneRotateRight";
         public static string TAG_SNAP_DROP_ZONE_CLONE_JUMP = "SnapDropZoneCloneJump";
-        public static string TAG_TEMPORARY_POSITION_OBJECT = "TempPositionObject";  
+        public static string TAG_TEMPORARY_POSITION_OBJECT = "TempPositionObject";
+
+        public const string EVENT_NAME_CHARACTER_DID_START = "Character_Did_Start";
+        public const string EVENT_NAME_GAME_AREA_DID_SCALE = "Game_Area_Did_Scale";
     }
 }
-

@@ -53,6 +53,11 @@ namespace Kubs
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
             GetVRTKSnapDropZoneCloneRotateLeft().ForceSnap(rotateLeftBlock);
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
+
+            // Load tutorial
+            StagesManager.loadPos = new Vector3(-6, 0, -8.5f);
+            StagesManager.loadScale = new Vector3(3, 3, 3);
+            StagesManager.LoadStageAsync(0, this);
         }
 
         // Update is called once per frame
@@ -156,7 +161,7 @@ namespace Kubs
             ProgramBlock block = rotateRightBlock.GetComponent<ProgramBlock>();
             block.Type = ProgramBlockType.RotateRight;
             block.PauseSweepChildTrigger();
-            
+
             RegisterProgramBlockHoverEventHandler(block);
 
             return rotateRightBlock;
