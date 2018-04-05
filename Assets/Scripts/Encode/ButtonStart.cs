@@ -19,6 +19,7 @@ namespace Kubs
         private bool _isAnimating = false;
 
         private GameObject _zonesObject;
+        private ZoneGroupController _zoneGroupController;
         private ZoneMovementController _zoneMovementController;
 
         // Use this for initialization
@@ -33,6 +34,7 @@ namespace Kubs
             //_defaultMaterial = GetCurrentMaterial();
 
             _zonesObject = GetZonesGameObject();
+            _zoneGroupController = GetZoneGroupController();
             _zoneMovementController = _zonesObject.GetComponent<ZoneMovementController>();
             _zoneMovementController.OnCompleted += Decode;
         }
@@ -87,7 +89,9 @@ namespace Kubs
         {
             Debug.Log("Decode");
             _zonesObject.SetActive(false);
-            // GetDecoder().Decode(listBlocks);
+            
+            var listBlocks = _zoneGroupController.CompileProgramBlocks();
+            GetDecoder().Decode(listBlocks);
         }
 
         private void ChangeColor()
