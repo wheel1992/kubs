@@ -9,12 +9,14 @@ public class UIProgramBlockHints : MonoBehaviour {
     private bool _onHover = false;
     private bool _animating = false;
     private GameObject currentGameObject;
+    private float scaleFactor = 0.1f;
 
 	// Use this for initialization
 	void Start () {
 		if(this.gameObject.GetComponent<VRTK_InteractableObject>() != null) {
             var io = gameObject.GetComponent<VRTK_InteractableObject>();
             io.InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouch);
+            io.InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrab);
             io.InteractableObjectUntouched += new InteractableObjectEventHandler(HandleUnTouch);
             //if(gameObject.CompareTag("Block_Program"))
             //{
@@ -46,25 +48,34 @@ public class UIProgramBlockHints : MonoBehaviour {
         _onHover = false;
     }
 
+    void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
+    {
+        _onHover = false;
+    }
+
     private IEnumerator CreateProgramBlockUIHint(ProgramBlockType programBlockType)
     {
-        Character miniChar;
+        GameObject UIProgramBlockHints = new GameObject();
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
-                miniChar = CreateMiniGameArea(2);
+                UIProgramBlockHints = CreateMiniGameArea(2);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.Jump:
-                miniChar = CreateMiniGameArea(3);
+                UIProgramBlockHints = CreateMiniGameArea(3);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateLeft:
-                miniChar = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateRight:
-                miniChar = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1);
+                //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             default:
@@ -74,9 +85,7 @@ public class UIProgramBlockHints : MonoBehaviour {
         yield return new WaitForSeconds(3);
     }
 
-    private 
-
-     GameObject CreateMiniGameArea(int numTerrain)
+    private GameObject CreateMiniGameArea(int numTerrain)
     {
         GameObject UIProgramBlockHints = new GameObject();
         UIProgramBlockHints.transform.SetParent(this.gameObject.transform);
@@ -89,8 +98,93 @@ public class UIProgramBlockHints : MonoBehaviour {
             cube.transform.SetParent(UIProgramBlockHints.transform);
             cube.tag = "Cubes";
         }
-        Character miniChar = new Character();
-        miniChar.transform.SetParent(UIProgramBlockHints.transform);
+        // Instatiate Character along with Parent
+        //Character miniChar = new Character();
+        //miniChar.tag = "UICharacter";
+        //miniChar.transform.SetParent(UIProgramBlockHints.transform);
         return UIProgramBlockHints;
+    }
+
+    private void ArrangeGameArea(GameObject area)
+    {
+        List<GameObject> cubeCollection;
+        Character miniChar;
+        if (area != null)
+        {
+            if (GetCharacterFromGameArea(area) != null)
+            {
+                miniChar = GetCharacterFromGameArea(area);
+            }
+            else
+                Debug.Log("UIProgramBlockHints.ArrangeGameArea: GetCharacterFromGameArea returns null");
+
+            if (GetCubesFromGameArea(area).Count != 0)
+            {
+                cubeCollection = GetCubesFromGameArea(area);
+                switch (cubeCollection.Count)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        if (cubeCollection.Count == 2)
+                        {
+                            GameObject cubeOne = cubeCollection[0];
+                            GameObject cubeTwo = cubeCollection[1];
+                            cubeOne.transform.localPosition -= new Vector3(0, 0, scaleFactor/2);
+                            cubeTwo.transform.localPosition += new Vector3(0, 0, scaleFactor / 2);
+                        }
+                        else
+                            Debug.Log("UIProgramBlockHints.ArrangeGameArea: CubeCollection Count Larger Than 2");
+                        break;
+                    case 3:
+                        if (cubeCollection.Count == 3)
+                        {
+
+                        }
+                        else
+                            Debug.Log("UIProgramBlockHints.ArrangeGameArea: CubeCollection Count Larger Than 3");
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            else
+                Debug.Log("UIProgramBlockHints.ArrangeGameArea: GetCubesFromGameArea returns null");
+
+        }
+
+    }
+
+    private Character GetCharacterFromGameArea(GameObject area)
+    {
+        Character miniChar = new Character();
+        if (area != null)
+        {
+            foreach (Transform child in area.transform)
+            {
+                if(child.tag == "UICharacter")
+                {
+                    miniChar = child.gameObject.GetComponent<Character>();
+                }
+            }
+        }
+        return miniChar;
+    }
+
+    private List<GameObject> GetCubesFromGameArea(GameObject area)
+    {
+        List<GameObject> cubeCollection = new List<GameObject>();
+        if(area != null)
+        {
+            foreach (Transform child in area.transform)
+            {
+                if (child.tag == "Cubes")
+                {
+                    cubeCollection.Add(child.gameObject);
+                }
+            }
+        }
+        return cubeCollection;
     }
 }

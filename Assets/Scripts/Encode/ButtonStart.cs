@@ -6,12 +6,21 @@ using VRTK.UnityEventHelper;
 
 namespace Kubs
 {
+    //public struct ButtonStartEventArgs
+    //{
+    //    public int Index;
+    //    public bool IsAttachedMove;
+    //}
     public class ButtonStart : MonoBehaviour
     {
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
         private bool _isAnimating = false;
+
+        private GameObject _zonesObject;
+        private ZoneGroupController _zoneGroupController;
+        private ZoneMovementController _zoneMovementController;
 
         // Use this for initialization
         void Start()
@@ -23,12 +32,24 @@ namespace Kubs
             // }
             // buttonEvents.OnPushed.AddListener(HandlePush);
             //_defaultMaterial = GetCurrentMaterial();
+
+            _zonesObject = GetZonesGameObject();
+            _zoneGroupController = GetZoneGroupController();
+            _zoneMovementController = _zonesObject.GetComponent<ZoneMovementController>();
+            _zoneMovementController.OnCompleted += Decode;
         }
 
         // Update is called once per frame
         void Update()
         {
-            
+
+        }
+
+        //Testing Method
+        public void buttonPressed()
+        {
+            Collider other = new Collider();
+            OnTriggerEnter(other);
         }
 
         private void OnTriggerExit(Collider other)
@@ -50,23 +71,36 @@ namespace Kubs
             StartCoroutine("Depress");
         }
 
-        private void HandlePush(object sender, Control3DEventArgs e)
-        {
-            VRTK_Logger.Info("Pushed");
-            Run();
-        }
+        //private void HandlePush(object sender, Control3DEventArgs e)
+        //{
+        //    VRTK_Logger.Info("Pushed");
+        //    Run();
+        //}
 
         private void Run()
         {
-            var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
-            //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
+            // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
+            // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
+            // _zoneMovementController.MoveBlockChain();
+            Decode();
+        }
+
+        private void Decode()
+        {
+            Debug.Log("Decode");
+            // _zonesObject.SetActive(false);
+            
+            var listBlocks = _zoneGroupController.CompileProgramBlocks();
             GetDecoder().Decode(listBlocks);
         }
-        private void ChangeColor() {
+
+        private void ChangeColor()
+        {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
         }
-        private Material GetCurrentMaterial() {
+        private Material GetCurrentMaterial()
+        {
             return gameObject.GetComponent<Renderer>().material;
         }
 
@@ -85,7 +119,7 @@ namespace Kubs
             }
 
             _isAnimating = true;
-            
+
             var startScale = transform.localScale;
             var endScale = startScale;
             endScale.y /= 2;
@@ -128,9 +162,15 @@ namespace Kubs
             return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
         }
 
-        private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
+        private ZoneGroupController GetZoneGroupController()
         {
-            return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
+            return GameObject.Find(Constant.NAME_ZONES).GetComponent<ZoneGroupController>();
         }
+        
+        GameObject GetZonesGameObject()
+        {
+            return GameObject.Find("Zones");
+        }
+        
     }
 }

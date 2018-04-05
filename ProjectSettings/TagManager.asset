@@ -29,6 +29,17 @@ TagManager:
   - Hole
   - Collectable
   - SnapDropZoneCloneRotateRight
+  - ZoneBase
+  - ZoneHint
+  - ZoneGroup
+  - ZoneObject
+  - ZoneHintHighlightedObject
+  - ZoneSnap
+  - ZoneHintPredicter
+  - ZoneContainer
+  - SnapDropZoneCloneForStartEnd
+  - ZoneStartDummy
+  - UICharacter
   layers:
   - Default
   - TransparentFX

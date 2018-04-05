@@ -1,23 +1,27 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using VRTK;
 
-public class BlockChainController : MonoBehaviour
+public class ZoneMovementController : MonoBehaviour
 {
+    // Events
+    public event UnityAction OnCompleted;
+
     //Attributes for movement
-    private GameObject[] blockChainWaypoints;
+    private GameObject[] zonesWaypoints;
     private int startTargetWP = 1;
     private int currentWP;
-    private float rotationSpeed = 3f;
-    private float moveSpeed = 3f;
-    private float accuracyWP = 1f;
-    private bool moveValid = false;
-    private GameObject blockChainPlate;
+    private float rotationSpeed = 50f;
+    private float moveSpeed = 12f;
+    private float accuracyWP = 0.1f;
+    private bool moveValid;
+    private GameObject zones;
     private BoxCollider blockChainPlateBoxCollider;
     private Vector3 direction;
+    public bool forward { get; set; }
 
-    //Attributes for expansion & depression
-    private bool expand = false;
+//Attributes for expansion & depression
     private float _currentScale = InitScale;
     private const float TargetBigScale = 2f;
     private const float TargetSmallScale = 0.1f;
@@ -37,29 +41,31 @@ public class BlockChainController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        moveValid = false;
+        forward = true;
         currentWP = startTargetWP;
-        blockChainWaypoints = new GameObject[19];
-        blockChainWaypoints[0] = GameObject.Find("BlockChainMovementWPS0");
-        blockChainWaypoints[1] = GameObject.Find("BlockChainMovementWPS1");
-        blockChainWaypoints[2] = GameObject.Find("BlockChainMovementWPS2");
-        blockChainWaypoints[3] = GameObject.Find("BlockChainMovementWPS3");
-        blockChainWaypoints[4] = GameObject.Find("BlockChainMovementWPS4");
-        blockChainWaypoints[5] = GameObject.Find("BlockChainMovementWPS5");
-        blockChainWaypoints[6] = GameObject.Find("BlockChainMovementWPS6");
-        blockChainWaypoints[7] = GameObject.Find("BlockChainMovementWPS7");
-        blockChainWaypoints[8] = GameObject.Find("BlockChainMovementWPS8");
-        blockChainWaypoints[9] = GameObject.Find("BlockChainMovementWPS9");
-        blockChainWaypoints[10] = GameObject.Find("BlockChainMovementWPS10");
-        blockChainWaypoints[11] = GameObject.Find("BlockChainMovementWPS11");
-        blockChainWaypoints[12] = GameObject.Find("BlockChainMovementWPS12");
-        blockChainWaypoints[13] = GameObject.Find("BlockChainMovementWPS13");
-        blockChainWaypoints[14] = GameObject.Find("BlockChainMovementWPS14");
-        blockChainWaypoints[15] = GameObject.Find("BlockChainMovementWPS15");
-        blockChainWaypoints[16] = GameObject.Find("BlockChainMovementWPS16");
-        blockChainWaypoints[17] = GameObject.Find("BlockChainMovementWPS17");
-        blockChainWaypoints[18] = GameObject.Find("BlockChainMovementWPS18");
-        blockChainPlate = GameObject.Find("BlockChain");
-        blockChainPlateBoxCollider = GameObject.Find("BlockChainPlate").GetComponent<BoxCollider>();
+        zonesWaypoints = new GameObject[10];
+        zonesWaypoints[0] = GameObject.Find("BlockChainMovementWPS0");
+        zonesWaypoints[1] = GameObject.Find("BlockChainMovementWPS1");
+        zonesWaypoints[2] = GameObject.Find("BlockChainMovementWPS2");
+        zonesWaypoints[3] = GameObject.Find("BlockChainMovementWPS3");
+        zonesWaypoints[4] = GameObject.Find("BlockChainMovementWPS4");
+        zonesWaypoints[5] = GameObject.Find("BlockChainMovementWPS5");
+        zonesWaypoints[6] = GameObject.Find("BlockChainMovementWPS6");
+        zonesWaypoints[7] = GameObject.Find("BlockChainMovementWPS7");
+        zonesWaypoints[8] = GameObject.Find("BlockChainMovementWPS8");
+        zonesWaypoints[9] = GameObject.Find("BlockChainMovementWPS9");
+        //zonesWaypoints[10] = GameObject.Find("BlockChainMovementWPS10");
+        //zonesWaypoints[11] = GameObject.Find("BlockChainMovementWPS11");
+        //zonesWaypoints[12] = GameObject.Find("BlockChainMovementWPS12");
+        //zonesWaypoints[13] = GameObject.Find("BlockChainMovementWPS13");
+        //zonesWaypoints[14] = GameObject.Find("BlockChainMovementWPS14");
+        //zonesWaypoints[15] = GameObject.Find("BlockChainMovementWPS15");
+        //zonesWaypoints[16] = GameObject.Find("BlockChainMovementWPS16");
+        //zonesWaypoints[17] = GameObject.Find("BlockChainMovementWPS17");
+        //zonesWaypoints[18] = GameObject.Find("BlockChainMovementWPS18");
+        zones = GameObject.Find("Zones");
+        //blockChainPlateBoxCollider = GameObject.Find("BlockChainPlate").GetComponent<BoxCollider>();
         //InitBlockChainPlateBoxCollider();
         //Debug.Log("BlockChain Started");
         Program_Block_Snap_Zone = GameObject.Find("Program_Block_SnapDropZone");
@@ -74,38 +80,60 @@ public class BlockChainController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("BlockChain Update: " + moveValid + " " + currentWP);
+        //Debug.Log("BlockChain Update: " + moveValid + " " + currentWP);
         if (moveValid)
         {
-            Debug.Log("BlockChain Move Valid Update");
-            if (Vector3.Distance(blockChainWaypoints[currentWP].transform.position, transform.position) < accuracyWP)
+            //Debug.Log("BlockChain Move Valid Update");
+            //Debug.Log("Debug Update Distance " + Vector3.Distance(zonesWaypoints[currentWP].transform.position, transform.position));
+            if (Vector3.Distance(zonesWaypoints[currentWP].transform.position, transform.position) < accuracyWP)
             {
-                //Handle reassignment of target way point when object reaches current way point
 
-                if (currentWP < blockChainWaypoints.Length - 1)
+                if (forward)
                 {
-                    currentWP++;
-                } else if(currentWP == blockChainWaypoints.Length - 1)
-                {
-                    currentWP = 0;
-                }
 
-                if(currentWP == 10 || currentWP == 1)
-                {
-                    //moveValid = false;
-                    if (currentWP == 1)
-                        blockChainPlateBoxCollider.enabled = true;
-                    else
+                    //Handle reassignment of target way point when object reaches current way point
+
+                    if (currentWP < zonesWaypoints.Length - 1)
                     {
-                        GameObject.Find("BlockChain").SetActive(false);
+                        currentWP++;
+                        //Debug.Log("Debug Update " + currentWP + " WP");
                     }
-                    return;
+                    else if (currentWP == zonesWaypoints.Length - 1)
+                    {
+                        //moveValid = false;
+                        currentWP = 8;
+                        forward = false;
+                        //zones.SetActive(false);
+
+                        OnCompleted();
+                        return;
+                    }
+
+                } else
+                {
+
+                    if (currentWP > 0)
+                        currentWP--;
+                    else if (currentWP == 0)
+                    {
+                        moveValid = false;
+                        currentWP = 1;
+                        forward = true;
+                        return;
+                    }
+
+                    //if(currentWP == 0)
+                    //{
+                    //    moveSpeed = 1f;
+                    //    accuracyWP = 0.3f;
+                    //}
+
                 }
 
             }
 
             //rotate and move towards waypoint
-            direction = blockChainWaypoints[currentWP].transform.position - transform.position;
+            direction = zonesWaypoints[currentWP].transform.position - transform.position;
             this.transform.rotation = Quaternion.Slerp(this.transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Time.deltaTime);
             this.transform.Translate(0, 0, Time.deltaTime * moveSpeed);
         }
@@ -123,16 +151,17 @@ public class BlockChainController : MonoBehaviour
 
     public bool MoveBlockChain()
     {
-        if (expand)
+        //Debug.Log(forward);
+        if (!forward)
             StartCoroutine(Expand());
         else
             StartCoroutine(Depress());
 
-        if (blockChainPlateBoxCollider == null)
-        {
-            InitBlockChainPlateBoxCollider();
-        }
-        blockChainPlateBoxCollider.enabled = false;
+        //if (blockChainPlateBoxCollider == null)
+        //{
+        //    InitBlockChainPlateBoxCollider();
+        //}
+        //blockChainPlateBoxCollider.enabled = false;
         moveValid = true;
         return moveValid;
     }
@@ -183,9 +212,11 @@ public class BlockChainController : MonoBehaviour
     private IEnumerator Depress()
     {
         var incrementor = 0f;
+        var scalingFactor = 5; // Bigger for slower
+
         while (this.transform.localScale != (Vector3.one * TargetSmallScale))
         {
-            incrementor += 0.001f;
+            incrementor += Time.deltaTime / scalingFactor;
             Vector3 currentScale = Vector3.Lerp(Vector3.one * InitScale, Vector3.one * TargetSmallScale, incrementor);
             transform.localScale = currentScale;
             yield return null;
