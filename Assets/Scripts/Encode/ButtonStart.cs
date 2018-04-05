@@ -82,14 +82,14 @@ namespace Kubs
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
-            // _zoneMovementController.MoveBlockChain();
+            //_zoneMovementController.MoveBlockChain();
             Decode();
         }
 
         private void Decode()
         {
             Debug.Log("Decode");
-            // _zonesObject.SetActive(false);
+            //_zonesObject.SetActive(false);
             
             var listBlocks = _zoneGroupController.CompileProgramBlocks();
             GetDecoder().Decode(listBlocks);

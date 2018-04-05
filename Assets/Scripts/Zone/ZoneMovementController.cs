@@ -23,7 +23,7 @@ public class ZoneMovementController : MonoBehaviour
 
 //Attributes for expansion & depression
     private float _currentScale = InitScale;
-    private const float TargetBigScale = 2f;
+    private const float TargetBigScale = 1f;
     private const float TargetSmallScale = 0.1f;
     private const float InitScale = 1f;
     private const int FramesCount = 100;
@@ -68,12 +68,12 @@ public class ZoneMovementController : MonoBehaviour
         //blockChainPlateBoxCollider = GameObject.Find("BlockChainPlate").GetComponent<BoxCollider>();
         //InitBlockChainPlateBoxCollider();
         //Debug.Log("BlockChain Started");
-        Program_Block_Snap_Zone = GameObject.Find("Program_Block_SnapDropZone");
-        if (Program_Block_Snap_Zone != null)
-        {
-            var block = Instantiate(testBlockPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            Program_Block_Snap_Zone.GetComponent<VRTK_SnapDropZone>().ForceSnap(block);
-        }
+        //Program_Block_Snap_Zone = GameObject.Find("Program_Block_SnapDropZone");
+        //if (Program_Block_Snap_Zone != null)
+        //{
+        //    var block = Instantiate(testBlockPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        //    Program_Block_Snap_Zone.GetComponent<VRTK_SnapDropZone>().ForceSnap(block);
+        //}
 
     }
 
@@ -100,7 +100,7 @@ public class ZoneMovementController : MonoBehaviour
                     }
                     else if (currentWP == zonesWaypoints.Length - 1)
                     {
-                        //moveValid = false;
+                        moveValid = false;
                         currentWP = 8;
                         forward = false;
                         //zones.SetActive(false);
