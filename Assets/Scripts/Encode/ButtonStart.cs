@@ -22,6 +22,7 @@ namespace Kubs
         private bool _isAnimating = false;
 
         private GameObject _zonesObject;
+        private ZoneMovementController _zoneMovementController;
 
         // Use this for initialization
         void Start()
@@ -34,7 +35,9 @@ namespace Kubs
             // buttonEvents.OnPushed.AddListener(HandlePush);
             //_defaultMaterial = GetCurrentMaterial();
 
-             _zonesObject = GetZonesGameObject();
+            _zonesObject = GetZonesGameObject();
+            _zoneMovementController = _zonesObject.GetComponent<ZoneMovementController>();
+            _zoneMovementController.OnCompleted += Decode;
         }
 
         // Update is called once per frame
@@ -74,18 +77,17 @@ namespace Kubs
 
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
-            bool toggle = false;
-            while(_zonesObject.GetComponent<ZoneMovementController>().forward)
-            {
-               if(!toggle)
-               {
-                   _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-                   toggle = true;
-               }
-            }
+
+            _zoneMovementController.MoveBlockChain();
+        }
+
+        private void Decode()
+        {
+            Debug.Log("Decode");
             _zonesObject.SetActive(false);
             // GetDecoder().Decode(listBlocks);
         }
+
         private void ChangeColor()
         {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;

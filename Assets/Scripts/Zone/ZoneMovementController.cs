@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using VRTK;
 
 public class ZoneMovementController : MonoBehaviour
 {
+    // Events
+    public event UnityAction OnCompleted;
+
     //Attributes for movement
     private GameObject[] zonesWaypoints;
     private int startTargetWP = 1;
@@ -99,6 +103,8 @@ private bool expand = false;
                         currentWP = 8;
                         forward = false;
                         //zones.SetActive(false);
+
+                        OnCompleted();
                         return;
                     }
 

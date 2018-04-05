@@ -34,6 +34,8 @@ namespace Kubs
         private AudioSource _audioSourceChewFood;
         private AudioSource _audioSourceJump;
 
+        private GameObject _zonesObject;
+
         // Use this for initialization
         void Start()
         {
@@ -61,6 +63,8 @@ namespace Kubs
                 Invoke("Forward", 10);
                 Invoke("Jump", 10);
             }
+
+            _zonesObject = GetZonesGameObject();
         }
 
         // Update is called once per frame
@@ -320,6 +324,11 @@ namespace Kubs
 
             _isAnimating = false;
             yield break;
+        }
+
+        private GameObject GetZonesGameObject()
+        {
+            return GameObject.Find("Zones");
         }
     }
 }
