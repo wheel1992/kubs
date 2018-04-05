@@ -14,6 +14,8 @@ namespace Kubs
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
         public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
         public event ProgramBlockSnapEventHandler ProgramBlockSnap;
+
+        public Material skybox;
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _forLoopStartBlockPrefab;
         [SerializeField] private GameObject _forLoopEndBlockPrefab;
@@ -60,6 +62,9 @@ namespace Kubs
 
         void LoadTutorial()
         {
+            // Set skybox
+            GameObject.FindGameObjectWithTag("MainCamera").AddComponent<Skybox>().material = skybox;
+
             StagesManager.loadPos = new Vector3(-15, 0, 0);
             StagesManager.loadScale = new Vector3(3, 3, 3);
             StagesManager.LoadStageAsync(0, this);

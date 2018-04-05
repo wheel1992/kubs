@@ -5875,6 +5875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f95c6c0fc7c4038488ff92a774572731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skybox: {fileID: 2100000, guid: 2bd8959f5fbd3644aa33af1a155fc147, type: 2}
   _forwardBlockPrefab: {fileID: 1936214868807188, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
     type: 2}
   _forLoopStartBlockPrefab: {fileID: 1303069895214580, guid: b1c26fd9e3bb14544868a095d8bbc78a,
