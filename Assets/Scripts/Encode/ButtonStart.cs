@@ -43,6 +43,13 @@ namespace Kubs
 
         }
 
+        //Testing Method
+        public void buttonPressed()
+        {
+            Collider other = new Collider();
+            OnTriggerEnter(other);
+        }
+
         private void OnTriggerExit(Collider other)
         {
             //Debug.Log("OnTriggerExit");

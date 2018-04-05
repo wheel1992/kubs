@@ -12,9 +12,9 @@ public class ZoneMovementController : MonoBehaviour
     private GameObject[] zonesWaypoints;
     private int startTargetWP = 1;
     private int currentWP;
-    private float rotationSpeed = 3f;
+    private float rotationSpeed = 50f;
     private float moveSpeed = 12f;
-    private float accuracyWP = 2f;
+    private float accuracyWP = 0.1f;
     private bool moveValid;
     private GameObject zones;
     private BoxCollider blockChainPlateBoxCollider;
@@ -22,7 +22,6 @@ public class ZoneMovementController : MonoBehaviour
     public bool forward { get; set; }
 
 //Attributes for expansion & depression
-private bool expand = false;
     private float _currentScale = InitScale;
     private const float TargetBigScale = 2f;
     private const float TargetSmallScale = 0.1f;
@@ -81,10 +80,11 @@ private bool expand = false;
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("BlockChain Update: " + moveValid + " " + currentWP);
+        //Debug.Log("BlockChain Update: " + moveValid + " " + currentWP);
         if (moveValid)
         {
-            Debug.Log("BlockChain Move Valid Update");
+            //Debug.Log("BlockChain Move Valid Update");
+            //Debug.Log("Debug Update Distance " + Vector3.Distance(zonesWaypoints[currentWP].transform.position, transform.position));
             if (Vector3.Distance(zonesWaypoints[currentWP].transform.position, transform.position) < accuracyWP)
             {
 
@@ -96,10 +96,11 @@ private bool expand = false;
                     if (currentWP < zonesWaypoints.Length - 1)
                     {
                         currentWP++;
+                        //Debug.Log("Debug Update " + currentWP + " WP");
                     }
                     else if (currentWP == zonesWaypoints.Length - 1)
                     {
-                        moveValid = false;
+                        //moveValid = false;
                         currentWP = 8;
                         forward = false;
                         //zones.SetActive(false);
@@ -107,15 +108,6 @@ private bool expand = false;
                         OnCompleted();
                         return;
                     }
-
-                    ////if (currentWP == 8)
-                    ////{
-                    ////    //moveValid = false;
-                    ////    //blockChainPlateBoxCollider.enabled = true;
-                    ////    zones.SetActive(false);
-                    ////    forward = false;
-                    ////    return;
-                    ////}
 
                 } else
                 {
@@ -129,7 +121,12 @@ private bool expand = false;
                         forward = true;
                         return;
                     }
-                    
+
+                    //if(currentWP == 0)
+                    //{
+                    //    moveSpeed = 1f;
+                    //    accuracyWP = 0.3f;
+                    //}
 
                 }
 
@@ -154,7 +151,8 @@ private bool expand = false;
 
     public bool MoveBlockChain()
     {
-        if (expand)
+        //Debug.Log(forward);
+        if (!forward)
             StartCoroutine(Expand());
         else
             StartCoroutine(Depress());

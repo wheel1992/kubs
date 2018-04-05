@@ -46,9 +46,7 @@ namespace Kubs
             InitAudioClips();
 
             //Test Blockchain Movement
-            //var zoneMovementController = GameObject.Find("Zones").GetComponent<ZoneMovementController>();
-            //Debug.Log("Character Script Run");
-            //zoneMovementController.MoveBlockChain();
+            //GameObject.Find("ButtonStart_New").GetComponent<ButtonStart>().buttonPressed();
 
             if (_isDebug)
             {
@@ -65,6 +63,7 @@ namespace Kubs
             }
 
             _zonesObject = GetZonesGameObject();
+
         }
 
         // Update is called once per frame
@@ -245,17 +244,9 @@ namespace Kubs
             transform.rotation = _originalRot;
 
             Set(Animations.Idle);
-
-            bool toggle = false;
+            
             _zonesObject.SetActive(true);
-            while (!_zonesObject.GetComponent<ZoneMovementController>().forward)
-            {
-               if(!toggle)
-               {
-                    _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-                   toggle = true;
-               }
-            }
+            _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
         }
 
         private Animations GetAnimation()
