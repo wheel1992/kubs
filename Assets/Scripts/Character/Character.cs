@@ -35,11 +35,13 @@ namespace Kubs
 
         // Audio
         public AudioClip audioClipWalk;
-		public AudioClip audioClipChewFood;
-		public AudioClip audioClipJump;
+        public AudioClip audioClipChewFood;
+        public AudioClip audioClipJump;
         private AudioSource _audioSourceWalk;
-		private AudioSource _audioSourceChewFood;
-		private AudioSource _audioSourceJump;
+        private AudioSource _audioSourceChewFood;
+        private AudioSource _audioSourceJump;
+
+        private GameObject _zonesObject;
 
         // Use this for initialization
         void Start()
@@ -50,7 +52,10 @@ namespace Kubs
             _originalRot = transform.localRotation;
             _scale = transform.lossyScale.x;
 
-			InitAudioClips();
+            InitAudioClips();
+
+            //Test Blockchain Movement
+            //GameObject.Find("ButtonStart_New").GetComponent<ButtonStart>().buttonPressed();
 
             if (_isDebug)
             {
@@ -73,6 +78,9 @@ namespace Kubs
                 Invoke("Jump", 1);
                 */
             }
+
+            _zonesObject = GetZonesGameObject();
+
         }
 
         // Update is called once per frame
@@ -149,7 +157,7 @@ namespace Kubs
             }
             else if (other.gameObject.tag == "Collectable")
             {
-				_audioSourceChewFood.Play();
+                _audioSourceChewFood.Play();
 
                 other.gameObject.SetActive(false);
 
@@ -158,7 +166,7 @@ namespace Kubs
                 {
                     tutorialManager.ShowStage(collectableBlock.nextStage);
 
-					Set(Animations.Victory);
+                    Set(Animations.Victory);
                     Invoke("Reset", 2f);
                 }
             }
@@ -211,7 +219,7 @@ namespace Kubs
             Set(Animations.Jump);
             _type = ProgramBlockType.Jump;
 
-			_audioSourceJump.Play();
+            _audioSourceJump.Play();
 
             StartCoroutine("UpdatePosition");
             return true;
@@ -274,7 +282,8 @@ namespace Kubs
             return _rigidbody.velocity.y < -0.1;
         }
 
-		private void InitAudioClips() {
+        private void InitAudioClips()
+        {
             _audioSourceWalk = gameObject.AddComponent<AudioSource>();
             _audioSourceWalk.clip = audioClipWalk;
             _audioSourceWalk.loop = false;
@@ -287,22 +296,25 @@ namespace Kubs
             _audioSourceChewFood.playOnAwake = false;
             _audioSourceChewFood.volume = 1.0f;
 
-		 	_audioSourceJump = gameObject.AddComponent<AudioSource>();
+            _audioSourceJump = gameObject.AddComponent<AudioSource>();
             _audioSourceJump.clip = audioClipJump;
             _audioSourceJump.loop = false;
             _audioSourceJump.playOnAwake = false;
             _audioSourceJump.volume = 0.8f;
-		}
+        }
 
         private void Reset()
         {
             transform.localPosition = _originalPos;
             transform.localRotation = _originalRot;
 
-			Set(Animations.Idle);
+            Set(Animations.Idle);
+            
+            _zonesObject.SetActive(true);
+            _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
         }
 
-		private Animations GetAnimation()
+        private Animations GetAnimation()
         {
             return (Animations)_animator.GetInteger("animation");
         }
@@ -333,9 +345,9 @@ namespace Kubs
             }
 
             if (GetAnimation() != Animations.Victory)
-			{
-				Set(Animations.Idle);
-			}
+            {
+                Set(Animations.Idle);
+            }
 
             _rigidbody.velocity = Vector3.zero;
             _isAnimating = false;
@@ -363,9 +375,7 @@ namespace Kubs
             }
 
             if (GetAnimation() != Animations.Victory)
-			{
-				Set(Animations.Idle);
-			}
+            {
 
             _isAnimating = false;
             yield break;
@@ -375,6 +385,10 @@ namespace Kubs
         {
             _scale = ((Vector3)localScale).x;
             DebugLog(_scale);
+
+        private GameObject GetZonesGameObject()
+        {
+            return GameObject.Find("Zones");
         }
     }
 }

@@ -22,6 +22,10 @@ namespace Kubs
         [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
         private AudioSource _mAudioSource;
+        // private UnityAction<object> onBlockProgramRegisterHoverEventListener;
+        // private UnityAction<object> onBlockProgramRegisterSnapEventListener;
+        private ButtonStart _buttonStart;
+        private GameObject _zonesObject;
 
         void Awake()
         {
@@ -66,6 +70,7 @@ namespace Kubs
         {
             // ...
         }
+
         // private void DoProgramBlockHover(int targetZoneId)
         // {
         //     ProgramBlockShiftRightWhenHover(targetZoneId);
@@ -200,6 +205,5 @@ namespace Kubs
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_CLONE_ROTATERIGHT).GetComponent<VRTK_SnapDropZone>();
         }
-
     }
 }

@@ -6,12 +6,20 @@ using VRTK.UnityEventHelper;
 
 namespace Kubs
 {
+    //public struct ButtonStartEventArgs
+    //{
+    //    public int Index;
+    //    public bool IsAttachedMove;
+    //}
     public class ButtonStart : MonoBehaviour
     {
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
         private bool _isAnimating = false;
+
+        private GameObject _zonesObject;
+        private ZoneMovementController _zoneMovementController;
 
         // Use this for initialization
         void Start()
@@ -23,12 +31,23 @@ namespace Kubs
             // }
             // buttonEvents.OnPushed.AddListener(HandlePush);
             //_defaultMaterial = GetCurrentMaterial();
+
+            _zonesObject = GetZonesGameObject();
+            _zoneMovementController = _zonesObject.GetComponent<ZoneMovementController>();
+            _zoneMovementController.OnCompleted += Decode;
         }
 
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        //Testing Method
+        public void buttonPressed()
+        {
+            Collider other = new Collider();
+            OnTriggerEnter(other);
         }
 
         private void OnTriggerExit(Collider other)
@@ -50,20 +69,27 @@ namespace Kubs
             StartCoroutine("Depress");
         }
 
-        private void HandlePush(object sender, Control3DEventArgs e)
-        {
-            VRTK_Logger.Info("Pushed");
-            Run();
-        }
+        //private void HandlePush(object sender, Control3DEventArgs e)
+        //{
+        //    VRTK_Logger.Info("Pushed");
+        //    Run();
+        //}
 
         private void Run()
         {
-            var list = GetZoneGroupController().CompileProgramBlocks();
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
-            GetDecoder().Decode(list);
+            _zoneMovementController.MoveBlockChain();
         }
+
+        private void Decode()
+        {
+            Debug.Log("Decode");
+            _zonesObject.SetActive(false);
+            // GetDecoder().Decode(listBlocks);
+        }
+
         private void ChangeColor()
         {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
@@ -135,9 +161,11 @@ namespace Kubs
         {
             return GameObject.Find(Constant.NAME_ZONES).GetComponent<ZoneGroupController>();
         }
-        // private SnapDropZone_Block_Group GetSnapDropZoneBlockGroup()
-        // {
-        //     return GameObject.FindGameObjectWithTag(Constant.TAG_SNAP_DROP_ZONE_GROUP).GetComponent<SnapDropZone_Block_Group>();
-        // }
+        
+        GameObject GetZonesGameObject()
+        {
+            return GameObject.Find("Zones");
+        }
+        
     }
 }

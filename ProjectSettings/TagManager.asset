@@ -39,6 +39,7 @@ TagManager:
   - ZoneContainer
   - SnapDropZoneCloneForStartEnd
   - ZoneStartDummy
+  - UICharacter
   layers:
   - Default
   - TransparentFX
