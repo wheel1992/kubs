@@ -340,7 +340,7 @@ namespace Kubs
             _isStopped = false;
 
             _zonesObject.SetActive(true);
-            _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
         }
 
         private Animations GetAnimation()

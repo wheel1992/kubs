@@ -104,19 +104,22 @@ namespace Kubs
                         {
                             moveValid = false;
                             forward = false;
-                            //zones.SetActive(false);
 
                             OnCompleted();
+                            
+                            StopCoroutine("Depress");
+                            zones.SetActive(true);
+                            MoveBlockChain();
+                            SetProgramBlockTrigger(false);
+                           
                             return;
                         }
 
                     }
                     else
                     {
-
                         this.gameObject.transform.localPosition = new Vector3(7.75f, 0, -5.49f);
                         this.gameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
-                        SetProgramBlockTrigger(false);
 
                         moveValid = false;
                         currentWP = 1;
@@ -165,6 +168,15 @@ namespace Kubs
             //blockChainPlateBoxCollider.enabled = false;
             moveValid = true;
             return moveValid;
+        }
+
+        private void ResetToDefaultLocation()
+        {
+            this.gameObject.transform.localPosition = new Vector3(7.75f, 0, -5.49f);
+            this.gameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+            moveValid = false;
+            currentWP = 1;
+            forward = true;
         }
 
         private IEnumerator Expand()

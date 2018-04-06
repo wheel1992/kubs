@@ -492,7 +492,12 @@ namespace Kubs
             for (int i = 0; i < _zones.Count; i++)
             {
                 var zone = GetZoneControllerByGameObject(_zones[i]);
+                var block = zone.GetAttachedProgramBlock();
+
                 zone.Index = i;
+
+                if (block != null)
+                    block.ZoneIndex = i;
             }
         }
 
