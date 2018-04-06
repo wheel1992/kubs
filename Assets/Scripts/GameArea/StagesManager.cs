@@ -71,6 +71,8 @@ namespace Kubs
 
 		private static void MoveGameObjectsToScene(List<GameObject> gameObjects, Scene scene)
 		{
+			loadScale = loadScale == Vector3.zero ? Vector3.one : loadScale;
+
 			// Destroy non-GameArea objects in scene
 			foreach (var go in scene.GetRootGameObjects())
 			{
