@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Kubs
 {
 	public class TutorialManager : MonoBehaviour
 	{
+		public int lastStage;
+
 		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
 
 		public void CollectChildren(Transform parent)
@@ -31,6 +34,8 @@ namespace Kubs
 
 				tutorialBlocks[stage].Add(tutorialBlock);
 			}
+
+			lastStage = tutorialBlocks.Keys.Max();
 		}
 
 		public void ShowStage(int stage)
