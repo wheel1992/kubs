@@ -54,11 +54,16 @@ namespace Kubs
 
             InitAudioClips();
 
-            //Test Blockchain Movement
-            //GameObject.Find("ButtonStart_New").GetComponent<ButtonStart>().buttonPressed();
-
             if (_isDebug)
             {
+                // Test blockchain movement
+                var buttonStart = GameObject.Find("ButtonStart_New");
+                if (buttonStart != null)
+                {
+                    buttonStart.GetComponent<ButtonStart>().buttonPressed();
+                }
+
+                // Start with forward
                 Invoke("Forward", 1);
 
                 // Set 1
@@ -154,6 +159,7 @@ namespace Kubs
             else if (other.gameObject.tag == "Hole")
             {
                 _isStopped = true;
+                Invoke("Reset", 2f);
             }
             else if (other.gameObject.tag == "Collectable")
             {
@@ -164,10 +170,13 @@ namespace Kubs
                 var collectableBlock = other.gameObject.GetComponent<CollectableBlock>();
                 if (collectableBlock != null)
                 {
-                    tutorialManager.ShowStage(collectableBlock.nextStage);
+                    if (tutorialManager != null)
+                    {
+                        tutorialManager.ShowStage(collectableBlock.nextStage);
+                        Invoke("Reset", 2f);
+                    }
 
                     Set(Animations.Victory);
-                    Invoke("Reset", 2f);
                 }
             }
         }
@@ -310,7 +319,7 @@ namespace Kubs
             transform.localRotation = _originalRot;
 
             Set(Animations.Idle);
-            
+
             _zonesObject.SetActive(true);
             _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
         }
