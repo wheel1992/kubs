@@ -194,22 +194,32 @@ namespace Kubs
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
             if (attachedBlock != null)
             {
-                if (attachedBlock.Type == ProgramBlockType.ForLoopStart)
+                Debug.Log("HandleZoneSnapped: block type = " + attachedBlock.Type);
+                switch (attachedBlock.Type)
                 {
-                    if (GetZoneIndexWithForLoopEndBlock() == -1)
-                    {
-                        // A ForStartLoop block is attached
-                        _defaultForEndLoopBlock.gameObject.SetActive(true);
-                        // Display and attached ForEndLoop at the end of zones
-                        AddZoneTail();
-                        GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
+                    case ProgramBlockType.ForLoopStart:
+                        if (GetZoneIndexWithForLoopEndBlock() == -1)
+                        {
+                            // A ForStartLoop block is attached
+                            _defaultForEndLoopBlock.gameObject.SetActive(true);
+                            // Display and attached ForEndLoop at the end of zones
+                            AddZoneTail();
+                            GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
 
-                        // var forLoopBlock = GetForLoopProgramBlock(attachedBlock);
-                        // forLoopBlock.ForLoopStartIndex = args.Index;
+                            // var forLoopBlock = GetForLoopProgramBlock(attachedBlock);
+                            // forLoopBlock.ForLoopStartIndex = args.Index;
 
-                        // forLoopBlock.UpdateUi();
-                        return;
-                    }
+                            // forLoopBlock.UpdateUi();
+                            return;
+                        }
+                        break;
+                    case ProgramBlockType.ForLoopEnd:
+                        Debug.Log("Snap is a forloopend");
+                        attachedBlock.transform.position = new Vector3(
+                            attachedBlock.transform.position.x,
+                            0.55f,
+                            attachedBlock.transform.position.z);
+                        break;
                 }
                 // else if (attachedBlock.Type == ProgramBlockType.ForLoopEnd)
                 // {
@@ -313,12 +323,12 @@ namespace Kubs
 
         private void AddZoneTail()
         {
-            Debug.Log("AddZoneTail");
+            //Debug.Log("AddZoneTail");
             AddZoneNext(_zones.Count - 1);
         }
         private void AddZoneTailIfEmpty()
         {
-            Debug.Log("AddZoneTailIfEmpty");
+            //Debug.Log("AddZoneTailIfEmpty");
             if (!IsZoneTailEmpty())
             {
                 AddZoneNext(_zones.Count - 1);
@@ -326,7 +336,7 @@ namespace Kubs
         }
         private void AddZoneAt(int index)
         {
-            Debug.Log("AddZoneAt: at " + index);
+            //Debug.Log("AddZoneAt: at " + index);
             var pos = new Vector3(
                 _defaultFirstZonePosition.x,
                 _defaultFirstZonePosition.y,

@@ -183,7 +183,7 @@ namespace Kubs
             var area = GameObject.Find("SnapCloneBlockArea");
             for (int i = 0; i < area.transform.childCount; i++)
             {
-                if (area.transform.GetChild(i).gameObject.name.CompareTo("ForStart_ProgramBlock_New") == 0)
+                if (area.transform.GetChild(i).gameObject.name.CompareTo("ForStart_ProgramBlock") == 0)
                 {
                     return area.transform.GetChild(i).gameObject.GetComponent<ProgramBlock>();
                 }
