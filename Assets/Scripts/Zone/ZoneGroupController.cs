@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using VRTK;
 
 namespace Kubs
 {
@@ -33,7 +34,10 @@ namespace Kubs
         {
             //_debugger = new KubsDebug(IS_DEBUG);
         }
-
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab);
+        }
         // Use this for initialization
         void Start()
         {
@@ -51,6 +55,10 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
+        }
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab);
         }
 
         #endregion
@@ -83,6 +91,30 @@ namespace Kubs
         #endregion
 
         #region Private Event Handler Listener 
+        private void HandleForLoopStartUngrab(object sender)
+        {
+            Debug.Log("HandleForLoopStartUngrab");
+            if (sender is VRTK_InteractableObject)
+            {
+                //Debug.Log("HandleForLoopStartUngrab: in zone? = " + ();
+                if (!((VRTK_InteractableObject)sender).IsInSnapDropZone())
+                {
+                    var forEndIndex = GetNearestRightForLoopEnd(0);
+                    if (forEndIndex != -1)
+                    {
+                        var forEndBlock = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
+                        DestroyZone(forEndIndex);
+                        Unshift(forEndIndex);
+                        UpdateZoneIndices();
+                    }
+                }
+                // var block = ((VRTK_InteractableObject) sender).IsInSnapDropZone();
+                // if (block != null)
+                // {
+                //     EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+                // }
+            }
+        }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
             Debug.Log("Hover: at " + args.ZoneIndex + "");
@@ -154,7 +186,7 @@ namespace Kubs
 
             UpdateZoneIndices();
 
-        // Do Test Here
+            // Do Test Here
             int forLoopStartIndex = GetNearestLeftForLoopStart(_zones.Count - 1);
             int forLoopEndIndex = GetNearestRightForLoopEnd(0);
             if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
@@ -243,7 +275,7 @@ namespace Kubs
                             {
                                 var forLoopBlock = GetForLoopProgramBlock(args.Index);
                                 forLoopBlock.ForLoopEndIndex = args.Index;
-                                 Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
+                                //Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
 
                                 forLoopBlock.SetSideAreaTo(args.Index, forLoopEndIndex);
                             }
@@ -262,7 +294,7 @@ namespace Kubs
                         {
                             var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
                             forLoopBlock.ForLoopEndIndex = args.Index;
-                            Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
+                            //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
 
                             forLoopBlock.SetSideAreaTo(forLoopStartIndex, args.Index);
                         }
@@ -275,7 +307,7 @@ namespace Kubs
                         {
                             var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
                             forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
-                            Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
+                            //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
 
                             forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
                         }

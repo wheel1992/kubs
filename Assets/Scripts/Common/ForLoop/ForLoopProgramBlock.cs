@@ -133,16 +133,16 @@ namespace Kubs
         // }
         void HandleOnCounterAddTriggerEnter(object sender, CounterAddEventArgs args)
         {
-            Debug.Log("HandleOnCounterAddTriggerEnter");
+            //Debug.Log("HandleOnCounterAddTriggerEnter");
             GetCounterNumberTextMesh().text = Convert.ToString(++loopCounter);
         }
         void HandleOnCounterAddTriggerExit(object sender, CounterAddEventArgs args)
         {
-            Debug.Log("HandleOnCounterAddTriggerExit");
+            //Debug.Log("HandleOnCounterAddTriggerExit");
         }
         void HandleOnCounterMinusTriggerEnter(object sender, CounterMinusEventArgs args)
         {
-            Debug.Log("HandleOnCounterMinusTriggerEnter");
+            //Debug.Log("HandleOnCounterMinusTriggerEnter");
             if (loopCounter != 1)
             {
                 GetCounterNumberTextMesh().text = Convert.ToString(--loopCounter);
@@ -150,12 +150,8 @@ namespace Kubs
         }
         void HandleOnCounterMinusTriggerExit(object sender, CounterMinusEventArgs args)
         {
-            Debug.Log("HandleOnCounterMinusTriggerExit");
+            //Debug.Log("HandleOnCounterMinusTriggerExit");
         }
-        // GameObject CreateSideArea(Vector3 pos)
-        // {
-        //     return Instantiate(sideAreaPrefab, pos, Quaternion.identity);
-        // }
         GameObject GetCounterAreaGameObject()
         {
             return transform.Find("ForStartCounterArea").gameObject;

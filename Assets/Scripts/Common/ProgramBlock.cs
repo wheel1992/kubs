@@ -48,7 +48,7 @@ namespace Kubs
                 }
             }
 
-            //GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
+            GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
 
             CollidedZoneIndex = -1;
         }
@@ -56,10 +56,17 @@ namespace Kubs
         {
         }
 
-        // private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
-        // {
-        //     //ResetCollidedZoneIndices();
-        // }
+        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            if (sender is VRTK_InteractableObject)
+            {
+                var block = ((VRTK_InteractableObject) sender).gameObject.GetComponent<ProgramBlock>();
+                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
+                {
+                    EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+                }
+            }
+        }
 
         #endregion
 

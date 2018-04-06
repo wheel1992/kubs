@@ -70,6 +70,15 @@ namespace Kubs
         {
             GetChildZoneHint().DisplayHighlight(isValid);
         }
+        public ProgramBlock UnparentAttachedBlock()
+        {
+            var block = GetAttachedProgramBlock();
+            if (block != null) {
+                block.SetParent(null);
+                return block;
+            }
+            return null;
+        }
         public ProgramBlock GetAttachedProgramBlock()
         {
             var blockObj = GetChildByTagName(Constant.TAG_BLOCK_PROGRAM);
