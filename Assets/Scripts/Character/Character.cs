@@ -76,6 +76,17 @@ namespace Kubs
                 Invoke("Forward", 10);
                 Invoke("Jump", 10);
 
+                var delay = 16;
+                for (int i = 1; i <= 4; i++)
+                {
+                    Invoke("Forward", delay);
+                    Invoke("RotateLeft", delay);
+                    Invoke("Forward", delay);
+                    Invoke("Jump", delay);
+
+                    Invoke("Forward", delay);
+                }
+
                 // Set 2
                 /*
                 Invoke("RotateLeft", 1);
@@ -173,7 +184,12 @@ namespace Kubs
                     if (tutorialManager != null)
                     {
                         tutorialManager.ShowStage(collectableBlock.nextStage);
-                        Invoke("Reset", 2f);
+
+                        var tutorialBlock = collectableBlock.GetComponent<TutorialBlock>();
+                        if (tutorialBlock == null || tutorialBlock.stage != tutorialManager.lastStage)
+                        {
+                            Invoke("Reset", 2f);
+                        }
                     }
 
                     Set(Animations.Victory);
