@@ -82,6 +82,7 @@ namespace Kubs
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
+            GameObject.Find("Character").GetComponent<Character>().Reset();
             _zoneMovementController.MoveBlockChain();
             //Decode();
         }

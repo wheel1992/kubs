@@ -170,6 +170,8 @@ namespace Kubs
             else if (other.gameObject.tag == "Hole")
             {
                 _isStopped = true;
+                _queue.Clear();
+
                 Invoke("Reset", 2f);
             }
             else if (other.gameObject.tag == "Collectable")
@@ -328,13 +330,14 @@ namespace Kubs
             _audioSourceJump.volume = 0.8f;
         }
 
-        private void Reset()
+        public void Reset()
         {
             Debug.Log("Reset");
             transform.localPosition = _originalPos;
             transform.localRotation = _originalRot;
 
             Set(Animations.Idle);
+            _isStopped = false;
 
             _zonesObject.SetActive(true);
             _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
