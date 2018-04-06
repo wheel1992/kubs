@@ -949,45 +949,40 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 264105475}
     m_Modifications:
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+    - target: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 65869529275735258, guid: 7a4fe169e155dbe409f2c408da2848c6,
-        type: 2}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+  m_ParentPrefab: {fileID: 100100000, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &216817720
 GameObject:
@@ -1422,7 +1417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43af9d2b7d8f84bc797b94bc95edbbc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zonePrefab: {fileID: 1347366348452212, guid: 7a4fe169e155dbe409f2c408da2848c6, type: 2}
+  zonePrefab: {fileID: 1279727289702994, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530, type: 2}
   forLoopEndBlockPrefab: {fileID: 1264671019520914, guid: dcd828a6b1a03c449b585ee04c088c35,
     type: 2}
   audioClipIncorrectPosition: {fileID: 8300000, guid: efba5acb7c19301438c1e965dbe07cae,
@@ -3185,7 +3180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &650979543
 Transform:
   m_ObjectHideFlags: 0
@@ -6369,7 +6364,7 @@ MeshFilter:
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1327346605 stripped
 Transform:
-  m_PrefabParentObject: {fileID: 4090092405864914, guid: 7a4fe169e155dbe409f2c408da2848c6,
+  m_PrefabParentObject: {fileID: 4200999922515316, guid: 4492aa2b6cb7cd54f9f43cb2a50ba530,
     type: 2}
   m_PrefabInternal: {fileID: 208822193}
 --- !u!1 &1332857109
@@ -7319,7 +7314,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1438273135}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}

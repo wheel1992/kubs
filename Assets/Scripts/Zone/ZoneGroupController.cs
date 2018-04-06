@@ -105,9 +105,9 @@ namespace Kubs
                         var forEndBlock = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
                         forEndBlock.gameObject.SetActive(false);
 
-                        var forStartBlock = GetForLoopProgramBlock(forEndIndex);
-                        forStartBlock.ForLoopEndIndex = -1;
-                        forStartBlock.ForLoopStartIndex = -1;
+                        // var forStartBlock = GetForLoopProgramBlock(forEndIndex);
+                        // forStartBlock.ForLoopEndIndex = -1;
+                        // forStartBlock.ForLoopStartIndex = -1;
 
                         DestroyZone(forEndIndex);
                         Unshift(forEndIndex);
@@ -119,7 +119,7 @@ namespace Kubs
         }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
-            Debug.Log("Hover: at " + args.ZoneIndex + "");
+            Debug.Log("Hover: at " + args.ZoneIndex + " with " + args.CollidedObject);
             var currentZone = GetZoneControllerByGameObject(_zones[args.ZoneIndex]);
 
             // Test For loop
@@ -129,11 +129,11 @@ namespace Kubs
                 if (testBlock.Type == ProgramBlockType.ForLoopStart)
                 {
                     var currentForEndIndex = GetZoneIndexWithForLoopEndBlock();
-                    Debug.Log("Hover: ForStart " + args.ZoneIndex + " ForEnd " + currentForEndIndex);
+                    //Debug.Log("Hover: ForStart " + args.ZoneIndex + " ForEnd " + currentForEndIndex);
                     // Proposed ForStartLoop zone index is args.ZoneIndex
                     if (currentForEndIndex != -1 && args.ZoneIndex > currentForEndIndex)
                     {
-                        Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
+                        //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         currentZone.DisableSnap();
                         currentZone.ShowHint(false);
 
@@ -146,11 +146,11 @@ namespace Kubs
                 else if (testBlock.Type == ProgramBlockType.ForLoopEnd)
                 {
                     var currentForStartIndex = GetZoneIndexWithForLoopStartBlock();
-                    Debug.Log("Hover: ForStart " + currentForStartIndex + " ForEnd " + args.ZoneIndex);
+                    //Debug.Log("Hover: ForStart " + currentForStartIndex + " ForEnd " + args.ZoneIndex);
                     // Proposed ForEndLoop zone index is args.ZoneIndex
                     if (currentForStartIndex != -1 && args.ZoneIndex < currentForStartIndex)
                     {
-                        Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
+                        //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         currentZone.DisableSnap();
                         currentZone.ShowHint(false);
 
@@ -194,13 +194,13 @@ namespace Kubs
             if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
             {
                 var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
+                //Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
                 forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
             }
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
-            Debug.Log("Unhovered: at " + args.ZoneIndex + "");
+            //Debug.Log("Unhovered: at " + args.ZoneIndex + "");
 
             // Test For loop
             var testBlock = GetProgramBlockByGameObject(args.CollidedObject);
@@ -370,6 +370,7 @@ namespace Kubs
             _defaultFirstZone = GetChildAt(DEFAULT_INDEX_ZONE);
             var _defaultZoneCtrl = GetZoneControllerByGameObject(_defaultFirstZone);
             _defaultFirstZonePosition = _defaultFirstZone.transform.position;
+            Debug.Log("position = " + _defaultFirstZone.transform.position + " localPosition = " + _defaultFirstZone.transform.localPosition);
             RegisterZoneEventHandler(_defaultZoneCtrl);
 
             _zones.Insert(DEFAULT_INDEX_ZONE, _defaultFirstZone);
