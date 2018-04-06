@@ -153,6 +153,16 @@ namespace Kubs
             AddZoneAt(args.ZoneIndex);
 
             UpdateZoneIndices();
+
+        // Do Test Here
+            int forLoopStartIndex = GetNearestLeftForLoopStart(_zones.Count - 1);
+            int forLoopEndIndex = GetNearestRightForLoopEnd(0);
+            if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
+            {
+                var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
+                Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
+                forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
+            }
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
@@ -183,6 +193,18 @@ namespace Kubs
             Unshift(args.ZoneIndex);
 
             UpdateZoneIndices();
+
+
+            // Do Test Here
+            int forLoopStartIndex = GetNearestLeftForLoopStart(_zones.Count - 1);
+            int forLoopEndIndex = GetNearestRightForLoopEnd(0);
+            if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
+            {
+                var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
+                Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
+                forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
+            }
+
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
         {
@@ -196,7 +218,6 @@ namespace Kubs
             {
                 int forLoopStartIndex = -1;
                 int forLoopEndIndex = -1;
-                int numBetweenBlock = 0;
 
                 switch (attachedBlock.Type)
                 {
@@ -220,11 +241,11 @@ namespace Kubs
                             forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
                             if (forLoopEndIndex != -1)
                             {
-                                var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                                forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
-                                Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
-                                numBetweenBlock = forLoopEndIndex - forLoopStartIndex - 1;
-                                forLoopBlock.SetSideAreaTo(numBetweenBlock);
+                                var forLoopBlock = GetForLoopProgramBlock(args.Index);
+                                forLoopBlock.ForLoopEndIndex = args.Index;
+                                 Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
+
+                                forLoopBlock.SetSideAreaTo(args.Index, forLoopEndIndex);
                             }
                         }
 
@@ -242,8 +263,8 @@ namespace Kubs
                             var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
                             forLoopBlock.ForLoopEndIndex = args.Index;
                             Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
-                            numBetweenBlock = args.Index - forLoopStartIndex - 1;
-                            forLoopBlock.SetSideAreaTo(numBetweenBlock);
+
+                            forLoopBlock.SetSideAreaTo(forLoopStartIndex, args.Index);
                         }
                         break;
 
@@ -255,8 +276,8 @@ namespace Kubs
                             var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
                             forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
                             Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
-                            numBetweenBlock = forLoopEndIndex - forLoopStartIndex - 1;
-                            forLoopBlock.SetSideAreaTo(numBetweenBlock);
+
+                            forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
                         }
                         break;
                 }
@@ -272,6 +293,24 @@ namespace Kubs
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
             Debug.Log("HandleZoneUnsnapped: at " + args.Index);
+
+            // var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
+            // if (attachedBlock != null)
+            // {
+            //     int forLoopStartIndex = -1;
+            //     int forLoopEndIndex = -1;
+            //     //int numBetweenBlock = 0;
+            //     switch (attachedBlock.Type)
+            //     {
+            //         case ProgramBlockType.ForLoopStart:
+            //             break;
+            //         case ProgramBlockType.ForLoopEnd:
+            //             break;
+            //         default:
+
+            //             break;
+            //     }
+            // }
         }
 
         #endregion

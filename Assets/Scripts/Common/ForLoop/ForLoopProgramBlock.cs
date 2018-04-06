@@ -21,8 +21,9 @@ namespace Kubs
         private float increaseSideSize = 1f;
         private float increasePosZ = 0.5f;
 
-        public void SetSideAreaTo(int count)
+        public void SetSideAreaTo(int start, int end)
         {
+            int count = end - start - 1;
             ResetSideArea();
             if (count <= 0) { return; }
 
@@ -55,7 +56,7 @@ namespace Kubs
         //     }
         // }
 
-        private void ResetSideArea()
+        public void ResetSideArea()
         {
             _defaultSideArea.transform.localScale = new Vector3(
                     _defaultSideArea.transform.localScale.x,
