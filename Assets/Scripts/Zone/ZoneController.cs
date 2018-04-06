@@ -156,6 +156,8 @@ namespace Kubs
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
                 args.WhichBlock.SetParent(null);
+                args.WhichBlock.CollidedZoneIndex = -1;
+                args.WhichBlock.ZoneIndex = -1;
 
                 OnZoneUnsnapped(this,
                     new ZoneEventArgs
@@ -171,7 +173,7 @@ namespace Kubs
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 if (collidedBlock != null)
                 {
-                    if (collidedBlock.CollidedZoneIndex == Index)
+                    if (collidedBlock.CollidedZoneIndex == Index || collidedBlock.ZoneIndex == Index)
                     {
                         return;
                     }

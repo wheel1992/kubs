@@ -21,7 +21,7 @@ public class ZoneMovementController : MonoBehaviour
     private Vector3 direction;
     public bool forward { get; set; }
 
-//Attributes for expansion & depression
+    //Attributes for expansion & depression
     private float _currentScale = InitScale;
     private const float TargetBigScale = 1f;
     private const float TargetSmallScale = 0.1f;
@@ -101,7 +101,6 @@ public class ZoneMovementController : MonoBehaviour
                     else if (currentWP == zonesWaypoints.Length - 1)
                     {
                         moveValid = false;
-                        currentWP = 8;
                         forward = false;
                         //zones.SetActive(false);
 
@@ -109,25 +108,22 @@ public class ZoneMovementController : MonoBehaviour
                         return;
                     }
 
-                } else
+                }
+                else
                 {
 
-                    if (currentWP > 0)
-                        currentWP--;
-                    else if (currentWP == 0)
-                    {
-                        moveValid = false;
-                        currentWP = 1;
-                        forward = true;
-                        return;
-                    }
-
-                    //if(currentWP == 0)
-                    //{
-                    //    moveSpeed = 1f;
-                    //    accuracyWP = 0.3f;
-                    //}
-
+                    this.gameObject.transform.localPosition = new Vector3(7.75f, 0, -5.49f);
+                    this.gameObject.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    // int zNum = 0;
+                    // foreach (Transform child in this.transform)
+                    // {
+                    //     child.localPosition = new Vector3(0, 0, zNum);
+                    //     zNum++;
+                    // }
+                    moveValid = false;
+                    currentWP = 1;
+                    forward = true;
+                    return;
                 }
 
             }
@@ -151,6 +147,7 @@ public class ZoneMovementController : MonoBehaviour
 
     public bool MoveBlockChain()
     {
+        Debug.Log("MoveBlockChain");
         //Debug.Log(forward);
         if (!forward)
             StartCoroutine(Expand());
@@ -173,7 +170,7 @@ public class ZoneMovementController : MonoBehaviour
         while (this.transform.localScale != (Vector3.one * TargetBigScale))
         {
             incrementor += 0.001f;
-            Vector3 currentScale = Vector3.Lerp(Vector3.one * InitScale, Vector3.one * TargetBigScale, incrementor);
+            Vector3 currentScale = Vector3.Lerp(Vector3.one * 0, Vector3.one * TargetBigScale, incrementor);
             transform.localScale = currentScale;
             yield return null;
         }

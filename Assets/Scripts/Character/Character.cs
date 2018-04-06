@@ -55,7 +55,7 @@ namespace Kubs
             InitAudioClips();
 
             //Test Blockchain Movement
-            GameObject.Find("ButtonStart_New").GetComponent<ButtonStart>().buttonPressed();
+            //GameObject.Find("ButtonStart_New").GetComponent<ButtonStart>().buttonPressed();
 
             if (_isDebug)
             {
@@ -305,13 +305,14 @@ namespace Kubs
 
         private void Reset()
         {
+            Debug.Log("Reset");
             transform.localPosition = _originalPos;
             transform.localRotation = _originalRot;
 
             Set(Animations.Idle);
             
-            //_zonesObject.SetActive(true);
-            //_zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            _zonesObject.SetActive(true);
+            _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
         }
 
         private Animations GetAnimation()
