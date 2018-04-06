@@ -194,7 +194,10 @@ namespace Kubs
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
             if (attachedBlock != null)
             {
-                Debug.Log("HandleZoneSnapped: block type = " + attachedBlock.Type);
+                int forLoopStartIndex = -1;
+                int forLoopEndIndex = -1;
+                int numBetweenBlock = 0;
+
                 switch (attachedBlock.Type)
                 {
                     case ProgramBlockType.ForLoopStart:
@@ -206,70 +209,58 @@ namespace Kubs
                             AddZoneTail();
                             GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
 
-                            // var forLoopBlock = GetForLoopProgramBlock(attachedBlock);
-                            // forLoopBlock.ForLoopStartIndex = args.Index;
-
-                            // forLoopBlock.UpdateUi();
+                            var forLoopBlock = GetForLoopProgramBlock(attachedBlock);
+                            forLoopBlock.ForLoopStartIndex = args.Index;
+                            forLoopBlock.ForLoopEndIndex = GetZoneTail().Index;
                             return;
+
                         }
+                        else
+                        {
+                            forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
+                            if (forLoopEndIndex != -1)
+                            {
+                                var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
+                                forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
+                                Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
+                                numBetweenBlock = forLoopEndIndex - forLoopStartIndex - 1;
+                                forLoopBlock.SetSideAreaTo(numBetweenBlock);
+                            }
+                        }
+
                         break;
+
                     case ProgramBlockType.ForLoopEnd:
-                        Debug.Log("Snap is a forloopend");
                         attachedBlock.transform.position = new Vector3(
                             attachedBlock.transform.position.x,
                             0.55f,
                             attachedBlock.transform.position.z);
+
+                        forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
+                        if (forLoopStartIndex != -1)
+                        {
+                            var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
+                            forLoopBlock.ForLoopEndIndex = args.Index;
+                            Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
+                            numBetweenBlock = args.Index - forLoopStartIndex - 1;
+                            forLoopBlock.SetSideAreaTo(numBetweenBlock);
+                        }
+                        break;
+
+                    default:
+                        forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
+                        forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
+                        if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
+                        {
+                            var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
+                            forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
+                            Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
+                            numBetweenBlock = forLoopEndIndex - forLoopStartIndex - 1;
+                            forLoopBlock.SetSideAreaTo(numBetweenBlock);
+                        }
                         break;
                 }
-                // else if (attachedBlock.Type == ProgramBlockType.ForLoopEnd)
-                // {
-                //     int forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-                //     if (forLoopStartIndex != -1)
-                //     {
-                //         var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                //         forLoopBlock.ForLoopEndIndex = args.Index;
-                //         //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
-                //         forLoopBlock.UpdateUi();
-                //     }
-                // }
-                // else
-                // {
-                //     int forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-                //     int forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
-                //     if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
-                //     {
-                //         var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                //         forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
-                //         //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
-                //         forLoopBlock.UpdateUi();
-                //     }
-                // }
             }
-
-
-            // else
-            // {
-            //     // not ForLoopStart
-            //     if (attachedBlock.Type == ProgramBlockType.ForLoopEnd)
-            //     {
-            //         int forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-            //         var forStartBlock = GetForLoopProgramBlock(forLoopStartIndex);
-            //         forStartBlock.ForLoopEndIndex = args.Index;
-            //         Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
-            //     }
-            //     else
-            //     {
-            //         // Neither ForLoopStart nor ForLoopEnd
-            //         int forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-            //         int forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
-            //         if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
-            //         {
-            //             var forStartBlock = GetForLoopProgramBlock(forLoopStartIndex);
-            //             forStartBlock.ForLoopEndIndex = forLoopEndIndex;
-            //             Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
-            //         }
-            //     }
-            // }
 
             if (IsZoneTail(args.Index))
             {

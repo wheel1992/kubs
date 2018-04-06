@@ -43,10 +43,11 @@ namespace Kubs
             // For Friday 6 April 2018 demo, we do not allow clone ForLoop
             // var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
             // GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
-            var block = GetForLoopStartProgramBlock();
-            if (block != null)
-                block.Type = ProgramBlockType.ForLoopStart;
-
+            var forStartblock = GetForLoopStartProgramBlock();
+            if (forStartblock != null) {
+                forStartblock.Type = ProgramBlockType.ForLoopStart;
+            }
+  
             var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
 
