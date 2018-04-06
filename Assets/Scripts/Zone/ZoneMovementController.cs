@@ -110,7 +110,6 @@ namespace Kubs
                             StopCoroutine("Depress");
                             zones.SetActive(true);
                             MoveBlockChain();
-                            SetProgramBlockTrigger(false);
                            
                             return;
                         }
@@ -190,6 +189,8 @@ namespace Kubs
                 transform.localScale = currentScale;
                 yield return null;
             }
+
+            SetProgramBlockTrigger(false);
 
             yield break;
 
