@@ -119,8 +119,8 @@ namespace Kubs
         }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
         {
-            Debug.Log("Hover: at " + args.ZoneIndex + " with " + args.CollidedObject);
-            var currentZone = GetZoneControllerByGameObject(_zones[args.ZoneIndex]);
+            //Debug.Log("Hover: at " + args.CollidedZoneIndex + " with " + args.CollidedObject);
+            var currentZone = GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]);
 
             // Test For loop
             var testBlock = GetProgramBlockByGameObject(args.CollidedObject);
@@ -131,7 +131,7 @@ namespace Kubs
                     var currentForEndIndex = GetZoneIndexWithForLoopEndBlock();
                     //Debug.Log("Hover: ForStart " + args.ZoneIndex + " ForEnd " + currentForEndIndex);
                     // Proposed ForStartLoop zone index is args.ZoneIndex
-                    if (currentForEndIndex != -1 && args.ZoneIndex > currentForEndIndex)
+                    if (currentForEndIndex != -1 && args.CollidedZoneIndex > currentForEndIndex)
                     {
                         //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         currentZone.DisableSnap();
@@ -148,7 +148,7 @@ namespace Kubs
                     var currentForStartIndex = GetZoneIndexWithForLoopStartBlock();
                     //Debug.Log("Hover: ForStart " + currentForStartIndex + " ForEnd " + args.ZoneIndex);
                     // Proposed ForEndLoop zone index is args.ZoneIndex
-                    if (currentForStartIndex != -1 && args.ZoneIndex < currentForStartIndex)
+                    if (currentForStartIndex != -1 && args.CollidedZoneIndex < currentForStartIndex)
                     {
                         //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
                         currentZone.DisableSnap();
@@ -165,9 +165,9 @@ namespace Kubs
             currentZone.ShowHint(true);
 
             // Current zone is empty, do nothing
-            if (IsZoneEmpty(args.ZoneIndex))
+            if (IsZoneEmpty(args.CollidedZoneIndex))
             {
-                Debug.Log("Hover: " + args.ZoneIndex + " is empty");
+                //Debug.Log("Hover: " + args.CollidedZoneIndex + " is empty");
                 return;
             }
 
@@ -177,14 +177,14 @@ namespace Kubs
             */
 
             // Left or right non-tail zone is empty, do nothing
-            if (IsPreviousZoneEmpty(args.ZoneIndex) || (IsNextZoneEmpty(args.ZoneIndex) && !IsZoneTail(args.ZoneIndex + 1)))
+            if (IsPreviousZoneEmpty(args.CollidedZoneIndex) || (IsNextZoneEmpty(args.CollidedZoneIndex) && !IsZoneTail(args.CollidedZoneIndex + 1)))
             {
-                Debug.Log("Hover: " + args.ZoneIndex + " is either left empty or right non-tail empty");
+                //Debug.Log("Hover: " + args.CollidedZoneIndex + " is either left empty or right non-tail empty");
                 return;
             }
 
-            Shift(args.ZoneIndex);
-            AddZoneAt(args.ZoneIndex);
+            Shift(args.CollidedZoneIndex);
+            AddZoneAt(args.CollidedZoneIndex);
 
             UpdateZoneIndices();
 
@@ -206,26 +206,26 @@ namespace Kubs
             var testBlock = GetProgramBlockByGameObject(args.CollidedObject);
             if (testBlock != null && (testBlock.Type == ProgramBlockType.ForLoopStart || testBlock.Type == ProgramBlockType.ForLoopEnd))
             {
-                GetZoneControllerByGameObject(_zones[args.ZoneIndex]).EnableSnap();
+                GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).EnableSnap();
             }
 
-            GetZoneControllerByGameObject(_zones[args.ZoneIndex]).HideHint();
+            GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).HideHint();
 
             // Current unhovered zone is occupied, do nothing  
-            if (!IsZoneEmpty(args.ZoneIndex))
+            if (!IsZoneEmpty(args.CollidedZoneIndex))
             {
                 
                 return;
             }
 
             // Current unhovered zone is empty and tail, do nothing
-            if (IsZoneTail(args.ZoneIndex))
+            if (IsZoneTail(args.CollidedZoneIndex))
             {
                 return;
             }
 
-            DestroyZone(args.ZoneIndex);
-            Unshift(args.ZoneIndex);
+            DestroyZone(args.CollidedZoneIndex);
+            Unshift(args.CollidedZoneIndex);
 
             UpdateZoneIndices();
 
@@ -495,9 +495,6 @@ namespace Kubs
                 var block = zone.GetAttachedProgramBlock();
 
                 zone.Index = i;
-
-                if (block != null)
-                    block.ZoneIndex = i;
             }
         }
 

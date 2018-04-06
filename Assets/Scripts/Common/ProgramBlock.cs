@@ -76,6 +76,7 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
 
             CollidedZoneIndex = -1;
+            ZoneIndex = -1;
         }
         private void Update()
         {

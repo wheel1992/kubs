@@ -15,7 +15,7 @@ namespace Kubs
     public struct ZoneHoverEventArgs
     {
         public GameObject CollidedObject;
-        public int ZoneIndex;
+        public int CollidedZoneIndex;
     }
     /// <summary>
     /// This contains both ZoneBaseController and ZoneHintController
@@ -173,7 +173,7 @@ namespace Kubs
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 if (collidedBlock != null)
                 {
-                    if (collidedBlock.CollidedZoneIndex == Index || collidedBlock.ZoneIndex == Index)
+                    if (collidedBlock.CollidedZoneIndex == Index) //  || collidedBlock.ZoneIndex == Index
                     {
                         return;
                     }
@@ -184,7 +184,7 @@ namespace Kubs
                         new ZoneHoverEventArgs
                         {
                             CollidedObject = args.CollidedObject,
-                            ZoneIndex = collidedBlock.CollidedZoneIndex
+                            CollidedZoneIndex = collidedBlock.CollidedZoneIndex
                         });
                 }
             }
@@ -201,7 +201,7 @@ namespace Kubs
                         new ZoneHoverEventArgs
                         {
                             CollidedObject = args.CollidedObject,
-                            ZoneIndex = Index
+                            CollidedZoneIndex = Index
                         });
                 }
             }
