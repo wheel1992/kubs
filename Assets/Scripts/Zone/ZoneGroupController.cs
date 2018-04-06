@@ -103,16 +103,18 @@ namespace Kubs
                     if (forEndIndex != -1)
                     {
                         var forEndBlock = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
+                        forEndBlock.gameObject.SetActive(false);
+
+                        var forStartBlock = GetForLoopProgramBlock(forEndIndex);
+                        forStartBlock.ForLoopEndIndex = -1;
+                        forStartBlock.ForLoopStartIndex = -1;
+
                         DestroyZone(forEndIndex);
                         Unshift(forEndIndex);
                         UpdateZoneIndices();
+                        
                     }
                 }
-                // var block = ((VRTK_InteractableObject) sender).IsInSnapDropZone();
-                // if (block != null)
-                // {
-                //     EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-                // }
             }
         }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
