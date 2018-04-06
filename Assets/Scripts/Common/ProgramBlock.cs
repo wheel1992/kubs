@@ -35,6 +35,31 @@ namespace Kubs
         void Awake()
         {
             Category = BlockCategory.Program;
+
+            if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORWARD) == 0)
+            {
+                Type = ProgramBlockType.Forward;
+            }
+            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_JUMP) == 0)
+            {
+                Type = ProgramBlockType.Jump;
+            }
+            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT) == 0)
+            {
+                Type = ProgramBlockType.RotateLeft;
+            }
+            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATERIGHT) == 0)
+            {
+                Type = ProgramBlockType.RotateRight;
+            }
+            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPSTART) == 0)
+            {
+                Type = ProgramBlockType.ForLoopStart;
+            }
+            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND) == 0)
+            {
+                Type = ProgramBlockType.ForLoopEnd;
+            }
         }
         void Start()
         {
@@ -60,7 +85,7 @@ namespace Kubs
         {
             if (sender is VRTK_InteractableObject)
             {
-                var block = ((VRTK_InteractableObject) sender).gameObject.GetComponent<ProgramBlock>();
+                var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
                 if (block != null && block.Type == ProgramBlockType.ForLoopStart)
                 {
                     EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
