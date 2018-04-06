@@ -30,7 +30,6 @@ namespace Kubs
 
         // Flags and miscellaneous
         private bool _isDebug = false;
-        private bool _isStopped;
         public float _scale;
 
         // Audio
@@ -97,16 +96,12 @@ namespace Kubs
 
             _zonesObject = GetZonesGameObject();
 
+            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (_isStopped)
-            {
-                return;
-            }
-
             if (_isAnimating)
             {
                 switch (_type)
@@ -143,8 +138,6 @@ namespace Kubs
                         break;
                 }
             }
-
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
         }
 
         void OnEnable()
@@ -161,7 +154,7 @@ namespace Kubs
         {
             if (other.gameObject.tag == "Grass")
             {
-                _isStopped = true;
+                Stop();
                 _queue.Clear();
 
                 Set(Animations.Die2);
@@ -169,7 +162,7 @@ namespace Kubs
             }
             else if (other.gameObject.tag == "Hole")
             {
-                _isStopped = true;
+                Stop();
                 _queue.Clear();
 
                 Invoke("Reset", 2f);
@@ -337,10 +330,20 @@ namespace Kubs
             transform.localRotation = _originalRot;
 
             Set(Animations.Idle);
-            _isStopped = false;
+            Stop();
 
             _zonesObject.SetActive(true);
             // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+        }
+
+        private void Stop()
+        {
+            StopCoroutine("UpdatePosition");
+            StopCoroutine("UpdateRotation");
+
+            _isAnimating = false;
+            _queue.Clear();
+            _rigidbody.velocity = Vector3.zero;
         }
 
         private Animations GetAnimation()
