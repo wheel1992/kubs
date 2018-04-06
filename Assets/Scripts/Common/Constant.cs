@@ -13,6 +13,8 @@ namespace Kubs
         public static float DEFAULT_BLOCK_SPACING = 0f; //0.03f;
         public static string LAYER_NAME_SWEEP_TEST = "SweepTest";
         public static string NAME_BUTTON_START = "ButtonStart_New";
+        public static string NAME_PROGRAM_BLOCK_FORLOOPSTART = "ForStart_ProgramBlock";
+        public static string NAME_PROGRAM_BLOCK_FORLOOPEND = "ForEnd_ProgramBlock";
         public static string NAME_PROGRAM_BLOCK_FORWARD = "Forward_ProgramBlock_New";
         public static string NAME_PROGRAM_BLOCK_ROTATELEFT= "RotateLeft_ProgramBlock_New";
         public static string NAME_PROGRAM_BLOCK_ROTATERIGHT= "RotateRight_ProgramBlock_New";

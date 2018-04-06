@@ -214,6 +214,7 @@ namespace Kubs
             // Current unhovered zone is occupied, do nothing  
             if (!IsZoneEmpty(args.ZoneIndex))
             {
+                
                 return;
             }
 
