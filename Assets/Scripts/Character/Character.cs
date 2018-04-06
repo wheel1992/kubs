@@ -159,6 +159,7 @@ namespace Kubs
             else if (other.gameObject.tag == "Hole")
             {
                 _isStopped = true;
+                Invoke("Reset", 2f);
             }
             else if (other.gameObject.tag == "Collectable")
             {
@@ -172,10 +173,10 @@ namespace Kubs
                     if (tutorialManager != null)
                     {
                         tutorialManager.ShowStage(collectableBlock.nextStage);
+                        Invoke("Reset", 2f);
                     }
 
                     Set(Animations.Victory);
-                    Invoke("Reset", 2f);
                 }
             }
         }
