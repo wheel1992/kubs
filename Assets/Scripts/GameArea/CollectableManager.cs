@@ -10,7 +10,10 @@ namespace Kubs
 
 		void Start ()
 		{
-			tutorialManager.CollectChildren(transform);
+			if (tutorialManager != null)
+			{
+				tutorialManager.CollectChildren(transform);
+			}
 		}
 	}
 }
