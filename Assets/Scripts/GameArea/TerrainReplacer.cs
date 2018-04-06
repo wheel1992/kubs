@@ -15,7 +15,10 @@ namespace Kubs
 			var dictionary = Convert(prefabs);
 			ReplaceChildren(transform, dictionary);
 
-			tutorialManager.CollectChildren(transform);
+			if (tutorialManager != null)
+			{
+				tutorialManager.CollectChildren(transform);
+			}
 		}
 
 		private Dictionary<string, GameObject> Convert(NamedPrefab[] namedPrefabs)
@@ -43,7 +46,11 @@ namespace Kubs
 								child.rotation,
 								parent);
 
-					tutorialManager.TransferComponent(child.gameObject, block);
+					if (tutorialManager != null)
+					{
+						tutorialManager.TransferComponent(child.gameObject, block);
+					}
+
 					Destroy(child.gameObject);
 				}
 			}
