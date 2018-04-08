@@ -189,7 +189,7 @@ namespace Kubs
             // Current zone is empty, do nothing
             if (IsZoneEmpty(args.CollidedZoneIndex))
             {
-                //Debug.Log("Hover: " + args.CollidedZoneIndex + " is empty");
+                Debug.Log("Hover: " + args.CollidedZoneIndex + " is empty");
                 currentZone.ShowHint(true);
                 return;
             }
@@ -202,13 +202,14 @@ namespace Kubs
             // Left or right non-tail zone is empty, do nothing
             if (IsPreviousZoneEmpty(args.CollidedZoneIndex) || (IsNextZoneEmpty(args.CollidedZoneIndex) && !IsZoneTail(args.CollidedZoneIndex + 1)))
             {
-                //Debug.Log("Hover: " + args.CollidedZoneIndex + " is either left empty or right non-tail empty");
+                Debug.Log("Hover: " + args.CollidedZoneIndex + " is either left empty or right non-tail empty");
                 return;
             }
 
             Shift(args.CollidedZoneIndex);
             AddZoneAt(args.CollidedZoneIndex);
 
+            Debug.Log("Hover: " + args.CollidedZoneIndex + " showing...");
             GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).ShowHint(true);
 
             UpdateZoneIndices();
@@ -296,6 +297,11 @@ namespace Kubs
                 switch (attachedBlock.Type)
                 {
                     case ProgramBlockType.ForLoopStart:
+                        attachedBlock.transform.position = new Vector3(
+                                attachedBlock.transform.position.x,
+                                0.8f,
+                                attachedBlock.transform.position.z);
+
                         var forStart = attachedBlock.GetComponent<ForLoopStart>();
                         if (forStart.ForLoopEnd.GetZoneIndex() == -1)
                         {
@@ -353,6 +359,11 @@ namespace Kubs
                         break;
 
                     default:
+                        attachedBlock.transform.position = new Vector3(
+                            attachedBlock.transform.position.x,
+                            0.8f,
+                            attachedBlock.transform.position.z);
+
                         // forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
                         // forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
                         // if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
