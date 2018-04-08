@@ -531,7 +531,7 @@ MonoBehaviour:
   ignoredColliders:
   - {fileID: 65187290507951210}
   isGrabbable: 1
-  holdButtonToGrab: 0
+  holdButtonToGrab: 1
   stayGrabbedOnTeleport: 1
   validDrop: 1
   grabOverrideButton: 0
@@ -556,8 +556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48111d783297d4729b536c68778bbcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HoverZoneId: -1
-  ZoneIndex: -1
 --- !u!114 &114863538058874060
 MonoBehaviour:
   m_ObjectHideFlags: 1
