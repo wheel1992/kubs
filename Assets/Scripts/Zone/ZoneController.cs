@@ -138,7 +138,7 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.CollidedZoneIndex = -1;
-                args.WhichBlock.ZoneIndex = this.Index;
+                // args.WhichBlock.ZoneIndex = this.Index;
                 // Attach block (child) to this zone (parent)
                 args.WhichBlock.SetParent(this.transform);
 
@@ -155,9 +155,16 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
-                args.WhichBlock.SetParent(null);
+                // args.WhichBlock.SetParent(null);
                 args.WhichBlock.CollidedZoneIndex = -1;
-                args.WhichBlock.ZoneIndex = -1;
+                // args.WhichBlock.ZoneIndex = -1;
+
+                if (args.WhichBlock.Type == ProgramBlockType.ForLoopEnd) {
+                    // A snapped ForLoopEnd is attached to a Zone
+                    // When unsnapped, ForLoopEnd will attached back to its ForLoopStart
+                    var parentForStart = args.WhichBlock.gameObject.GetComponent<ForLoopEnd>().ForLoopStart;
+                    args.WhichBlock.SetParent(parentForStart.transform);
+                }
 
                 OnZoneUnsnapped(this,
                     new ZoneEventArgs

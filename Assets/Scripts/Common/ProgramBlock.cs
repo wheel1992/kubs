@@ -10,11 +10,18 @@ namespace Kubs
     {
         public ProgramBlockType Type { get; set; }
         [HideInInspector]
-        public int ZoneIndex = -1;
+        // public int ZoneIndex = -1;
         public int CollidedZoneIndex { get; set; }
 
         #region Public Methods
-
+        public void SetActive()
+        {
+            gameObject.SetActive(true);
+        }
+        public void SetInactive()
+        {
+            gameObject.SetActive(false);
+        }
         public void SetParent(Transform parent)
         {
             transform.SetParent(parent);
@@ -23,12 +30,28 @@ namespace Kubs
         {
             return gameObject.GetComponent<VRTK_InteractableObject>();
         }
-        public bool HasZoneIndex()
+        public GameObject GetParent()
         {
-            Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
-            return ZoneIndex != -1;
+            return transform.parent.gameObject;
         }
+        public bool IsInZone()
+        {
+            // Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
+            // return ZoneIndex != -1;
+            var zoneIndex = GetZoneIndex();
+            return zoneIndex != -1;
+        }
+        public int GetZoneIndex()
+        {
+            var parent = GetParent();
+            if (parent == null) { return -1; }
 
+            // Check instance is in ZoneController
+            var zoneCtrl = parent.GetComponent<ZoneController>();
+            if (zoneCtrl == null) { return -1; }
+
+            return zoneCtrl.Index;
+        }
         #endregion
 
         #region Private Lifecycle Methods
@@ -76,12 +99,15 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
 
             CollidedZoneIndex = -1;
-            ZoneIndex = -1;
+            // ZoneIndex = -1;
         }
         private void Update()
         {
         }
 
+        #endregion
+
+        #region Private Event Listeners
         private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
         {
             if (sender is VRTK_InteractableObject)
@@ -96,6 +122,9 @@ namespace Kubs
 
         #endregion
 
+        #region Private Methods
+
+        #endregion
     }
 
     public enum ProgramBlockType
