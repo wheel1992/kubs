@@ -107,6 +107,8 @@ namespace Kubs
             _counterMinus.GetComponent<ForLoopCounterMinus>().OnExit += new ForLoopCounterMinus.CounterMinusEventHandler(HandleOnCounterMinusTriggerExit);
 
             GetCounterNumberTextMesh().text = Convert.ToString(loopCounter);
+
+            ResetSideArea();
         }
 
         // Update is called once per frame

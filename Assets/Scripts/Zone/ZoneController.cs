@@ -68,6 +68,7 @@ namespace Kubs
         }
         public void ShowHint(bool isValid)
         {
+            Debug.Log("ShowHint: at zone " + Index);
             GetChildZoneHint().DisplayHighlight(isValid);
         }
         public ProgramBlock UnparentAttachedBlock()
