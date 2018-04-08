@@ -74,12 +74,17 @@ namespace Kubs
             }
 
             GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+            GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
+            GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
             CollidedZoneIndex = -1;
             // ZoneIndex = -1;
             DetermineType();
 
             mBoxCollider = gameObject.GetComponent<BoxCollider>();
+
+            var halo = GetHalo();
+            halo.enabled = false;
         }
         private void Update()
         {
@@ -109,11 +114,46 @@ namespace Kubs
             if (sender is VRTK_InteractableObject)
             {
                 var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
+                if (block != null)
                 {
-                    EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+                    if (block.Type == ProgramBlockType.ForLoopStart)
+                    {
+                        EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+                    }
+
                 }
             }
+        }
+
+        private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
+        {
+            var halo = GetHalo();
+            halo.enabled = true;
+            // if (sender is VRTK_InteractableObject)
+            // {
+            //     Debug.Log("HandleOnTouched: " + ((VRTK_InteractableObject)sender).gameObject.name);
+            //     var block = ((VRTK_InteractableObject)sender).gameObject;
+            //     if (block != null)
+            //     {
+            //         var halo = (Behaviour)block.GetComponent("Halo");
+            //         halo.enabled = true;
+            //     }
+            // }
+        }
+        private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
+        {
+            var halo = GetHalo();
+            halo.enabled = false;
+            // if (sender is VRTK_InteractableObject)
+            // {
+            //     Debug.Log("HandleOnTouched: " + ((VRTK_InteractableObject)sender).gameObject.name);
+            //     var block = ((VRTK_InteractableObject)sender).gameObject;
+            //     if (block != null)
+            //     {
+            //         var halo = (Behaviour)block.GetComponent("Halo");
+            //         halo.enabled = false;
+            //     }
+            // }
         }
 
         #endregion
@@ -146,6 +186,10 @@ namespace Kubs
             {
                 Type = ProgramBlockType.ForLoopEnd;
             }
+        }
+
+        private Behaviour GetHalo() {
+            return (Behaviour) gameObject.GetComponent("Halo");
         }
 
         #endregion
