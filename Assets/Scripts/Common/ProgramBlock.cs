@@ -13,6 +13,8 @@ namespace Kubs
         // public int ZoneIndex = -1;
         public int CollidedZoneIndex { get; set; }
 
+        private BoxCollider mBoxCollider;
+
         #region Public Methods
         public void SetActive()
         {
@@ -76,10 +78,27 @@ namespace Kubs
             CollidedZoneIndex = -1;
             // ZoneIndex = -1;
             DetermineType();
+
+            mBoxCollider = gameObject.GetComponent<BoxCollider>();
         }
         private void Update()
         {
             DetermineType();
+            // (Type != ProgramBlockType.ForLoopStart || Type != ProgramBlockType.ForLoopEnd) && 
+            if (GetVRTKInteractableObject().IsInSnapDropZone())
+            {
+                //Debug.Log("Start: " + gameObject.name + " > " + GetVRTKInteractableObject().GetStoredSnapDropZone().name);
+                if (GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
+                {
+                    mBoxCollider.center = new Vector3(0f, 0.3f, 0f);
+                    mBoxCollider.size = new Vector3(2f, 1.5f, 2f);
+                }
+            }
+            else
+            {
+                mBoxCollider.center = new Vector3(0f, 0f, 0f);
+                mBoxCollider.size = new Vector3(1f, 1f, 1f);
+            }
         }
 
         #endregion
