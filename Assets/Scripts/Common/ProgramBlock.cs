@@ -58,7 +58,51 @@ namespace Kubs
         void Awake()
         {
             Category = BlockCategory.Program;
+        }
+        void Start()
+        {
+            // _collidedZoneIndices = new List<int>();
 
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
+                {
+                    transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
+                }
+            }
+
+            GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+
+            CollidedZoneIndex = -1;
+            // ZoneIndex = -1;
+            DetermineType();
+        }
+        private void Update()
+        {
+            DetermineType();
+        }
+
+        #endregion
+
+        #region Private Event Listeners
+        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            if (sender is VRTK_InteractableObject)
+            {
+                var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
+                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
+                {
+                    EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void DetermineType()
+        {
             if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORWARD) == 0)
             {
                 Type = ProgramBlockType.Forward;
@@ -84,45 +128,6 @@ namespace Kubs
                 Type = ProgramBlockType.ForLoopEnd;
             }
         }
-        void Start()
-        {
-            // _collidedZoneIndices = new List<int>();
-
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
-                {
-                    transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
-                }
-            }
-
-            GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
-
-            CollidedZoneIndex = -1;
-            // ZoneIndex = -1;
-        }
-        private void Update()
-        {
-        }
-
-        #endregion
-
-        #region Private Event Listeners
-        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
-        {
-            if (sender is VRTK_InteractableObject)
-            {
-                var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
-                {
-                    EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Private Methods
 
         #endregion
     }
