@@ -123,6 +123,10 @@ namespace Kubs
         private void HandleZoneOnEntered(object sender, ZoneSnapEventArgs args)
         {
             //Debug.Log("HandleZoneOnEntered");
+            if (args.WhichBlock != null)
+            {
+                args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+            }
         }
         private void HandleZoneOnExited(object sender, ZoneSnapEventArgs args)
         {

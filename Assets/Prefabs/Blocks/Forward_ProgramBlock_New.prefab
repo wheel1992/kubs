@@ -42,6 +42,7 @@ GameObject:
   - component: {fileID: 114288662475598514}
   - component: {fileID: 114309855176837452}
   - component: {fileID: 122468606558844416}
+  - component: {fileID: 114521439009543188}
   m_Layer: 0
   m_Name: Forward_ProgramBlock_New
   m_TagString: Block_Program
@@ -644,6 +645,17 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
+--- !u!114 &114521439009543188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1157666413697690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!122 &122468606558844416
 Halo:
   m_ObjectHideFlags: 1
