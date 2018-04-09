@@ -2653,7 +2653,7 @@ MonoBehaviour:
   secondaryGrabActionScript: {fileID: 114112245827420806}
   isUsable: 0
   holdButtonToUse: 1
-  useOnlyIfGrabbed: 0
+  useOnlyIfGrabbed: 1
   pointerActivatesUseAction: 0
   useOverrideButton: 0
   allowedUseControllers: 0

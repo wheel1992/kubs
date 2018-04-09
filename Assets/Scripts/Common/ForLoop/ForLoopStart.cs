@@ -170,6 +170,7 @@ namespace Kubs
                     if (!forStartBlock.ForLoopEnd.IsInZone())
                     {
                         forStartBlock.DisableForLoopEnd();
+                        forStartBlock.DisableCounter();
                     }
                 }
             }
@@ -208,7 +209,7 @@ namespace Kubs
                 // Ungrabbed and dropped not within the Zone (aka outside)
                 if (interactableObject.IsInSnapDropZone() && !forStartBlock.GetProgramBlock().IsInSnapDropZoneClone())
                 {
-                    forStartBlock.ForLoopEnd.Enable();
+                    forStartBlock.EnableForLoopEnd();
                     forStartBlock.EnableCounter();
                 }
             }

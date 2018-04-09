@@ -51,7 +51,7 @@ namespace Kubs
 
         public void AttachBlock(ProgramBlock block)
         {
-            //Debug.Log("AttachBlock: " + block.name);
+            Debug.Log("AttachBlock: " + block.name);
             GetChildZoneSnap().Snap(block.gameObject);
         }
         public void DisableSnap()
@@ -141,7 +141,7 @@ namespace Kubs
                 // args.WhichBlock.ZoneIndex = this.Index;
                 // Attach block (child) to this zone (parent)
                 args.WhichBlock.SetParent(this.transform);
-
+                Debug.Log("HandleZoneOnSnapped: " + args.WhichBlock.name);
                 OnZoneSnapped(this,
                     new ZoneEventArgs
                     {

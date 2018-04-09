@@ -25,11 +25,12 @@ namespace Kubs
         public void DisableGrab()
         {
             GetProgramBlock().GetVRTKInteractableObject().isGrabbable = false;
+            GetProgramBlock().GetVRTKInteractableObject().useOnlyIfGrabbed = false;
         }
         public void EnableGrab()
         {
             GetProgramBlock().GetVRTKInteractableObject().isGrabbable = true;
-            GetProgramBlock().GetVRTKInteractableObject().useOnlyIfGrabbed = false;
+            GetProgramBlock().GetVRTKInteractableObject().useOnlyIfGrabbed = true;
         }
         public void SetActive()
         {
@@ -42,6 +43,7 @@ namespace Kubs
         public void SetParent(Transform parent)
         {
             GetProgramBlock().SetParent(parent);
+            transform.rotation = parent.rotation;
         }
         public ForLoopStart GetParentForLoopStart()
         {

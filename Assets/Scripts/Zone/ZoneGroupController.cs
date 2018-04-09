@@ -293,7 +293,6 @@ namespace Kubs
             // Current unhovered zone is occupied, do nothing  
             if (!IsZoneEmpty(args.CollidedZoneIndex))
             {
-
                 return;
             }
 
@@ -348,6 +347,7 @@ namespace Kubs
                                 attachedBlock.transform.position.z);
 
                         var forStart = attachedBlock.GetComponent<ForLoopStart>();
+                        Debug.Log("HandleZoneSnapped: ForStart's ForEnd zone index = " + forStart.ForLoopEnd.GetZoneIndex());
                         if (forStart.ForLoopEnd.GetZoneIndex() == -1)
                         {
                             //forStart.ForLoopEnd.SetActive();
