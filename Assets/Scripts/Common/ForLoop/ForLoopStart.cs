@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 namespace Kubs
 {
@@ -19,6 +20,20 @@ namespace Kubs
         private float increasePosZ = 0.5f;
 
         #region Public Methods
+        public void EnableForLoopEnd()
+        {
+            ForLoopEnd.Enable();
+        }
+        public void DisableForLoopEnd()
+        {
+            // var checkParent = ForLoopEnd.GetParentForLoopStart();
+            // if (checkParent == null) { return; }
+
+            ForLoopEnd.transform.localPosition = new Vector3(0, 0f, 1f);
+            ForLoopEnd.Disable();
+            // ForLoopEnd.GetComponent<BoxCollider>().isTrigger = true;
+
+        }
         public void SetSideAreaTo(int start, int end)
         {
             int count = end - start - 1;
@@ -34,17 +49,6 @@ namespace Kubs
                     _defaultSideArea.transform.localScale.z + increaseSideSize);
                 _defaultSideArea.transform.localPosition = new Vector3(_defaultSideAreaPosition.x, _defaultSideAreaPosition.y, _defaultSideArea.transform.localPosition.z + increasePosZ);
             }
-        }
-        public void ResetForLoopEnd()
-        {
-            var checkParent = ForLoopEnd.GetParentForLoopStart();
-            if (checkParent == null) { return; }
-
-            ForLoopEnd.GetComponent<BoxCollider>().isTrigger = false;
-            ForLoopEnd.transform.localPosition = new Vector3(0, -0.25f, 1f);
-            // if (checkParent.GetZoneIndex() == GetZoneIndex()) {
-                
-            // }
         }
         public void ResetSideArea()
         {
@@ -101,6 +105,10 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
+            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
+            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
+
             this.ForLoopEnd = GetChildForLoopEnd();
             //this.ForLoopEnd.SetInactive();
 
@@ -120,17 +128,91 @@ namespace Kubs
             GetCounterNumberTextMesh().text = Convert.ToString(loopCounter);
 
             ResetSideArea();
-            ResetForLoopEnd();
+            DisableForLoopEnd();
+
+            if (GetProgramBlock().IsInSnapDropZoneClone())
+            {
+                ExpandCollider();
+                DisableCounter();
+            } else {
+                ResetCollider();
+            }
+
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            if (GetProgramBlock().GetVRTKInteractableObject().IsInSnapDropZone())
+            {
+                //Debug.Log("Start: " + gameObject.name + " > " + GetVRTKInteractableObject().GetStoredSnapDropZone().name);
+                if (GetProgramBlock().GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
+                {
+                    //ExpandCollider();
+                }
+            }
+            else
+            {
+                //ResetCollider();
+            }
         }
 
         #region Private Methods
+        private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
+        {
 
+            if (sender is VRTK_InteractableObject)
+            {
+                var interactableObject = (VRTK_InteractableObject)sender;
+                var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                if (forStartBlock != null)
+                {
+                    if (!forStartBlock.ForLoopEnd.IsInZone())
+                    {
+                        forStartBlock.DisableForLoopEnd();
+                    }
+                }
+            }
+        }
+        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            Debug.Log("HandleOnUngrabbed:");
+            if (sender is VRTK_InteractableObject)
+            {
+                var interactableObject = (VRTK_InteractableObject)sender;
+                // Ungrabbed and dropped not within the Zone (aka outside)
+                // StartCoroutine(ExecuteAfterTime(1f, () =>
+                // {
+                //     // if (!interactableObject.IsInSnapDropZone())
+                //     // {
+                //     //     var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                //     //     if (forStartBlock != null)
+                //     //     {
+                //     //         forStartBlock.ForLoopEnd.SetParent(forStartBlock.transform);
+                //     //         forStartBlock.DisableForLoopEnd();
+                //     //         // forStartBlock.ForLoopEnd
+                //     //     }
+                //     // }
+                // }));
+
+                EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+            }
+        }
+        private void HandleOnSnappedToDropZone(object sender, InteractableObjectEventArgs args)
+        {
+            Debug.Log("HandleOnSnappedToDropZone:");
+            if (sender is VRTK_InteractableObject)
+            {
+                var interactableObject = (VRTK_InteractableObject)sender;
+                var forStartBlock = interactableObject.GetComponent<ForLoopStart>();
+                // Ungrabbed and dropped not within the Zone (aka outside)
+                if (interactableObject.IsInSnapDropZone() && !forStartBlock.GetProgramBlock().IsInSnapDropZoneClone())
+                {
+                    forStartBlock.ForLoopEnd.Enable();
+                    forStartBlock.EnableCounter();
+                }
+            }
+        }
         void HandleOnCounterAddTriggerEnter(object sender, CounterAddEventArgs args)
         {
             //Debug.Log("HandleOnCounterAddTriggerEnter");
@@ -152,11 +234,34 @@ namespace Kubs
         {
             //Debug.Log("HandleOnCounterMinusTriggerExit");
         }
+        void EnableCounter()
+        {
+            _counterAdd.GetComponent<BoxCollider>().enabled = true;
+            _counterMinus.GetComponent<BoxCollider>().enabled = true;
+        }
+        void DisableCounter()
+        {
+            _counterAdd.GetComponent<BoxCollider>().enabled = false;
+            _counterMinus.GetComponent<BoxCollider>().enabled = false;
+        }
+        void ExpandCollider()
+        {
+            var collider = GetProgramBlock().GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0, 0, 0.75f);
+            collider.size = new Vector3(2, 1, 2.5f);
+        }
+        void ResetCollider()
+        {
+            var collider = GetProgramBlock().GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0, 0, 0);
+            collider.size = new Vector3(1f, 1f, 1f);
+        }
 
         #endregion
 
         #region Private Get Methods
-
         GameObject GetCounterAreaGameObject()
         {
             return transform.Find("ForStartCounterArea").gameObject;
@@ -181,7 +286,6 @@ namespace Kubs
         {
             return GetCounterNumberAreaGameObject().transform.Find("CounterNumberText").gameObject.GetComponent<TextMesh>();
         }
-
         #endregion
     }
 }

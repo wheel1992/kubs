@@ -29,6 +29,17 @@ namespace Kubs
         //private ProgramBlock _defaultForEndLoopBlock;
         private Vector3 _defaultFirstZonePosition;
 
+        bool isCoroutineExecuting = false;
+        IEnumerator ExecuteAfterTime(float time, Action task)
+        {
+            if (isCoroutineExecuting)
+                yield break;
+            isCoroutineExecuting = true;
+            yield return new WaitForSeconds(time);
+            task();
+            isCoroutineExecuting = false;
+        }
+
         #region Private Lifecycle Methods
         void Awake()
         {
@@ -98,33 +109,56 @@ namespace Kubs
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
                 //Debug.Log("HandleForLoopStartUngrab: in zone? = " + ();
-                if (!interactableObject.IsInSnapDropZone())
+
+                StartCoroutine(ExecuteAfterTime(3f, () =>
                 {
-                    var block = interactableObject.gameObject.GetComponent<ProgramBlock>();
-                    if (block == null) { return; }
-
-                    var forStartBlock = block.GetComponent<ForLoopStart>();
-                    if (forStartBlock == null) { return; }
-
-                    var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
-                    if (forEndIndex != -1)
+                    if (!interactableObject.IsInSnapDropZone())
                     {
-                        // var block = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
-                        GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
-                        // forStartBlock.ForLoopEnd.SetInactive();
-                        // var forEndBlock = block.GetComponent<ForLoopEnd>();
-                        forStartBlock.ForLoopEnd.GetProgramBlock().SetParent(forStartBlock.transform);
-                        forStartBlock.ResetForLoopEnd();
-                        // var forStartBlock = GetForLoopProgramBlock(forEndIndex);
-                        // forStartBlock.ForLoopEndIndex = -1;
-                        // forStartBlock.ForLoopStartIndex = -1;
-
-                        DestroyZone(forEndIndex);
-                        Unshift(forEndIndex);
-                        UpdateZoneIndices();
-
+                        var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                        if (forStartBlock != null)
+                        {
+                            var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
+                            if (forEndIndex != -1)
+                            {
+                                forStartBlock.ForLoopEnd.SetParent(forStartBlock.transform);
+                                forStartBlock.DisableForLoopEnd();
+                                DestroyZone(forEndIndex);
+                                Unshift(forEndIndex);
+                                UpdateZoneIndices();
+                            }
+                        }
                     }
-                }
+                }));
+
+
+                // // Ungrabbed and dropped not within the Zone (aka outside)
+                // if (!interactableObject.IsInSnapDropZone())
+                // {
+                //     // var block = interactableObject.gameObject.GetComponent<ProgramBlock>();
+                //     // if (block == null) { return; }
+
+                //     var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                //     if (forStartBlock == null) { return; }
+
+                //     var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
+                //     if (forEndIndex != -1)
+                //     {
+                //         // // var block = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
+                //         // //GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
+                //         // // forStartBlock.ForLoopEnd.SetInactive();
+                //         // // var forEndBlock = block.GetComponent<ForLoopEnd>();
+                //         // forStartBlock.ForLoopEnd.SetParent(forStartBlock.transform);
+                //         // forStartBlock.DisableForLoopEnd();
+                //         // // var forStartBlock = GetForLoopProgramBlock(forEndIndex);
+                //         // // forStartBlock.ForLoopEndIndex = -1;
+                //         // // forStartBlock.ForLoopStartIndex = -1;
+
+                //         DestroyZone(forEndIndex);
+                //         Unshift(forEndIndex);
+                //         UpdateZoneIndices();
+
+                //     }
+                // }
             }
         }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
@@ -358,7 +392,7 @@ namespace Kubs
                     case ProgramBlockType.ForLoopEnd:
                         attachedBlock.transform.position = new Vector3(
                             attachedBlock.transform.position.x,
-                            0.55f,
+                            0.8f,
                             attachedBlock.transform.position.z);
 
                         UpdateForLoopSideArea(args.Index);

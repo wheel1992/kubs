@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 namespace Kubs
 {
@@ -9,6 +10,27 @@ namespace Kubs
         public ForLoopStart ForLoopStart { get; set; }
 
         #region Public Methods
+        public void Enable()
+        {
+            gameObject.GetComponent<BoxCollider>().enabled = true;
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            EnableGrab();
+        }
+        public void Disable()
+        {
+            gameObject.GetComponent<BoxCollider>().enabled = false;
+            gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            DisableGrab();
+        }
+        public void DisableGrab()
+        {
+            GetProgramBlock().GetVRTKInteractableObject().isGrabbable = false;
+        }
+        public void EnableGrab()
+        {
+            GetProgramBlock().GetVRTKInteractableObject().isGrabbable = true;
+            GetProgramBlock().GetVRTKInteractableObject().useOnlyIfGrabbed = false;
+        }
         public void SetActive()
         {
             gameObject.SetActive(true);
@@ -16,6 +38,10 @@ namespace Kubs
         public void SetInactive()
         {
             gameObject.SetActive(false);
+        }
+        public void SetParent(Transform parent)
+        {
+            GetProgramBlock().SetParent(parent);
         }
         public ForLoopStart GetParentForLoopStart()
         {
@@ -60,6 +86,9 @@ namespace Kubs
         void Start()
         {
             this.ForLoopStart = GetParentForLoopStart();
+
+            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
+            // GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone +=
         }
 
         // Update is called once per frame
@@ -67,6 +96,26 @@ namespace Kubs
         {
 
         }
+
+        #region  Private Event Handler Methods
+        private void HandleOnSnappedToDropZone(object sender, InteractableObjectEventArgs args)
+        {
+            if (sender is VRTK_InteractableObject)
+            {
+                var interactableObject = (VRTK_InteractableObject)sender;
+                // Ungrabbed and dropped not within the Zone (aka outside)
+                var forEndBlock = interactableObject.GetComponent<ForLoopEnd>();
+                if (interactableObject.IsInSnapDropZone() && !forEndBlock.GetProgramBlock().IsInSnapDropZoneClone())
+                { 
+                    if (forEndBlock != null)
+                    {
+                        forEndBlock.SetParent(interactableObject.gameObject.transform);
+                        forEndBlock.Enable();
+                    }
+                }
+            }
+        }
+        #endregion
 
         #region Private Get methods
         #endregion

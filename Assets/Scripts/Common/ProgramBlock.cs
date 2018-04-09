@@ -13,7 +13,7 @@ namespace Kubs
         // public int ZoneIndex = -1;
         public int CollidedZoneIndex { get; set; }
 
-        private BoxCollider mBoxCollider;
+        // private BoxCollider mBoxCollider;
 
         #region Public Methods
         public void SetActive()
@@ -43,6 +43,16 @@ namespace Kubs
             // return ZoneIndex != -1;
             var zoneIndex = GetZoneIndex();
             return zoneIndex != -1;
+        }
+        public bool IsInSnapDropZoneClone()
+        {
+            var dropZone = GetVRTKInteractableObject().GetStoredSnapDropZone();
+            if (dropZone == null) { return false; }
+            return dropZone.name.Contains("Program_Block_SnapDropZone_Clone");
+        }
+        public BoxCollider GetBoxCollider()
+        {
+            return gameObject.GetComponent<BoxCollider>();
         }
         public int GetZoneIndex()
         {
@@ -74,7 +84,7 @@ namespace Kubs
                 }
             }
 
-            GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+            //GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
@@ -82,49 +92,57 @@ namespace Kubs
             // ZoneIndex = -1;
             DetermineType();
 
-            mBoxCollider = gameObject.GetComponent<BoxCollider>();
+            // mBoxCollider = gameObject.GetComponent<BoxCollider>();
 
             var halo = GetHalo();
             halo.enabled = false;
+
+            // if (IsInSnapDropZoneClone())
+            // {
+            //     ExpandCollider();
+            // } else {
+            //     ResetCollider();
+            // }
+
         }
         private void Update()
         {
             DetermineType();
-            // (Type != ProgramBlockType.ForLoopStart || Type != ProgramBlockType.ForLoopEnd) && 
-            if (GetVRTKInteractableObject().IsInSnapDropZone())
+            // // (Type != ProgramBlockType.ForLoopStart || Type != ProgramBlockType.ForLoopEnd) && 
+            if (GetVRTKInteractableObject().IsInSnapDropZone() && IsInSnapDropZoneClone())
             {
+                ExpandCollider();
                 //Debug.Log("Start: " + gameObject.name + " > " + GetVRTKInteractableObject().GetStoredSnapDropZone().name);
-                if (GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
-                {
-                    mBoxCollider.center = new Vector3(0f, 0.3f, 0f);
-                    mBoxCollider.size = new Vector3(1.8f, 1.5f, 1.8f);
-                }
+                // if (GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
+                // {
+                //     mBoxCollider.center = new Vector3(0f, 0.3f, 0f);
+                //     mBoxCollider.size = new Vector3(1.8f, 1.5f, 1.8f);
+                // }
             }
             else
             {
-                mBoxCollider.center = new Vector3(0f, 0f, 0f);
-                mBoxCollider.size = new Vector3(1f, 1f, 1f);
+               ResetCollider();
             }
         }
 
         #endregion
 
         #region Private Event Listeners
-        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
-        {
-            if (sender is VRTK_InteractableObject)
-            {
-                var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-                if (block != null)
-                {
-                    if (block.Type == ProgramBlockType.ForLoopStart)
-                    {
-                        EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-                    }
+        // private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        // {
+        //     if (sender is VRTK_InteractableObject)
+        //     {
+        //         var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
+        //         if (block != null)
+        //         {
+        //             if (block.Type == ProgramBlockType.ForLoopStart)
+        //             {
+        //                 EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+        //             }
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {
@@ -160,6 +178,20 @@ namespace Kubs
         #endregion
 
         #region Private Methods
+        void ExpandCollider()
+        {
+            var collider = GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0f, 0.3f, 0f);
+            collider.size = new Vector3(1.8f, 1.5f, 1.8f);
+        }
+        void ResetCollider()
+        {
+            var collider = GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0f, 0f, 0f);
+            collider.size = new Vector3(1f, 1f, 1f);
+        }
 
         private void DetermineType()
         {
@@ -171,7 +203,7 @@ namespace Kubs
             {
                 Type = ProgramBlockType.Jump;
             }
-            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT) )
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT))
             {
                 Type = ProgramBlockType.RotateLeft;
             }
@@ -189,8 +221,9 @@ namespace Kubs
             }
         }
 
-        private Behaviour GetHalo() {
-            return (Behaviour) gameObject.GetComponent("Halo");
+        private Behaviour GetHalo()
+        {
+            return (Behaviour)gameObject.GetComponent("Halo");
         }
 
         #endregion
