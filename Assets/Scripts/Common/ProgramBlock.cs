@@ -34,6 +34,7 @@ namespace Kubs
         }
         public GameObject GetParent()
         {
+            //Debug.Log("GetParent: " + transform.parent.name);
             return transform.parent.gameObject;
         }
         public bool IsInZone()
@@ -162,27 +163,27 @@ namespace Kubs
 
         private void DetermineType()
         {
-            if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORWARD) == 0)
+            if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORWARD))
             {
                 Type = ProgramBlockType.Forward;
             }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_JUMP) == 0)
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_JUMP))
             {
                 Type = ProgramBlockType.Jump;
             }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT) == 0)
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT) )
             {
                 Type = ProgramBlockType.RotateLeft;
             }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATERIGHT) == 0)
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATERIGHT))
             {
                 Type = ProgramBlockType.RotateRight;
             }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPSTART) == 0)
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORLOOPSTART))
             {
                 Type = ProgramBlockType.ForLoopStart;
             }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND) == 0)
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND))
             {
                 Type = ProgramBlockType.ForLoopEnd;
             }

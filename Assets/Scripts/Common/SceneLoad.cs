@@ -18,7 +18,7 @@ namespace Kubs
         public Material skybox;
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _forLoopStartBlockPrefab;
-        [SerializeField] private GameObject _forLoopEndBlockPrefab;
+        // [SerializeField] private GameObject _forLoopEndBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
         [SerializeField] private GameObject _rotateRightBlockPrefab;
         [SerializeField] private GameObject _jumpBlockPrefab;
@@ -32,21 +32,20 @@ namespace Kubs
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
-            //_mAudioSource.Stop();
-            _mAudioSource.Play();
+            _mAudioSource.Stop();
+            //_mAudioSource.Play();
         }
         void Start()
         {
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
 
-            // For Friday 6 April 2018 demo, we do not allow clone ForLoop
-            // var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
-            // GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
-            var forStartblock = GetForLoopStartProgramBlock();
-            if (forStartblock != null) {
-                forStartblock.Type = ProgramBlockType.ForLoopStart;
-            }
+            var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
+            GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
+            // var forStartblock = GetForLoopStartProgramBlock();
+            // if (forStartblock != null) {
+            //     forStartblock.Type = ProgramBlockType.ForLoopStart;
+            // }
   
             var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);

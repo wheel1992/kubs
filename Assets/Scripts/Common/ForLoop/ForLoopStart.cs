@@ -35,6 +35,17 @@ namespace Kubs
                 _defaultSideArea.transform.localPosition = new Vector3(_defaultSideAreaPosition.x, _defaultSideAreaPosition.y, _defaultSideArea.transform.localPosition.z + increasePosZ);
             }
         }
+        public void ResetForLoopEnd()
+        {
+            var checkParent = ForLoopEnd.GetParentForLoopStart();
+            if (checkParent == null) { return; }
+
+            ForLoopEnd.GetComponent<BoxCollider>().isTrigger = false;
+            ForLoopEnd.transform.localPosition = new Vector3(0, -0.25f, 1f);
+            // if (checkParent.GetZoneIndex() == GetZoneIndex()) {
+                
+            // }
+        }
         public void ResetSideArea()
         {
             _defaultSideArea.transform.localScale = new Vector3(
@@ -91,7 +102,7 @@ namespace Kubs
         void Start()
         {
             this.ForLoopEnd = GetChildForLoopEnd();
-            this.ForLoopEnd.SetInactive();
+            //this.ForLoopEnd.SetInactive();
 
             _defaultSideArea = GetSideAreaGameObject();
             _defaultSideAreaPosition = _defaultSideArea.transform.localPosition;
@@ -109,6 +120,7 @@ namespace Kubs
             GetCounterNumberTextMesh().text = Convert.ToString(loopCounter);
 
             ResetSideArea();
+            ResetForLoopEnd();
         }
 
         // Update is called once per frame

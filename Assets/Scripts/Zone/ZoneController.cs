@@ -51,7 +51,7 @@ namespace Kubs
 
         public void AttachBlock(ProgramBlock block)
         {
-            Debug.Log("AttachBlock: " + block.name);
+            //Debug.Log("AttachBlock: " + block.name);
             GetChildZoneSnap().Snap(block.gameObject);
         }
         public void DisableSnap()

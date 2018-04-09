@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 114919612283687202}
   - component: {fileID: 114075940671143576}
   - component: {fileID: 114889820288321482}
+  - component: {fileID: 122425784811559660}
   m_Layer: 0
   m_Name: ForEnd_ProgramBlock
   m_TagString: Block_Program
@@ -554,3 +555,14 @@ MonoBehaviour:
   hideDelayOnGrab: 0
   hideControllerOnUse: 0
   hideDelayOnUse: 0
+--- !u!122 &122425784811559660
+Halo:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1463387355303930}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4287936512
+  m_Size: 1.5
