@@ -97,7 +97,7 @@ namespace Kubs
                 if (GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
                 {
                     mBoxCollider.center = new Vector3(0f, 0.3f, 0f);
-                    mBoxCollider.size = new Vector3(2f, 1.5f, 2f);
+                    mBoxCollider.size = new Vector3(1.8f, 1.5f, 1.8f);
                 }
             }
             else
