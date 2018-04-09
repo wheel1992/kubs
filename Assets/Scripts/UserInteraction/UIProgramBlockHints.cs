@@ -9,7 +9,8 @@ public class UIProgramBlockHints : MonoBehaviour {
     private bool _onHover = false;
     private bool _animating = false;
     private GameObject currentGameObject;
-    private float scaleFactor = 0.1f;
+    private float scaleFactor = 0.2f;
+    //[SerializeField] private GameObject programBlockTypeOnField;
 
 	// Use this for initialization
 	void Start () {
@@ -21,6 +22,7 @@ public class UIProgramBlockHints : MonoBehaviour {
             //if(gameObject.CompareTag("Block_Program"))
             //{
             currentGameObject = this.gameObject;
+            //Debug.Log("UIProgramBlockHints Start Function: " + currentGameObject.name );
         }
 	}
 	
@@ -31,6 +33,7 @@ public class UIProgramBlockHints : MonoBehaviour {
             if(currentGameObject.CompareTag("Block_Program") && !_animating)
             {
                 ProgramBlockType programBlockType = currentGameObject.GetComponent<ProgramBlock>().Type;
+                //Debug.Log("UIProgramBlockHints Update Function: " + currentGameObject.name );
                 StartCoroutine(CreateProgramBlockUIHint(programBlockType));
                 _animating = true;
             }
@@ -59,22 +62,22 @@ public class UIProgramBlockHints : MonoBehaviour {
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
-                UIProgramBlockHints = CreateMiniGameArea(2);
+                UIProgramBlockHints = CreateMiniGameArea(2, "Program_Block_SnapDropZone_Clone_Forward");
                 //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.Jump:
-                UIProgramBlockHints = CreateMiniGameArea(3);
+                UIProgramBlockHints = CreateMiniGameArea(3, "Program_Block_SnapDropZone_Clone_Jump");
                 //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateLeft:
-                UIProgramBlockHints = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1, "Program_Block_SnapDropZone_Clone_RotateLeft");
                 //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
             case ProgramBlockType.RotateRight:
-                UIProgramBlockHints = CreateMiniGameArea(1);
+                UIProgramBlockHints = CreateMiniGameArea(1, "Program_Block_SnapDropZone_Clone_RotateRight");
                 //ArrangeGameArea(UIProgramBlockHints);
                 // Make character move
                 break;
@@ -85,23 +88,30 @@ public class UIProgramBlockHints : MonoBehaviour {
         yield return new WaitForSeconds(3);
     }
 
-    private GameObject CreateMiniGameArea(int numTerrain)
+    private GameObject CreateMiniGameArea(int numTerrain, string programBlockTypeOnFieldString)
     {
         GameObject UIProgramBlockHints = new GameObject();
-        UIProgramBlockHints.transform.SetParent(this.gameObject.transform);
-        UIProgramBlockHints.transform.localPosition = new Vector3(0, 1, 0);
+        //Debug.Log("UIProgramBlockHints CreateMiniGameArea CurrentGameObject: " + currentGameObject.name);
+        UIProgramBlockHints.transform.SetParent(currentGameObject.transform);
+        Debug.Log("UIProgramBlockHints CreateMiniGameArea UIProgramBlockHints BeforeTransform Transform: " + UIProgramBlockHints.transform.localPosition);
+        GameObject programBlockTypeOnField = GameObject.Find(programBlockTypeOnFieldString);
+        Debug.Log("UIProgramBlockHints CreateMiniGameArea UIProgramBlockHints ProgramBlockTypeOnField Transform: " + programBlockTypeOnField.transform.position);
+        Debug.Log("UIProgramBlockHints CreateMiniGameArea UIProgramBlockHints Transform: " + UIProgramBlockHints.transform.localPosition);
         UIProgramBlockHints.name = "UIProgramBlockHints";
         for (int numBlock = 0; numBlock < numTerrain; numBlock++)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             cube.name = "MiniTerrain" + numBlock;
             cube.transform.SetParent(UIProgramBlockHints.transform);
+            cube.transform.localPosition = new Vector3(0, ((0.5f+scaleFactor*2)/scaleFactor), 0);
             cube.tag = "Cubes";
         }
         // Instatiate Character along with Parent
         //Character miniChar = new Character();
         //miniChar.tag = "UICharacter";
         //miniChar.transform.SetParent(UIProgramBlockHints.transform);
+        UIProgramBlockHints.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        UIProgramBlockHints.transform.position = programBlockTypeOnField.transform.position;
         return UIProgramBlockHints;
     }
 
