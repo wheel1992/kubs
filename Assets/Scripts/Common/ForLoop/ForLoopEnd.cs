@@ -12,15 +12,17 @@ namespace Kubs
         #region Public Methods
         public void Enable()
         {
-            gameObject.GetComponent<BoxCollider>().enabled = true;
-            gameObject.GetComponent<Rigidbody>().isKinematic = false;
-            EnableGrab();
+            // gameObject.GetComponent<BoxCollider>().enabled = true;
+            // gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            // EnableGrab();
+            SetActive();
         }
         public void Disable()
         {
-            gameObject.GetComponent<BoxCollider>().enabled = false;
-            gameObject.GetComponent<Rigidbody>().isKinematic = true;
-            DisableGrab();
+            // gameObject.GetComponent<BoxCollider>().enabled = false;
+            // gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            // DisableGrab();
+            SetInactive();
         }
         public void DisableGrab()
         {
@@ -45,23 +47,23 @@ namespace Kubs
             GetProgramBlock().SetParent(parent);
             transform.rotation = parent.rotation;
         }
-        public ForLoopStart GetParentForLoopStart()
-        {
-            var block = GetProgramBlock();
-            if (block == null) { return null; }
+        // public ForLoopStart GetParentForLoopStart()
+        // {
+        //     var block = GetProgramBlock();
+        //     if (block == null) { return null; }
 
-            var parent = block.GetParent();
-            if (parent == null) { return null; }
+        //     var parent = block.GetParent();
+        //     if (parent == null) { return null; }
 
-            // Update its reference for ForLoopStart
-            if (parent.GetComponent<ForLoopStart>() == null)
-            {
-                return null;
-            }
+        //     // Update its reference for ForLoopStart
+        //     if (parent.GetComponent<ForLoopStart>() == null)
+        //     {
+        //         return null;
+        //     }
 
-            this.ForLoopStart = parent.GetComponent<ForLoopStart>();
-            return this.ForLoopStart;
-        }
+        //     this.ForLoopStart = parent.GetComponent<ForLoopStart>();
+        //     return this.ForLoopStart;
+        // }
         public bool IsInZone()
         {
             // Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
@@ -87,9 +89,9 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            this.ForLoopStart = GetParentForLoopStart();
+            //this.ForLoopStart = GetParentForLoopStart();
 
-            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
+            //GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
             // GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone +=
         }
 
@@ -111,8 +113,8 @@ namespace Kubs
                 { 
                     if (forEndBlock != null)
                     {
-                        forEndBlock.SetParent(interactableObject.gameObject.transform);
-                        forEndBlock.Enable();
+                        //forEndBlock.SetParent(interactableObject.gameObject.transform);
+                        //forEndBlock.Enable();
                     }
                 }
             }

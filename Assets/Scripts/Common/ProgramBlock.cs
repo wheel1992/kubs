@@ -83,8 +83,9 @@ namespace Kubs
                     transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
-
-            //GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+ 
+            // GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
+            // GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
@@ -103,11 +104,11 @@ namespace Kubs
             // } else {
             //     ResetCollider();
             // }
-            if (gameObject.GetComponent<VRTK_InteractGrab>() != null)
-            {
-                Debug.Log("Start: " + gameObject.GetComponent<VRTK_InteractGrab>().isActiveAndEnabled);
-                gameObject.GetComponent<VRTK_InteractGrab>().ControllerStartUngrabInteractableObject += new ObjectInteractEventHandler(HandleControllerUngrab);
-            }
+            // if (gameObject.GetComponent<VRTK_InteractGrab>() != null)
+            // {
+            //     Debug.Log("Start: " + gameObject.GetComponent<VRTK_InteractGrab>().isActiveAndEnabled);
+            //     gameObject.GetComponent<VRTK_InteractGrab>().ControllerStartUngrabInteractableObject += new ObjectInteractEventHandler(HandleControllerUngrab);
+            // }
 
 
         }
@@ -134,22 +135,23 @@ namespace Kubs
         #endregion
 
         #region Private Event Listeners
-        private void HandleControllerUngrab(object sender, ObjectInteractEventArgs args)
-        {
-            Debug.Log("HandleControllerUngrab");
-            // if (sender is VRTK_InteractableObject)
-            // {
-            //     var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-            //     if (block != null)
-            //     {
-            //         if (block.Type == ProgramBlockType.ForLoopStart)
-            //         {
-            //             EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-            //         }
+        // private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        // {
+        //     Debug.Log("HandleOnUngrabbed");
+        //     GetVRTKInteractableObject().ForceStopInteracting();
+        //     // if (sender is VRTK_InteractableObject)
+        //     // {
+        //     //     var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
+        //     //     if (block != null)
+        //     //     {
+        //     //         if (block.Type == ProgramBlockType.ForLoopStart)
+        //     //         {
+        //     //             EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
+        //     //         }
 
-            //     }
-            // }
-        }
+        //     //     }
+        //     // }
+        // }
 
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {

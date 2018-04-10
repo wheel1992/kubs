@@ -8,9 +8,11 @@ namespace Kubs
 {
     public class ForLoopStart : MonoBehaviour
     {
+        [SerializeField] private GameObject forLoopEndPrefab;
         public ForLoopEnd ForLoopEnd { get; set; }
 
         public int loopCounter = 2;
+        private GameObject _dummyForLoopEnd;
         private GameObject _counterAdd;
         private GameObject _counterMinus;
         private GameObject _defaultSideArea;
@@ -20,19 +22,19 @@ namespace Kubs
         private float increasePosZ = 0.5f;
 
         #region Public Methods
-        public void EnableForLoopEnd()
+        public void HideDummyForLoopEnd()
         {
-            ForLoopEnd.Enable();
+            //ForLoopEnd.Enable();
+            GetDummyForLoopEnd().SetActive(false);
         }
-        public void DisableForLoopEnd()
+        public void ShowDummyForLoopEnd()
         {
             // var checkParent = ForLoopEnd.GetParentForLoopStart();
             // if (checkParent == null) { return; }
-
-            ForLoopEnd.transform.localPosition = new Vector3(0, 0f, 1f);
-            ForLoopEnd.Disable();
+            GetDummyForLoopEnd().SetActive(true);
+            // ForLoopEnd.transform.localPosition = new Vector3(0, 0f, 1f);
+            // ForLoopEnd.Disable();
             // ForLoopEnd.GetComponent<BoxCollider>().isTrigger = true;
-
         }
         public void SetSideAreaTo(int start, int end)
         {
@@ -66,19 +68,29 @@ namespace Kubs
         {
             gameObject.SetActive(false);
         }
-        public ForLoopEnd GetChildForLoopEnd()
+        public ForLoopEnd CreateForLoopEnd()
         {
-            var childEnd = transform.Find(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND);
-            if (childEnd == null) { return null; }
-
-            if (childEnd.gameObject.GetComponent<ForLoopEnd>() == null)
-            {
-                return null;
-            }
-
-            this.ForLoopEnd = childEnd.gameObject.GetComponent<ForLoopEnd>();
-            return this.ForLoopEnd;
+            ForLoopEnd = Instantiate(forLoopEndPrefab, new Vector3(0, 0, 0), Quaternion.identity).GetComponent<ForLoopEnd>();
+            ForLoopEnd.ForLoopStart = this;
+            return ForLoopEnd;
         }
+        public void DeleteForLoopEnd()
+        {
+            Destroy(ForLoopEnd);
+        }
+        // public ForLoopEnd GetChildForLoopEnd()
+        // {
+        //     var childEnd = transform.Find(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND);
+        //     if (childEnd == null) { return null; }
+
+        //     if (childEnd.gameObject.GetComponent<ForLoopEnd>() == null)
+        //     {
+        //         return null;
+        //     }
+
+        //     this.ForLoopEnd = childEnd.gameObject.GetComponent<ForLoopEnd>();
+        //     return this.ForLoopEnd;
+        // }
         public bool IsInZone()
         {
             // Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
@@ -109,7 +121,7 @@ namespace Kubs
             GetProgramBlock().GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
             GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
 
-            this.ForLoopEnd = GetChildForLoopEnd();
+            //this.ForLoopEnd = GetChildForLoopEnd();
             //this.ForLoopEnd.SetInactive();
 
             _defaultSideArea = GetSideAreaGameObject();
@@ -128,13 +140,15 @@ namespace Kubs
             GetCounterNumberTextMesh().text = Convert.ToString(loopCounter);
 
             ResetSideArea();
-            DisableForLoopEnd();
+            ShowDummyForLoopEnd();
 
             if (GetProgramBlock().IsInSnapDropZoneClone())
             {
                 ExpandCollider();
                 DisableCounter();
-            } else {
+            }
+            else
+            {
                 ResetCollider();
             }
 
@@ -167,11 +181,12 @@ namespace Kubs
                 var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
                 if (forStartBlock != null)
                 {
-                    if (!forStartBlock.ForLoopEnd.IsInZone())
-                    {
-                        forStartBlock.DisableForLoopEnd();
-                        forStartBlock.DisableCounter();
-                    }
+                    forStartBlock.DisableCounter();
+                    // if (!forStartBlock.ForLoopEnd.IsInZone())
+                    // {
+                    //     forStartBlock.ShowDummyForLoopEnd();
+                    //     forStartBlock.DisableCounter();
+                    // }
                 }
             }
         }
@@ -209,7 +224,7 @@ namespace Kubs
                 // Ungrabbed and dropped not within the Zone (aka outside)
                 if (interactableObject.IsInSnapDropZone() && !forStartBlock.GetProgramBlock().IsInSnapDropZoneClone())
                 {
-                    forStartBlock.EnableForLoopEnd();
+                    forStartBlock.HideDummyForLoopEnd();
                     forStartBlock.EnableCounter();
                 }
             }
@@ -286,6 +301,10 @@ namespace Kubs
         TextMesh GetCounterNumberTextMesh()
         {
             return GetCounterNumberAreaGameObject().transform.Find("CounterNumberText").gameObject.GetComponent<TextMesh>();
+        }
+        GameObject GetDummyForLoopEnd()
+        {
+            return transform.Find("ForEnd").gameObject;
         }
         #endregion
     }

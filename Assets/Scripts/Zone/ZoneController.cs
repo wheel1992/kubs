@@ -190,6 +190,7 @@ namespace Kubs
                     }
 
                     collidedBlock.CollidedZoneIndex = Index;
+                    collidedBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
 
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
@@ -208,6 +209,8 @@ namespace Kubs
                 if (collidedBlock != null)
                 {
                     collidedBlock.CollidedZoneIndex = -1;
+                    collidedBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+                    
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs
                         {
