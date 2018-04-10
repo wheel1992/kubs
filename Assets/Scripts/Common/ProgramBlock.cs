@@ -83,9 +83,9 @@ namespace Kubs
                     transform.GetChild(i).gameObject.GetComponent<Renderer>().enabled = false;
                 }
             }
- 
+
             // GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
-            // GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+            GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
@@ -115,16 +115,9 @@ namespace Kubs
         private void Update()
         {
             DetermineType();
-            // // (Type != ProgramBlockType.ForLoopStart || Type != ProgramBlockType.ForLoopEnd) && 
             if (GetVRTKInteractableObject().IsInSnapDropZone() && IsInSnapDropZoneClone())
             {
                 ExpandCollider();
-                //Debug.Log("Start: " + gameObject.name + " > " + GetVRTKInteractableObject().GetStoredSnapDropZone().name);
-                // if (GetVRTKInteractableObject().GetStoredSnapDropZone().name.Contains("Program_Block_SnapDropZone_Clone"))
-                // {
-                //     mBoxCollider.center = new Vector3(0f, 0.3f, 0f);
-                //     mBoxCollider.size = new Vector3(1.8f, 1.5f, 1.8f);
-                // }
             }
             else
             {
@@ -135,58 +128,32 @@ namespace Kubs
         #endregion
 
         #region Private Event Listeners
-        // private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
-        // {
-        //     Debug.Log("HandleOnUngrabbed");
-        //     GetVRTKInteractableObject().ForceStopInteracting();
-        //     // if (sender is VRTK_InteractableObject)
-        //     // {
-        //     //     var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-        //     //     if (block != null)
-        //     //     {
-        //     //         if (block.Type == ProgramBlockType.ForLoopStart)
-        //     //         {
-        //     //             EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-        //     //         }
-
-        //     //     }
-        //     // }
-        // }
-
+        private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            DisableHalo();
+        }
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {
-            var halo = GetHalo();
-            halo.enabled = true;
-            // if (sender is VRTK_InteractableObject)
-            // {
-            //     Debug.Log("HandleOnTouched: " + ((VRTK_InteractableObject)sender).gameObject.name);
-            //     var block = ((VRTK_InteractableObject)sender).gameObject;
-            //     if (block != null)
-            //     {
-            //         var halo = (Behaviour)block.GetComponent("Halo");
-            //         halo.enabled = true;
-            //     }
-            // }
+            EnableHalo();
         }
         private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
         {
-            var halo = GetHalo();
-            halo.enabled = false;
-            // if (sender is VRTK_InteractableObject)
-            // {
-            //     Debug.Log("HandleOnTouched: " + ((VRTK_InteractableObject)sender).gameObject.name);
-            //     var block = ((VRTK_InteractableObject)sender).gameObject;
-            //     if (block != null)
-            //     {
-            //         var halo = (Behaviour)block.GetComponent("Halo");
-            //         halo.enabled = false;
-            //     }
-            // }
+            DisableHalo();
         }
 
         #endregion
 
         #region Private Methods
+        void DisableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = false;
+        }
+        void EnableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = true;
+        }
         void ExpandCollider()
         {
             var collider = GetBoxCollider();
