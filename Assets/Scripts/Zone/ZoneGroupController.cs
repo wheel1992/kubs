@@ -185,11 +185,13 @@ namespace Kubs
                 {
                     case ProgramBlockType.ForLoopStart:
                         isValidMove = IsForStartCorrectPlacement(testBlock.GetComponent<ForLoopStart>(), args.CollidedZoneIndex);
+                        Debug.Log("Hover: ForLoopStart is valid?" + isValidMove);
                         //if (!isValidMove) { return; }
                         //Debug.Log("Hover: ForStart is valid? = " + isValidMove + " child ForEnd index = " + testBlock.GetComponent<ForLoopStart>().ForLoopEnd.GetZoneIndex());
                         break;
                     case ProgramBlockType.ForLoopEnd:
                         isValidMove = IsForEndCorrectPlacement(testBlock.GetComponent<ForLoopEnd>(), args.CollidedZoneIndex);
+                        Debug.Log("Hover: ForLoopEnd is valid?" + isValidMove);
                         //if (!isValidMove) { return; }
                         break;
                     default: break;
@@ -735,8 +737,17 @@ namespace Kubs
         /// <returns>Returns True or False</returns>
         private bool IsForStartCorrectPlacement(ForLoopStart forStart, int targetZoneIndex)
         {
+            
+            if(forStart.ForLoopEnd != null) {
+                if (forStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex) {
+                    Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
+                    return false;
+                }
+            }
+
             var leftForStartIndex = GetNearestLeftForLoopStart(targetZoneIndex);
-            Debug.Log("IsForStartCorrectPlacement: leftForStartIndex = " + leftForStartIndex + ", targetZoneIndex = " + targetZoneIndex);
+            //Debug.Log("IsForStartCorrectPlacement: leftForStartIndex = " + leftForStartIndex + ", targetZoneIndex = " + targetZoneIndex);
+            
             // Either there's no left ForStart (exist or not)
             // Or there's right ForStart
             if (leftForStartIndex == -1) { return true; }
@@ -768,16 +779,14 @@ namespace Kubs
             }
 
             var leftForStartIndex = GetNearestLeftForLoopStart(targetZoneIndex);
-            Debug.Log("IsForEndCorrectPlacement: targetZoneIndex = " + targetZoneIndex);
-            Debug.Log("IsForEndCorrectPlacement: leftForStartIndex = " + leftForStartIndex);
+            // Debug.Log("IsForEndCorrectPlacement: targetZoneIndex = " + targetZoneIndex);
+            // Debug.Log("IsForEndCorrectPlacement: leftForStartIndex = " + leftForStartIndex);
+
             // Either there's no left ForStart (exist or not)
             // Or there's right ForStart
             if (leftForStartIndex == -1) { return true; }
 
-
-
             var leftForStart = GetZoneControllerByGameObject(_zones[leftForStartIndex]).GetAttachedProgramBlock().GetComponent<ForLoopStart>();
-
 
             // Debug.Log("IsForEndCorrectPlacement: forEnd.ForLoopStart.GetZoneIndex() = " + forEnd.ForLoopStart.GetZoneIndex());
 

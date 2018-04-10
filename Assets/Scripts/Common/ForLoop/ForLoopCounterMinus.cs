@@ -25,6 +25,7 @@ namespace Kubs
         }
         void OnTriggerEnter(Collider other)
         {
+            if (other == null) { return; }
             if (!IsController(other.gameObject)) return;
             if (!IsTriggered)
             {
@@ -34,6 +35,7 @@ namespace Kubs
         }
         void OnTriggerExit(Collider other)
         {
+            if (other == null) { return; }
             IsTriggered = false;
             OnExit(this, new CounterMinusEventArgs { CollidedObject = other.gameObject });
         }
