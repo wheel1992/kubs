@@ -44,7 +44,6 @@ namespace Kubs
 
         public static void StartListening(string eventName, UnityAction<object> listener)
         {
-
             UnityAction<object> thisEvent;
             if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
             {

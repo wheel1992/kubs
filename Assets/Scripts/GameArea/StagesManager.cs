@@ -22,8 +22,25 @@ namespace Kubs
 			return stageString == "" ? 0 : int.Parse(stageString);
 		}
 
+		private static int? TryGetActiveStage()
+		{
+			try
+			{
+				return GetActiveStage();
+			}
+			catch
+			{
+				return null;
+			}
+		}
+
 		public static void LoadStageAsync(int stage, MonoBehaviour monoBehaviour)
 		{
+			if (stage == TryGetActiveStage())
+			{
+				return;
+			}
+
 			var stageString = stage.ToString();
 			monoBehaviour.StartCoroutine(LoadSceneAsync(STAGE_PREFIX + stageString));
 		}

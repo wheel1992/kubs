@@ -9,6 +9,7 @@ namespace Kubs
 	{
 		public int lastStage;
 
+		private int _activeStage = 1;
 		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
 
 		public void CollectChildren(Transform parent)
@@ -36,6 +37,8 @@ namespace Kubs
 			}
 
 			lastStage = tutorialBlocks.Keys.Max();
+
+			StartCoroutine(TriggerReadOnNextFrame());
 		}
 
 		public void ShowStage(int stage)
@@ -45,9 +48,17 @@ namespace Kubs
 				return;
 			}
 
-			foreach (var block in tutorialBlocks[stage])
+			var prevStage = _activeStage;
+			_activeStage = stage;
+
+			if (stage < prevStage)
 			{
-				block.Grow();
+				HideStagesInRange(stage, prevStage);
+			}
+
+			if (stage != 1)
+			{
+				ShowStagesInRange(prevStage + 1, stage);
 			}
 		}
 
@@ -61,6 +72,35 @@ namespace Kubs
 
 				fromComponent.stage = 0;
 			}
+		}
+
+		private void HideStagesInRange(int start, int end)
+		{
+			for (int stage = end; stage > start; stage--)
+			{
+				foreach (var block in tutorialBlocks[stage])
+				{
+					block.Shrink();
+				}
+			}
+		}
+
+		private void ShowStagesInRange(int start, int end)
+		{
+			for (int stage = start; stage <= end; stage++)
+			{
+				foreach (var block in tutorialBlocks[stage])
+				{
+					block.Grow();
+				}
+			}
+		}
+
+		private IEnumerator TriggerReadOnNextFrame()
+		{
+			yield return null;
+
+			EventManager.TriggerEvent(Constant.EVENT_NAME_TUTORIAL_MANAGER_READY, this);
 		}
 	}
 }
