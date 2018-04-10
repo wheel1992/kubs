@@ -20,6 +20,13 @@ namespace Kubs
 		{
 			if (isTutorial)
 			{
+				var tutorialManager = GameObject.FindObjectOfType<TutorialManager>();
+				if (tutorialManager != null)
+				{
+					ShowTutorial(tutorialManager);
+					return;
+				}
+
 				EventManager.StartListening(Constant.EVENT_NAME_TUTORIAL_MANAGER_READY, ShowTutorial);
 				StagesManager.LoadStageAsync(0, this);
 			}

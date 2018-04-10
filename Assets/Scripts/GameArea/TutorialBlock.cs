@@ -24,6 +24,16 @@ namespace Kubs
 			startScale = transform.localScale;
 			endScale = _originalScale;
 
+			gameObject.SetActive(true);
+			StartCoroutine("UpdateScale");
+		}
+
+		public void Shrink()
+		{
+			startScale = transform.localScale;
+			endScale = Vector3.zero;
+
+			gameObject.SetActive(true);
 			StartCoroutine("UpdateScale");
 		}
 
