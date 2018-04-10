@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 222783130849063004}
   - component: {fileID: 114762302730297592}
   - component: {fileID: 114357883646887544}
-  - component: {fileID: 114753755939528034}
-  - component: {fileID: 65028913012539698}
+  - component: {fileID: 114652801104265658}
+  - component: {fileID: 65944723396081412}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -48,7 +48,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &65028913012539698
+--- !u!65 &65944723396081412
 BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -134,7 +134,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
---- !u!114 &114753755939528034
+--- !u!114 &114652801104265658
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -142,9 +142,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1087296674511642}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 086c61b18b7e77a4c9566ddde56c3c54, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a6c810040af36e499956be74e2189c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTutorial: 0
+  stage: 0
 --- !u!114 &114762302730297592
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +220,6 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -180, y: 50}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

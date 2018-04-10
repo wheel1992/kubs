@@ -36,6 +36,8 @@ namespace Kubs
 			}
 
 			lastStage = tutorialBlocks.Keys.Max();
+
+			EventManager.TriggerEvent(Constant.EVENT_NAME_TUTORIAL_MANAGER_READY, this);
 		}
 
 		public void ShowStage(int stage)
