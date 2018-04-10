@@ -150,7 +150,6 @@ namespace Kubs
             Debug.Log("HandleOnUngrabbed:");
             if (sender is VRTK_InteractableObject)
             {
-                // var interactableObject = (VRTK_InteractableObject)sender;
                 EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
             }
         }

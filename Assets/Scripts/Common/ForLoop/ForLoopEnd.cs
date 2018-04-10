@@ -89,10 +89,7 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
-            //this.ForLoopStart = GetParentForLoopStart();
-
-            //GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnappedToDropZone);
-            // GetProgramBlock().GetVRTKInteractableObject().InteractableObjectSnappedToDropZone +=
+            GetProgramBlock().GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
         }
 
         // Update is called once per frame
@@ -102,6 +99,14 @@ namespace Kubs
         }
 
         #region  Private Event Handler Methods
+        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            Debug.Log("HandleOnUngrabbed:");
+            if (sender is VRTK_InteractableObject)
+            {
+                EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, sender);
+            }
+        }
         private void HandleOnSnappedToDropZone(object sender, InteractableObjectEventArgs args)
         {
             if (sender is VRTK_InteractableObject)
@@ -110,7 +115,7 @@ namespace Kubs
                 // Ungrabbed and dropped not within the Zone (aka outside)
                 var forEndBlock = interactableObject.GetComponent<ForLoopEnd>();
                 if (interactableObject.IsInSnapDropZone() && !forEndBlock.GetProgramBlock().IsInSnapDropZoneClone())
-                { 
+                {
                     if (forEndBlock != null)
                     {
                         //forEndBlock.SetParent(interactableObject.gameObject.transform);

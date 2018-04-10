@@ -47,7 +47,8 @@ namespace Kubs
         }
         void OnEnable()
         {
-            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab);
+            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, HandleForLoopEndUngrab);
+            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab); 
         }
         // Use this for initialization
         void Start()
@@ -64,6 +65,7 @@ namespace Kubs
         }
         void OnDisable()
         {
+            EventManager.StopListening(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, HandleForLoopEndUngrab);
             EventManager.StopListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab);
         }
 
@@ -97,40 +99,99 @@ namespace Kubs
         #endregion
 
         #region Private Event Handler Listener 
+        private void HandleForLoopEndUngrab(object sender)
+        {
+            Debug.Log("HandleForLoopEndUngrab: " + sender);
+            if (sender is VRTK_InteractableObject)
+            {
+                var interactableObject = (VRTK_InteractableObject)sender;
+                StartCoroutine(ExecuteAfterTime(2f, () =>
+                {
+                    if (interactableObject.IsInSnapDropZone()) { return; }
+
+                    // ForLoopEnd is ungrab and unsnap from zone
+                    // ForLoopStart must move back towards ForLoopEnd
+                    var forEndBlock = interactableObject.gameObject.GetComponent<ForLoopEnd>();
+                    if (forEndBlock == null) { return; }
+
+                    var forEndBlockWorldPosition = forEndBlock.transform.position;
+
+                    var forStartIndex = forEndBlock.ForLoopStart.GetZoneIndex();
+                    if (forStartIndex == -1) { return; }
+
+                    Debug.Log("HandleForLoopEndUngrab: forStartIndex = " + forStartIndex);
+                    Debug.Log("HandleForLoopEndUngrab: forEndBlockWorldPosition = " + forEndBlockWorldPosition);
+
+
+                    forEndBlock.ForLoopStart.ShowDummyForLoopEnd();
+                    forEndBlock.ForLoopStart.DeleteForLoopEnd();
+                    forEndBlock.ForLoopStart.transform.SetParent(null);
+                    forEndBlock.ForLoopStart.transform.position = forEndBlockWorldPosition;
+                    DestroyZone(forStartIndex);
+                    Unshift(forStartIndex);
+                    UpdateZoneIndices();
+                }));
+            }
+        }
         private void HandleForLoopStartUngrab(object sender)
         {
             //Debug.Log("HandleForLoopStartUngrab");
             if (sender is VRTK_InteractableObject)
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
+                //var whichBlock = GetProgramBlockByGameObject(interactableObject.gameObject);
                 //Debug.Log("HandleForLoopStartUngrab: in zone? = " + ();
 
-                StartCoroutine(ExecuteAfterTime(3f, () =>
+                StartCoroutine(ExecuteAfterTime(2f, () =>
                 {
-                    if (!interactableObject.IsInSnapDropZone())
-                    {
-                        var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
-                        if (forStartBlock != null)
-                        {
-                            if (forStartBlock.ForLoopEnd == null)
-                            {
-                                forStartBlock.ShowDummyForLoopEnd();
-                            }
-                            else
-                            {
-                                var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
-                                if (forEndIndex != -1)
-                                {
-                                    forStartBlock.ShowDummyForLoopEnd();
-                                    forStartBlock.DeleteForLoopEnd();
-                                    DestroyZone(forEndIndex);
-                                    Unshift(forEndIndex);
-                                    UpdateZoneIndices();
-                                }
-                            }
+                    if (interactableObject.IsInSnapDropZone()) { return; }
 
-                        }
+                    var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                    if (forStartBlock == null) { return; }
+
+                    if (forStartBlock.ForLoopEnd == null)
+                    {
+                        forStartBlock.ShowDummyForLoopEnd();
                     }
+                    else
+                    {
+                        var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
+                        if (forEndIndex == -1) { return; }
+
+                        forStartBlock.ShowDummyForLoopEnd();
+                        forStartBlock.DeleteForLoopEnd();
+                        DestroyZone(forEndIndex);
+                        Unshift(forEndIndex);
+                        UpdateZoneIndices();
+                    }
+
+
+
+
+                    // if (!interactableObject.IsInSnapDropZone())
+                    // {
+                    //     var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
+                    //     if (forStartBlock != null)
+                    //     {
+                    //         if (forStartBlock.ForLoopEnd == null)
+                    //         {
+                    //             forStartBlock.ShowDummyForLoopEnd();
+                    //         }
+                    //         else
+                    //         {
+                    //             var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
+                    //             if (forEndIndex != -1)
+                    //             {
+                    //                 forStartBlock.ShowDummyForLoopEnd();
+                    //                 forStartBlock.DeleteForLoopEnd();
+                    //                 DestroyZone(forEndIndex);
+                    //                 Unshift(forEndIndex);
+                    //                 UpdateZoneIndices();
+                    //             }
+                    //         }
+
+                    //     }
+                    // }
                 }));
             }
         }
@@ -510,7 +571,7 @@ namespace Kubs
         {
             return GetZoneControllerByGameObject(_zones[_zones.Count - 1]);
         }
-        
+
         /// <summary>
         /// Checks whether both ForStartLoop and ForEndLoop are in correct placement
         /// ForStartLoop must be before ForEndLoop 
