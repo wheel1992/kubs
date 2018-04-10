@@ -352,10 +352,10 @@ namespace Kubs
                 switch (attachedBlock.Type)
                 {
                     case ProgramBlockType.ForLoopStart:
-                        attachedBlock.transform.position = new Vector3(
-                                attachedBlock.transform.position.x,
+                        attachedBlock.transform.localPosition = new Vector3(
+                                attachedBlock.transform.localPosition.x,
                                 0.8f,
-                                attachedBlock.transform.position.z);
+                                attachedBlock.transform.localPosition.z);
 
                         var forStart = attachedBlock.GetComponent<ForLoopStart>();
                         //Debug.Log("HandleZoneSnapped: ForStart's ForEnd zone index = " + forStart.ForLoopEnd.GetZoneIndex());
@@ -405,10 +405,10 @@ namespace Kubs
                         break;
 
                     case ProgramBlockType.ForLoopEnd:
-                        attachedBlock.transform.position = new Vector3(
-                            attachedBlock.transform.position.x,
+                        attachedBlock.transform.localPosition = new Vector3(
+                            attachedBlock.transform.localPosition.x,
                             0.55f, // 0.8f,
-                            attachedBlock.transform.position.z);
+                            attachedBlock.transform.localPosition.z);
 
                         UpdateForLoopSideArea(args.Index);
                         // forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
@@ -423,10 +423,10 @@ namespace Kubs
                         break;
 
                     default:
-                        attachedBlock.transform.position = new Vector3(
-                            attachedBlock.transform.position.x,
+                        attachedBlock.transform.localPosition = new Vector3(
+                            attachedBlock.transform.localPosition.x,
                             0.8f,
-                            attachedBlock.transform.position.z);
+                            attachedBlock.transform.localPosition.z);
 
                         // forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
                         // forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
@@ -737,9 +737,11 @@ namespace Kubs
         /// <returns>Returns True or False</returns>
         private bool IsForStartCorrectPlacement(ForLoopStart forStart, int targetZoneIndex)
         {
-            
-            if(forStart.ForLoopEnd != null) {
-                if (forStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex) {
+
+            if (forStart.ForLoopEnd != null)
+            {
+                if (forStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex)
+                {
                     Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
                     return false;
                 }
@@ -747,7 +749,7 @@ namespace Kubs
 
             var leftForStartIndex = GetNearestLeftForLoopStart(targetZoneIndex);
             //Debug.Log("IsForStartCorrectPlacement: leftForStartIndex = " + leftForStartIndex + ", targetZoneIndex = " + targetZoneIndex);
-            
+
             // Either there's no left ForStart (exist or not)
             // Or there's right ForStart
             if (leftForStartIndex == -1) { return true; }
