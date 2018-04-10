@@ -9,12 +9,17 @@ namespace Kubs
     public class ProgramBlock : Block
     {
         public ProgramBlockType Type { get; set; }
-        [HideInInspector]
-        public int ZoneIndex = -1;
         public int CollidedZoneIndex { get; set; }
 
         #region Public Methods
-
+        public void SetActive()
+        {
+            gameObject.SetActive(true);
+        }
+        public void SetInactive()
+        {
+            gameObject.SetActive(false);
+        }
         public void SetParent(Transform parent)
         {
             transform.SetParent(parent);
@@ -23,48 +28,48 @@ namespace Kubs
         {
             return gameObject.GetComponent<VRTK_InteractableObject>();
         }
-        public bool HasZoneIndex()
+        public GameObject GetParent()
         {
-            Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
-            return ZoneIndex != -1;
+            //Debug.Log("GetParent: " + transform.parent.name);
+            if (transform.parent == null) { return null; }
+            return transform.parent.gameObject;
         }
+        public bool IsInZone()
+        {
+            // Debug.Log("HasZoneIndex: ZoneIndex = " + ZoneIndex);
+            var zoneIndex = GetZoneIndex();
+            return zoneIndex != -1;
+        }
+        public bool IsInSnapDropZoneClone()
+        {
+            var dropZone = GetVRTKInteractableObject().GetStoredSnapDropZone();
+            if (dropZone == null) { return false; }
+            return dropZone.name.Contains("Program_Block_SnapDropZone_Clone");
+        }
+        public BoxCollider GetBoxCollider()
+        {
+            return gameObject.GetComponent<BoxCollider>();
+        }
+        public int GetZoneIndex()
+        {
+            var parent = GetParent();
+            if (parent == null) { return -1; }
 
+            // Check instance is in ZoneController
+            var zoneCtrl = parent.GetComponent<ZoneController>();
+            if (zoneCtrl == null) { return -1; }
+
+            return zoneCtrl.Index;
+        }
         #endregion
 
         #region Private Lifecycle Methods
         void Awake()
         {
             Category = BlockCategory.Program;
-
-            if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORWARD) == 0)
-            {
-                Type = ProgramBlockType.Forward;
-            }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_JUMP) == 0)
-            {
-                Type = ProgramBlockType.Jump;
-            }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT) == 0)
-            {
-                Type = ProgramBlockType.RotateLeft;
-            }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_ROTATERIGHT) == 0)
-            {
-                Type = ProgramBlockType.RotateRight;
-            }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPSTART) == 0)
-            {
-                Type = ProgramBlockType.ForLoopStart;
-            }
-            else if (gameObject.name.CompareTo(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND) == 0)
-            {
-                Type = ProgramBlockType.ForLoopEnd;
-            }
         }
         void Start()
         {
-            // _collidedZoneIndices = new List<int>();
-
             for (int i = 0; i < transform.childCount; i++)
             {
                 if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
@@ -73,28 +78,107 @@ namespace Kubs
                 }
             }
 
-            GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
+            // GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
+            GetVRTKInteractableObject().InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrabbed);
+            GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
+            GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
             CollidedZoneIndex = -1;
+
+            DetermineType();
+            DisableHalo();
         }
         private void Update()
         {
-        }
-
-        private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
-        {
-            if (sender is VRTK_InteractableObject)
+            DetermineType();
+            if (GetVRTKInteractableObject().IsInSnapDropZone() && IsInSnapDropZoneClone())
             {
-                var block = ((VRTK_InteractableObject)sender).gameObject.GetComponent<ProgramBlock>();
-                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
-                {
-                    EventManager.TriggerEvent(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, sender);
-                }
+                ExpandCollider();
+            }
+            else
+            {
+                ResetCollider();
             }
         }
 
         #endregion
 
+        #region Private Event Listeners
+        private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
+        {
+            DisableHalo();
+        }
+        private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
+        {
+            EnableHalo();
+        }
+        private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
+        {
+            DisableHalo();
+        }
+
+        #endregion
+
+        #region Private Methods
+        void DisableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = false;
+        }
+        void EnableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = true;
+        }
+        void ExpandCollider()
+        {
+            var collider = GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0f, 0.3f, 0f);
+            collider.size = new Vector3(1.8f, 1.5f, 1.8f);
+        }
+        void ResetCollider()
+        {
+            var collider = GetBoxCollider();
+            if (collider == null) { return; }
+            collider.center = new Vector3(0f, 0f, 0f);
+            collider.size = new Vector3(1f, 1f, 1f);
+        }
+
+        private void DetermineType()
+        {
+            if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORWARD))
+            {
+                Type = ProgramBlockType.Forward;
+            }
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_JUMP))
+            {
+                Type = ProgramBlockType.Jump;
+            }
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATELEFT))
+            {
+                Type = ProgramBlockType.RotateLeft;
+            }
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_ROTATERIGHT))
+            {
+                Type = ProgramBlockType.RotateRight;
+            }
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORLOOPSTART))
+            {
+                Type = ProgramBlockType.ForLoopStart;
+            }
+            else if (gameObject.name.Contains(Constant.NAME_PROGRAM_BLOCK_FORLOOPEND))
+            {
+                Type = ProgramBlockType.ForLoopEnd;
+            }
+        }
+
+        private Behaviour GetHalo()
+        {
+            return (Behaviour)gameObject.GetComponent("Halo");
+        }
+
+        #endregion
     }
 
     public enum ProgramBlockType

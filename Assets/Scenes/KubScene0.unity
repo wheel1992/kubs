@@ -389,6 +389,18 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 8fc64b4c675f1564ba1c43d37467699e, type: 3}
+--- !u!114 &444427307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 444427304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a905b0a964731b746841c47c0d945256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTriggered: 0
 --- !u!1 &481754779
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf2b8202df1991d4c881a3857163b797, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastStage: 0
 --- !u!1 &589412245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,6 +1978,18 @@ GameObject:
   m_PrefabParentObject: {fileID: 1363521503581418, guid: e04287c5ce67464469b13455453e0074,
     type: 2}
   m_PrefabInternal: {fileID: 1320992167}
+--- !u!114 &1320992170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1320992169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a905b0a964731b746841c47c0d945256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTriggered: 0
 --- !u!114 &1320992171
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2071,6 +2096,18 @@ GameObject:
   m_PrefabParentObject: {fileID: 1363521503581418, guid: e04287c5ce67464469b13455453e0074,
     type: 2}
   m_PrefabInternal: {fileID: 1353919933}
+--- !u!114 &1353919936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1353919935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a905b0a964731b746841c47c0d945256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTriggered: 0
 --- !u!114 &1353919937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2531,6 +2568,18 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: 8fc64b4c675f1564ba1c43d37467699e, type: 3}
+--- !u!114 &1659825273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1659825269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a905b0a964731b746841c47c0d945256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTriggered: 0
 --- !u!1001 &1712295608
 Prefab:
   m_ObjectHideFlags: 0

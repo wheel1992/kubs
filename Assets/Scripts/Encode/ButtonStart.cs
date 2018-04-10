@@ -22,6 +22,8 @@ namespace Kubs
         private ZoneGroupController _zoneGroupController;
         private ZoneMovementController _zoneMovementController;
 
+        private bool HasTouchedByController = false;
+
         // Use this for initialization
         void Start()
         {
@@ -37,6 +39,9 @@ namespace Kubs
             _zoneGroupController = GetZoneGroupController();
             _zoneMovementController = _zonesObject.GetComponent<ZoneMovementController>();
             _zoneMovementController.OnCompleted += Decode;
+
+            GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
+            GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
         }
 
         // Update is called once per frame
@@ -63,12 +68,29 @@ namespace Kubs
         {
             //Debug.Log("OnTriggerEnter");
             //ChangeColor();
-
-            if (!_isAnimating)
+            // Debug.Log("OnTriggerEnter: " + other);
+            // // if (!_isAnimating)
+            // // {
+            // //     Run();
+            // // }
+            // StartCoroutine("Depress");
+        }
+        private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
+        {
+            // Debug.Log("HandleOnTouched: " + args.interactingObject);
+            if (args.interactingObject.name.CompareTo("RightController") == 0 || args.interactingObject.name.CompareTo("LeftController") == 0)
             {
+                HasTouchedByController = true;
+                StartCoroutine(Depress());
+            }
+        }
+        private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
+        {
+            // Debug.Log("HandleOnUntouched: " + args.interactingObject);
+            if (HasTouchedByController) {
+                HasTouchedByController = false;  
                 Run();
             }
-            StartCoroutine("Depress");
         }
 
         //private void HandlePush(object sender, Control3DEventArgs e)
@@ -83,15 +105,15 @@ namespace Kubs
             // //Debug.Log("HandlePush: list blocks count = " + listBlocks.Count);
 
             GameObject.Find("Character").GetComponent<Character>().Reset();
-            _zoneMovementController.MoveBlockChain();
-            //Decode();
+            // _zoneMovementController.MoveBlockChain();
+            Decode();
         }
 
         private void Decode()
         {
             Debug.Log("Decode");
-            _zonesObject.SetActive(false);
-            
+            // _zonesObject.SetActive(false);
+
             var listBlocks = _zoneGroupController.CompileProgramBlocks();
             GetDecoder().Decode(listBlocks);
         }
@@ -162,16 +184,20 @@ namespace Kubs
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
         }
+        public VRTK_InteractableObject GetVRTKInteractableObject()
+        {
+            return gameObject.GetComponent<VRTK_InteractableObject>();
+        }
 
         private ZoneGroupController GetZoneGroupController()
         {
             return GameObject.Find(Constant.NAME_ZONES).GetComponent<ZoneGroupController>();
         }
-        
+
         GameObject GetZonesGameObject()
         {
             return GameObject.Find("Zones");
         }
-        
+
     }
 }

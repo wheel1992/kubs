@@ -37,6 +37,8 @@ namespace Kubs
         public const string EVENT_NAME_CHARACTER_DID_START = "Character_Did_Start";
         public const string EVENT_NAME_GAME_AREA_DID_SCALE = "Game_Area_Did_Scale";
         public const string EVENT_NAME_TUTORIAL_MANAGER_READY = "Tutorial_Manager_Ready";
+        public const string EVENT_NAME_FOR_LOOP_END_UNGRAB = "ForLoopEnd_Ungrab";
+        public const string EVENT_NAME_FOR_LOOP_START_GRAB = "ForLoopStart_Grab";
         public const string EVENT_NAME_FOR_LOOP_START_UNGRAB = "ForLoopStart_Ungrab";
 
     }

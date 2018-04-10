@@ -15,7 +15,7 @@ namespace Kubs
     public struct ZoneHoverEventArgs
     {
         public GameObject CollidedObject;
-        public int ZoneIndex;
+        public int CollidedZoneIndex;
     }
     /// <summary>
     /// This contains both ZoneBaseController and ZoneHintController
@@ -123,6 +123,10 @@ namespace Kubs
         private void HandleZoneOnEntered(object sender, ZoneSnapEventArgs args)
         {
             //Debug.Log("HandleZoneOnEntered");
+            if (args.WhichBlock != null)
+            {
+                args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+            }
         }
         private void HandleZoneOnExited(object sender, ZoneSnapEventArgs args)
         {
@@ -138,10 +142,10 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.CollidedZoneIndex = -1;
-                args.WhichBlock.ZoneIndex = this.Index;
+                // args.WhichBlock.ZoneIndex = this.Index;
                 // Attach block (child) to this zone (parent)
                 args.WhichBlock.SetParent(this.transform);
-
+                Debug.Log("HandleZoneOnSnapped: " + args.WhichBlock.name);
                 OnZoneSnapped(this,
                     new ZoneEventArgs
                     {
@@ -155,9 +159,16 @@ namespace Kubs
             if (args.WhichBlock != null)
             {
                 args.WhichBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.NoDrop;
-                args.WhichBlock.SetParent(null);
+                // args.WhichBlock.SetParent(null);
                 args.WhichBlock.CollidedZoneIndex = -1;
-                args.WhichBlock.ZoneIndex = -1;
+                // args.WhichBlock.ZoneIndex = -1;
+
+                if (args.WhichBlock.Type == ProgramBlockType.ForLoopEnd) {
+                    // A snapped ForLoopEnd is attached to a Zone
+                    // When unsnapped, ForLoopEnd will attached back to its ForLoopStart
+                    var parentForStart = args.WhichBlock.gameObject.GetComponent<ForLoopEnd>().ForLoopStart;
+                    args.WhichBlock.SetParent(parentForStart.transform);
+                }
 
                 OnZoneUnsnapped(this,
                     new ZoneEventArgs
@@ -173,18 +184,19 @@ namespace Kubs
                 var collidedBlock = GetProgramBlockByGameObject(args.CollidedObject);
                 if (collidedBlock != null)
                 {
-                    if (collidedBlock.CollidedZoneIndex == Index || collidedBlock.ZoneIndex == Index)
+                    if (collidedBlock.CollidedZoneIndex == Index) //  || collidedBlock.ZoneIndex == Index
                     {
                         return;
                     }
 
                     collidedBlock.CollidedZoneIndex = Index;
+                    collidedBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
 
                     OnZonesHovered(this,
                         new ZoneHoverEventArgs
                         {
                             CollidedObject = args.CollidedObject,
-                            ZoneIndex = collidedBlock.CollidedZoneIndex
+                            CollidedZoneIndex = collidedBlock.CollidedZoneIndex
                         });
                 }
             }
@@ -197,11 +209,13 @@ namespace Kubs
                 if (collidedBlock != null)
                 {
                     collidedBlock.CollidedZoneIndex = -1;
+                    collidedBlock.GetVRTKInteractableObject().validDrop = VRTK_InteractableObject.ValidDropTypes.DropAnywhere;
+                    
                     OnZonesUnhovered(this,
                         new ZoneHoverEventArgs
                         {
                             CollidedObject = args.CollidedObject,
-                            ZoneIndex = Index
+                            CollidedZoneIndex = Index
                         });
                 }
             }

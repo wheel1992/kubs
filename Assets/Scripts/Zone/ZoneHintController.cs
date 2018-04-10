@@ -34,7 +34,7 @@ namespace Kubs
 
         public void DisplayHighlight(bool isValid)
         {
-            Debug.Log("DisplayHighlight: isValid " + isValid);
+            //Debug.Log("DisplayHighlight: isValid " + isValid);
             var prefab = GetZoneHintHighlightPrefabGameObject();
             prefab.SetActive(true);
             var prefabMeshRenderer = prefab.GetComponent<MeshRenderer>();
@@ -52,7 +52,7 @@ namespace Kubs
         }
         public void HideHighlight()
         {
-            Debug.Log("HideHighlight: ");
+            //Debug.Log("HideHighlight: ");
             var prefab = GetZoneHintHighlightPrefabGameObject();
             prefab.SetActive(false);
         }

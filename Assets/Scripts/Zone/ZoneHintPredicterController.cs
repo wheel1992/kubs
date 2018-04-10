@@ -26,11 +26,17 @@ namespace Kubs
         }
         void OnTriggerEnter(Collider other)
         {
-            OnPredicterTriggerEnter(this, new ZoneHintPredicterEventArgs { CollidedObject = other.gameObject });
+            if (other != null)
+            {
+                OnPredicterTriggerEnter(this, new ZoneHintPredicterEventArgs { CollidedObject = other.gameObject });
+            }
         }
         void OnTriggerExit(Collider other)
         {
-            OnPredicterTriggerExit(this, new ZoneHintPredicterEventArgs { CollidedObject = other.gameObject });
+            if (other != null)
+            {
+                OnPredicterTriggerExit(this, new ZoneHintPredicterEventArgs { CollidedObject = other.gameObject });
+            }
         }
     }
 
