@@ -19,7 +19,7 @@ namespace Kubs
 			sceneName = sceneName == CHARACTER_STAGE ? STAGE_PREFIX : sceneName;
 
 			var stageString = sceneName.Substring(STAGE_PREFIX.Length);
-			return stageString == "" ? 0 : int.Parse(stageString);
+			return stageString == "" ? -1 : int.Parse(stageString);
 		}
 
 		private static int? TryGetActiveStage()

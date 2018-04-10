@@ -31,6 +31,13 @@ public class VRTK_UIInput : MonoBehaviour
         {
             ExecuteEvents.Execute(EventSystem.current.currentSelectedGameObject, new PointerEventData(EventSystem.current), ExecuteEvents.submitHandler);
         }
+
+        var button = e.target.GetComponent<Button>();
+        if (button != null)
+        {
+            // button.OnPointerClick(new PointerEventData(null));
+            Debug.Log("HandleTriggerClicked", e.target.gameObject);
+        }
     }
 
     private void HandlePointerIn(object sender, DestinationMarkerEventArgs e)
