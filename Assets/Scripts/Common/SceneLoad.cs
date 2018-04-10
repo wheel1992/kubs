@@ -33,8 +33,8 @@ namespace Kubs
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
-            _mAudioSource.Stop();
-            //_mAudioSource.Play();
+            //_mAudioSource.Stop();
+            _mAudioSource.Play();
         }
         void Start()
         {
