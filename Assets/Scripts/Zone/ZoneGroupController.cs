@@ -27,7 +27,7 @@ namespace Kubs
         private GameObject _defaultFirstZone;
         private Vector3 _defaultFirstZonePosition;
         bool isCoroutineExecuting = false;
-        
+
         IEnumerator ExecuteAfterTime(float time, Action task)
         {
             if (isCoroutineExecuting)
@@ -46,7 +46,7 @@ namespace Kubs
         void OnEnable()
         {
             EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, HandleForLoopEndUngrab);
-            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab); 
+            EventManager.StartListening(Constant.EVENT_NAME_FOR_LOOP_START_UNGRAB, HandleForLoopStartUngrab);
         }
         // Use this for initialization
         void Start()
@@ -103,7 +103,7 @@ namespace Kubs
             if (sender is VRTK_InteractableObject)
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
-                StartCoroutine(ExecuteAfterTime(2f, () =>
+                StartCoroutine(ExecuteAfterTime(1f, () =>
                 {
                     if (interactableObject.IsInSnapDropZone()) { return; }
 
@@ -117,10 +117,11 @@ namespace Kubs
                     var forStartIndex = forEndBlock.ForLoopStart.GetZoneIndex();
                     if (forStartIndex == -1) { return; }
 
-                    forEndBlock.ForLoopStart.ShowDummyForLoopEnd();
                     forEndBlock.ForLoopStart.DeleteForLoopEnd();
+                    forEndBlock.ForLoopStart.ShowDummyForLoopEnd();
                     forEndBlock.ForLoopStart.transform.SetParent(null);
                     forEndBlock.ForLoopStart.transform.position = forEndBlockWorldPosition;
+                    forEndBlock.ForLoopStart.GetComponent<Rigidbody>().isKinematic = false;
                     DestroyZone(forStartIndex);
                     Unshift(forStartIndex);
                     UpdateZoneIndices();
@@ -134,7 +135,7 @@ namespace Kubs
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
 
-                StartCoroutine(ExecuteAfterTime(2f, () =>
+                StartCoroutine(ExecuteAfterTime(1f, () =>
                 {
                     if (interactableObject.IsInSnapDropZone()) { return; }
 
