@@ -53,7 +53,6 @@ namespace Kubs
 
 			if (stage < prevStage)
 			{
-				Debug.Log("h");
 				HideStagesInRange(stage, prevStage);
 			}
 

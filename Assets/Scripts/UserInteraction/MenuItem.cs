@@ -10,6 +10,9 @@ namespace Kubs
 		public bool isTutorial;
 		public int stage;
 
+		// EventManager keeps calling the first instance, even if stop listening
+		private static int _activeStage;
+
 		// Use this for initialization
 		void Start ()
 		{
@@ -20,6 +23,8 @@ namespace Kubs
 		{
 			if (isTutorial)
 			{
+				_activeStage = stage;
+
 				var tutorialManager = GameObject.FindObjectOfType<TutorialManager>();
 				if (tutorialManager != null)
 				{
@@ -43,7 +48,7 @@ namespace Kubs
 			var tutorialManager = o as TutorialManager;
 			if (tutorialManager != null)
 			{
-				tutorialManager.ShowStage(stage);
+				tutorialManager.ShowStage(_activeStage);
 			}
 		}
 	}
