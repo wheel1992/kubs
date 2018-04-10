@@ -920,6 +920,7 @@ GameObject:
   - component: {fileID: 235407054}
   - component: {fileID: 235407055}
   - component: {fileID: 235407056}
+  - component: {fileID: 235407057}
   m_Layer: 0
   m_Name: LeftController
   m_TagString: Untagged
@@ -1097,6 +1098,17 @@ MonoBehaviour:
   pointer: {fileID: 0}
   addRigidBody: 0
   reference: {fileID: 0}
+--- !u!114 &235407057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 235407049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fce2c1d02a4934b933f19a684ff2e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &241226636
 GameObject:
   m_ObjectHideFlags: 0
@@ -2962,6 +2974,7 @@ GameObject:
   - component: {fileID: 743436573}
   - component: {fileID: 743436575}
   - component: {fileID: 743436574}
+  - component: {fileID: 743436576}
   m_Layer: 0
   m_Name: RightController
   m_TagString: Untagged
@@ -3121,6 +3134,17 @@ MonoBehaviour:
   maximumCursorScale: {x: Infinity, y: Infinity, z: Infinity}
   customTracer: {fileID: 0}
   customCursor: {fileID: 0}
+--- !u!114 &743436576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 743436569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0fce2c1d02a4934b933f19a684ff2e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &765552143
 GameObject:
   m_ObjectHideFlags: 0
@@ -8669,7 +8693,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 2131562571}
-  - component: {fileID: 2131562572}
+  - component: {fileID: 2131562573}
   m_Layer: 0
   m_Name: PlayArea
   m_TagString: Untagged
@@ -8690,7 +8714,7 @@ Transform:
   m_Father: {fileID: 1766427851}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2131562572
+--- !u!114 &2131562573
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -8698,7 +8722,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2131562570}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef7e6bfad51b1f24f8bba548c8dcecb8, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f33e91d203cf2745b10535d7b093a45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   blinkToColor: {r: 0, g: 0, b: 0, a: 1}

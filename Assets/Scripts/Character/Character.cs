@@ -332,8 +332,11 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
-            _zonesObject.SetActive(true);
-            // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            if (_zonesObject != null)
+            {
+                _zonesObject.SetActive(true);
+                // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            }
         }
 
         private void Stop()
