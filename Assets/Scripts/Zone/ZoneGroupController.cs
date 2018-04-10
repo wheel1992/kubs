@@ -14,7 +14,6 @@ namespace Kubs
     public class ZoneGroupController : MonoBehaviour
     {
         [SerializeField] private GameObject zonePrefab;
-        //[SerializeField] private GameObject forLoopEndBlockPrefab;
         [SerializeField] private AudioClip audioClipIncorrectPosition;
         [SerializeField] private AudioClip audioClipInsertBlock;
 
@@ -26,10 +25,9 @@ namespace Kubs
         private AudioSource _audioSourceIncorrectPosition;
         private AudioSource _audioSourceInsertBlock;
         private GameObject _defaultFirstZone;
-        //private ProgramBlock _defaultForEndLoopBlock;
         private Vector3 _defaultFirstZonePosition;
-
         bool isCoroutineExecuting = false;
+        
         IEnumerator ExecuteAfterTime(float time, Action task)
         {
             if (isCoroutineExecuting)
@@ -101,7 +99,7 @@ namespace Kubs
         #region Private Event Handler Listener 
         private void HandleForLoopEndUngrab(object sender)
         {
-            Debug.Log("HandleForLoopEndUngrab: " + sender);
+            // Debug.Log("HandleForLoopEndUngrab: " + sender);
             if (sender is VRTK_InteractableObject)
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
@@ -119,10 +117,6 @@ namespace Kubs
                     var forStartIndex = forEndBlock.ForLoopStart.GetZoneIndex();
                     if (forStartIndex == -1) { return; }
 
-                    Debug.Log("HandleForLoopEndUngrab: forStartIndex = " + forStartIndex);
-                    Debug.Log("HandleForLoopEndUngrab: forEndBlockWorldPosition = " + forEndBlockWorldPosition);
-
-
                     forEndBlock.ForLoopStart.ShowDummyForLoopEnd();
                     forEndBlock.ForLoopStart.DeleteForLoopEnd();
                     forEndBlock.ForLoopStart.transform.SetParent(null);
@@ -139,8 +133,6 @@ namespace Kubs
             if (sender is VRTK_InteractableObject)
             {
                 var interactableObject = (VRTK_InteractableObject)sender;
-                //var whichBlock = GetProgramBlockByGameObject(interactableObject.gameObject);
-                //Debug.Log("HandleForLoopStartUngrab: in zone? = " + ();
 
                 StartCoroutine(ExecuteAfterTime(2f, () =>
                 {
@@ -164,34 +156,6 @@ namespace Kubs
                         Unshift(forEndIndex);
                         UpdateZoneIndices();
                     }
-
-
-
-
-                    // if (!interactableObject.IsInSnapDropZone())
-                    // {
-                    //     var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
-                    //     if (forStartBlock != null)
-                    //     {
-                    //         if (forStartBlock.ForLoopEnd == null)
-                    //         {
-                    //             forStartBlock.ShowDummyForLoopEnd();
-                    //         }
-                    //         else
-                    //         {
-                    //             var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
-                    //             if (forEndIndex != -1)
-                    //             {
-                    //                 forStartBlock.ShowDummyForLoopEnd();
-                    //                 forStartBlock.DeleteForLoopEnd();
-                    //                 DestroyZone(forEndIndex);
-                    //                 Unshift(forEndIndex);
-                    //                 UpdateZoneIndices();
-                    //             }
-                    //         }
-
-                    //     }
-                    // }
                 }));
             }
         }
