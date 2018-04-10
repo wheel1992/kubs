@@ -13,6 +13,8 @@ namespace Kubs
     //}
     public class ButtonStart : MonoBehaviour
     {
+        public AudioClip audioClipButtonPressed;
+        private AudioSource _audioSourceButtonPressed;
         private VRTK_Button_UnityEvents buttonEvents;
         private Material _defaultMaterial;
 
@@ -34,6 +36,8 @@ namespace Kubs
             // }
             // buttonEvents.OnPushed.AddListener(HandlePush);
             //_defaultMaterial = GetCurrentMaterial();
+
+            InitAudioClips();
 
             _zonesObject = GetZonesGameObject();
             _zoneGroupController = GetZoneGroupController();
@@ -81,6 +85,7 @@ namespace Kubs
             if (args.interactingObject.name.CompareTo("RightController") == 0 || args.interactingObject.name.CompareTo("LeftController") == 0)
             {
                 HasTouchedByController = true;
+                _audioSourceButtonPressed.Play();
                 StartCoroutine(Depress());
             }
         }
@@ -98,7 +103,14 @@ namespace Kubs
         //    VRTK_Logger.Info("Pushed");
         //    Run();
         //}
-
+        private void InitAudioClips()
+        {
+            _audioSourceButtonPressed = gameObject.AddComponent<AudioSource>();
+            _audioSourceButtonPressed.clip = audioClipButtonPressed;
+            _audioSourceButtonPressed.loop = false;
+            _audioSourceButtonPressed.playOnAwake = false;
+            _audioSourceButtonPressed.volume = 1.0f;
+        }
         private void Run()
         {
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
