@@ -9,11 +9,7 @@ namespace Kubs
     public class ProgramBlock : Block
     {
         public ProgramBlockType Type { get; set; }
-        [HideInInspector]
-        // public int ZoneIndex = -1;
         public int CollidedZoneIndex { get; set; }
-
-        // private BoxCollider mBoxCollider;
 
         #region Public Methods
         public void SetActive()
@@ -74,8 +70,6 @@ namespace Kubs
         }
         void Start()
         {
-            // _collidedZoneIndices = new List<int>();
-
             for (int i = 0; i < transform.childCount; i++)
             {
                 if (transform.GetChild(i).gameObject.tag.CompareTo(Constant.TAG_BLOCK_SWEEP_TEST_CHILD) == 0)
@@ -90,27 +84,9 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
 
             CollidedZoneIndex = -1;
-            // ZoneIndex = -1;
+
             DetermineType();
-
-            // mBoxCollider = gameObject.GetComponent<BoxCollider>();
-
-            var halo = GetHalo();
-            halo.enabled = false;
-
-            // if (IsInSnapDropZoneClone())
-            // {
-            //     ExpandCollider();
-            // } else {
-            //     ResetCollider();
-            // }
-            // if (gameObject.GetComponent<VRTK_InteractGrab>() != null)
-            // {
-            //     Debug.Log("Start: " + gameObject.GetComponent<VRTK_InteractGrab>().isActiveAndEnabled);
-            //     gameObject.GetComponent<VRTK_InteractGrab>().ControllerStartUngrabInteractableObject += new ObjectInteractEventHandler(HandleControllerUngrab);
-            // }
-
-
+            DisableHalo();
         }
         private void Update()
         {

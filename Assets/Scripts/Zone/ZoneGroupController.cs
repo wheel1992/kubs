@@ -56,11 +56,6 @@ namespace Kubs
 
             InitAudioClips();
             InitDefaultFirstZone();
-
-            // Create a ForEndLoop block and set hidden
-            // _defaultForEndLoopBlock = CreateForEndBlock(new Vector3(0, 0, 0));
-            // // _defaultForEndLoopBlock.gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
-            // _defaultForEndLoopBlock.gameObject.SetActive(false);
         }
 
         // Update is called once per frame
@@ -126,7 +121,6 @@ namespace Kubs
                                 var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
                                 if (forEndIndex != -1)
                                 {
-                                    //forStartBlock.ForLoopEnd.SetParent(forStartBlock.transform);
                                     forStartBlock.ShowDummyForLoopEnd();
                                     forStartBlock.DeleteForLoopEnd();
                                     DestroyZone(forEndIndex);
@@ -138,36 +132,6 @@ namespace Kubs
                         }
                     }
                 }));
-
-
-                // // Ungrabbed and dropped not within the Zone (aka outside)
-                // if (!interactableObject.IsInSnapDropZone())
-                // {
-                //     // var block = interactableObject.gameObject.GetComponent<ProgramBlock>();
-                //     // if (block == null) { return; }
-
-                //     var forStartBlock = interactableObject.gameObject.GetComponent<ForLoopStart>();
-                //     if (forStartBlock == null) { return; }
-
-                //     var forEndIndex = forStartBlock.ForLoopEnd.GetZoneIndex();
-                //     if (forEndIndex != -1)
-                //     {
-                //         // // var block = GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
-                //         // //GetZoneControllerByGameObject(_zones[forEndIndex]).UnparentAttachedBlock();
-                //         // // forStartBlock.ForLoopEnd.SetInactive();
-                //         // // var forEndBlock = block.GetComponent<ForLoopEnd>();
-                //         // forStartBlock.ForLoopEnd.SetParent(forStartBlock.transform);
-                //         // forStartBlock.DisableForLoopEnd();
-                //         // // var forStartBlock = GetForLoopProgramBlock(forEndIndex);
-                //         // // forStartBlock.ForLoopEndIndex = -1;
-                //         // // forStartBlock.ForLoopStartIndex = -1;
-
-                //         DestroyZone(forEndIndex);
-                //         Unshift(forEndIndex);
-                //         UpdateZoneIndices();
-
-                //     }
-                // }
             }
         }
         private void HandleZonesHovered(object sender, ZoneHoverEventArgs args)
@@ -185,51 +149,14 @@ namespace Kubs
                 {
                     case ProgramBlockType.ForLoopStart:
                         isValidMove = IsForStartCorrectPlacement(testBlock.GetComponent<ForLoopStart>(), args.CollidedZoneIndex);
-                        Debug.Log("Hover: ForLoopStart is valid?" + isValidMove);
-                        //if (!isValidMove) { return; }
-                        //Debug.Log("Hover: ForStart is valid? = " + isValidMove + " child ForEnd index = " + testBlock.GetComponent<ForLoopStart>().ForLoopEnd.GetZoneIndex());
+                        // Debug.Log("Hover: ForLoopStart is valid?" + isValidMove);
                         break;
                     case ProgramBlockType.ForLoopEnd:
                         isValidMove = IsForEndCorrectPlacement(testBlock.GetComponent<ForLoopEnd>(), args.CollidedZoneIndex);
-                        Debug.Log("Hover: ForLoopEnd is valid?" + isValidMove);
-                        //if (!isValidMove) { return; }
+                        // Debug.Log("Hover: ForLoopEnd is valid?" + isValidMove);
                         break;
                     default: break;
                 }
-                // if (testBlock.Type == ProgramBlockType.ForLoopStart)
-                // {
-                //     var currentForEndIndex = GetZoneIndexWithForLoopEndBlock();
-                //     //Debug.Log("Hover: ForStart " + args.ZoneIndex + " ForEnd " + currentForEndIndex);
-                //     // Proposed ForStartLoop zone index is args.ZoneIndex
-                //     if (currentForEndIndex != -1 && args.CollidedZoneIndex > currentForEndIndex)
-                //     {
-                //         //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
-                //         currentZone.DisableSnap();
-                //         currentZone.ShowHint(false);
-
-                //         // Start incorrect position audio
-                //         _audioSourceIncorrectPosition.Play();
-
-                //         return;
-                //     }
-                // }
-                // else if (testBlock.Type == ProgramBlockType.ForLoopEnd)
-                // {
-                //     var currentForStartIndex = GetZoneIndexWithForLoopStartBlock();
-                //     //Debug.Log("Hover: ForStart " + currentForStartIndex + " ForEnd " + args.ZoneIndex);
-                //     // Proposed ForEndLoop zone index is args.ZoneIndex
-                //     if (currentForStartIndex != -1 && args.CollidedZoneIndex < currentForStartIndex)
-                //     {
-                //         //Debug.Log("Hover: ForStartLoop cannot be behind ForEndLoop");
-                //         currentZone.DisableSnap();
-                //         currentZone.ShowHint(false);
-
-                //         // Start incorrect position audio
-                //         _audioSourceIncorrectPosition.Play();
-
-                //         return;
-                //     }
-                // }
             }
 
             if (!isValidMove)
@@ -245,7 +172,7 @@ namespace Kubs
             // Current zone is empty, do nothing
             if (IsZoneEmpty(args.CollidedZoneIndex))
             {
-                Debug.Log("Hover: " + args.CollidedZoneIndex + " is empty");
+                // Debug.Log("Hover: " + args.CollidedZoneIndex + " is empty");
                 currentZone.ShowHint(true);
                 return;
             }
@@ -258,47 +185,25 @@ namespace Kubs
             // Left or right non-tail zone is empty, do nothing
             if (IsPreviousZoneEmpty(args.CollidedZoneIndex) || (IsNextZoneEmpty(args.CollidedZoneIndex) && !IsZoneTail(args.CollidedZoneIndex + 1)))
             {
-                Debug.Log("Hover: " + args.CollidedZoneIndex + " is either left empty or right non-tail empty");
+                // Debug.Log("Hover: " + args.CollidedZoneIndex + " is either left empty or right non-tail empty");
                 return;
             }
 
             Shift(args.CollidedZoneIndex);
             AddZoneAt(args.CollidedZoneIndex);
 
-            Debug.Log("Hover: " + args.CollidedZoneIndex + " showing hint...");
+            // Debug.Log("Hover: " + args.CollidedZoneIndex + " showing hint...");
             GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).ShowHint(true);
 
             UpdateZoneIndices();
 
-            // // Do Test Here
-            // int forStartIndex = GetNearestLeftForLoopStart(_zones.Count - 1);
-            // ForLoopStart forLoopStart = GetZoneControllerByGameObject(_zones[forStartIndex]).GetAttachedProgramBlock().GetComponent<ForLoopStart>();
-            // int forEndIndex = forLoopStart.ForLoopEnd.GetZoneIndex();
-            // // int forLoopEndIndex = GetNearestRightForLoopEnd(0);
-            // // if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
-            // // {
-            // //     var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-            // //     //Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
-            // //     forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
-            // // }
-            // if (forStartIndex != -1 && forEndIndex != -1)
-            // {
-            //     forLoopStart.SetSideAreaTo(forStartIndex, forEndIndex);
-            // }
             UpdateForLoopSideArea(args.CollidedZoneIndex);
         }
         private void HandleZonesUnhovered(object sender, ZoneHoverEventArgs args)
         {
             //Debug.Log("Unhovered: at " + args.ZoneIndex + "");
 
-            // Test For loop
-            // var testBlock = GetProgramBlockByGameObject(args.CollidedObject);
-            // if (testBlock != null && (testBlock.Type == ProgramBlockType.ForLoopStart || testBlock.Type == ProgramBlockType.ForLoopEnd))
-            // {
-            //     GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).EnableSnap();
-            // }
             GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).EnableSnap();
-
             GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]).HideHint();
 
             // Current unhovered zone is occupied, do nothing  
@@ -318,22 +223,6 @@ namespace Kubs
 
             UpdateZoneIndices();
 
-
-            // // // Do Test Here
-            // int forStartIndex = GetNearestLeftForLoopStart(_zones.Count - 1);
-            // ForLoopStart forLoopStart = GetZoneControllerByGameObject(_zones[forStartIndex]).GetAttachedProgramBlock().GetComponent<ForLoopStart>();
-            // int forEndIndex = forLoopStart.ForLoopEnd.GetZoneIndex();
-            // // int forLoopEndIndex = GetNearestRightForLoopEnd(0);
-            // // if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
-            // // {
-            // //     var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-            // //     //Debug.Log("Unhovered: ForStart " + forLoopStartIndex + " ForEnd " + forLoopEndIndex);
-            // //     forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
-            // // }
-            // if (forStartIndex != -1 && forEndIndex != -1)
-            // {
-            //     forLoopStart.SetSideAreaTo(forStartIndex, forEndIndex);
-            // }
             UpdateForLoopSideArea(args.CollidedZoneIndex);
         }
         private void HandleZoneSnapped(object sender, ZoneEventArgs args)
@@ -342,13 +231,11 @@ namespace Kubs
             GetZoneControllerByGameObject(_zones[args.Index]).HideHint();
 
             _audioSourceInsertBlock.Play();
-            Debug.Log("HandleZoneSnapped:");
+            // Debug.Log("HandleZoneSnapped:");
             var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
             if (attachedBlock != null)
             {
-                // int forLoopStartIndex = -1;
-                // int forLoopEndIndex = -1;
-                Debug.Log("HandleZoneSnapped: " + attachedBlock.gameObject.name);
+                // Debug.Log("HandleZoneSnapped: " + attachedBlock.gameObject.name);
                 switch (attachedBlock.Type)
                 {
                     case ProgramBlockType.ForLoopStart:
@@ -361,46 +248,16 @@ namespace Kubs
                         //Debug.Log("HandleZoneSnapped: ForStart's ForEnd zone index = " + forStart.ForLoopEnd.GetZoneIndex());
                         if (forStart.ForLoopEnd == null || forStart.ForLoopEnd.GetZoneIndex() == -1)
                         {
-                            //forStart.ForLoopEnd.SetActive();
-                            //AddZoneTail();
-                            //GetZoneTail().AttachBlock(forStart.ForLoopEnd.GetProgramBlock());
-
                             forStart.HideDummyForLoopEnd();
 
                             Shift(args.Index + 1);
                             AddZoneAt(args.Index + 1);
                             UpdateZoneIndices();
-                            // GetZoneAt(args.Index + 1).AttachBlock(forStart.ForLoopEnd.GetProgramBlock());
+
                             GetZoneAt(args.Index + 1).AttachBlock(forStart.CreateForLoopEnd().GetProgramBlock());
                         }
 
                         UpdateForLoopSideArea(args.Index);
-                        // if (GetZoneIndexWithForLoopEndBlock() == -1)
-                        // {
-                        //     // A ForStartLoop block is attached
-                        //     _defaultForEndLoopBlock.gameObject.SetActive(true);
-                        //     // Display and attached ForEndLoop at the end of zones
-                        //     AddZoneTail();
-                        //     GetZoneTail().AttachBlock(_defaultForEndLoopBlock);
-
-                        //     var forLoopBlock = GetForLoopProgramBlock(attachedBlock);
-                        //     forLoopBlock.ForLoopStartIndex = args.Index;
-                        //     forLoopBlock.ForLoopEndIndex = GetZoneTail().Index;
-                        //     return;
-
-                        // }
-                        // else
-                        // {
-                        //     forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
-                        //     if (forLoopEndIndex != -1)
-                        //     {
-                        //         var forLoopBlock = GetForLoopProgramBlock(args.Index);
-                        //         forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
-                        //         //Debug.Log("HandleZoneSnapped: ForStart = " + args.Index + " ForEnd = " + forLoopEndIndex);
-
-                        //         forLoopBlock.SetSideAreaTo(forLoopEndIndex, forLoopEndIndex);
-                        //     }
-                        // }
 
                         break;
 
@@ -411,15 +268,7 @@ namespace Kubs
                             attachedBlock.transform.localPosition.z);
 
                         UpdateForLoopSideArea(args.Index);
-                        // forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-                        // if (forLoopStartIndex != -1)
-                        // {
-                        //     var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                        //     forLoopBlock.ForLoopEndIndex = args.Index;
-                        //     //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + args.Index);
 
-                        //     forLoopBlock.SetSideAreaTo(forLoopStartIndex, args.Index);
-                        // }
                         break;
 
                     default:
@@ -428,16 +277,6 @@ namespace Kubs
                             0.8f,
                             attachedBlock.transform.localPosition.z);
 
-                        // forLoopStartIndex = GetNearestLeftForLoopStart(args.Index);
-                        // forLoopEndIndex = GetNearestRightForLoopEnd(args.Index);
-                        // if (forLoopStartIndex != -1 && forLoopEndIndex != -1)
-                        // {
-                        //     var forLoopBlock = GetForLoopProgramBlock(forLoopStartIndex);
-                        //     forLoopBlock.ForLoopEndIndex = forLoopEndIndex;
-                        //     //Debug.Log("HandleZoneSnapped: ForStart = " + forLoopStartIndex + " ForEnd = " + forLoopEndIndex);
-
-                        //     forLoopBlock.SetSideAreaTo(forLoopStartIndex, forLoopEndIndex);
-                        // }
                         UpdateForLoopSideArea(args.Index);
                         break;
                 }
@@ -448,29 +287,10 @@ namespace Kubs
                 AddZoneTail();
                 UpdateZoneIndices();
             }
-
         }
         private void HandleZoneUnsnapped(object sender, ZoneEventArgs args)
         {
-            Debug.Log("HandleZoneUnsnapped: at " + args.Index);
-
-            // var attachedBlock = GetZoneControllerByGameObject(_zones[args.Index]).GetAttachedProgramBlock();
-            // if (attachedBlock != null)
-            // {
-            //     int forLoopStartIndex = -1;
-            //     int forLoopEndIndex = -1;
-            //     //int numBetweenBlock = 0;
-            //     switch (attachedBlock.Type)
-            //     {
-            //         case ProgramBlockType.ForLoopStart:
-            //             break;
-            //         case ProgramBlockType.ForLoopEnd:
-            //             break;
-            //         default:
-
-            //             break;
-            //     }
-            // }
+            // Debug.Log("HandleZoneUnsnapped: at " + args.Index);
         }
 
         #endregion
@@ -636,16 +456,6 @@ namespace Kubs
         }
 
         #region Private Get Methods
-        // private ProgramBlock CreateForEndBlock(Vector3 pos)
-        // {
-        //     var blockObj = (GameObject)Instantiate(
-        //         forLoopEndBlockPrefab,
-        //         pos,
-        //         Quaternion.identity);
-        //     var block = blockObj.GetComponent<ProgramBlock>();
-        //     block.Type = ProgramBlockType.ForLoopEnd;
-        //     return block;
-        // }
         private GameObject CreateZoneGameObject(Vector3 availablePosition, int availableIndex)
         {
             //Debug.Log("CreateZoneGameObject: new zone index " + availableIndex);
@@ -700,36 +510,7 @@ namespace Kubs
         {
             return GetZoneControllerByGameObject(_zones[_zones.Count - 1]);
         }
-
-        // Test ForLoop v2
-
-
-
-
-        private int GetZoneIndexWithForLoopEndBlock()
-        {
-            for (int i = 0; i < _zones.Count; i++)
-            {
-                var block = GetZoneControllerByGameObject(_zones[i]).GetAttachedProgramBlock();
-                if (block != null && block.Type == ProgramBlockType.ForLoopEnd)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-        private int GetZoneIndexWithForLoopStartBlock()
-        {
-            for (int i = 0; i < _zones.Count; i++)
-            {
-                var block = GetZoneControllerByGameObject(_zones[i]).GetAttachedProgramBlock();
-                if (block != null && block.Type == ProgramBlockType.ForLoopStart)
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
+        
         /// <summary>
         /// Checks whether both ForStartLoop and ForEndLoop are in correct placement
         /// ForStartLoop must be before ForEndLoop 
@@ -755,21 +536,16 @@ namespace Kubs
             if (leftForStartIndex == -1) { return true; }
 
             var leftForStart = GetZoneControllerByGameObject(_zones[leftForStartIndex]).GetAttachedProgramBlock().GetComponent<ForLoopStart>();
+
             // Test for invalid move
-            // if (leftForStartIndex < targetZoneIndex && leftForStart.ForLoopEnd.GetZoneIndex() > targetZoneIndex)
             if (leftForStartIndex < targetZoneIndex)
             {
                 if (leftForStart.ForLoopEnd == null) { return true; }
                 if (leftForStart.ForLoopEnd.GetZoneIndex() > targetZoneIndex) { return false; }
                 //Debug.Log("IsForStartCorrectPlacement: false");
-                //return false;
             }
             //Debug.Log("IsForStartCorrectPlacement: true");
             return true;
-            // var startIndex = GetZoneIndexWithForLoopStartBlock();
-            // var endIndex = GetZoneIndexWithForLoopEndBlock();
-            // Debug.Log("CorrectPlacement: ForStart " + startIndex + " ForEnd " + endIndex);
-            // return startIndex < endIndex;
         }
         private bool IsForEndCorrectPlacement(ForLoopEnd forEnd, int targetZoneIndex)
         {
@@ -793,9 +569,6 @@ namespace Kubs
             // Debug.Log("IsForEndCorrectPlacement: forEnd.ForLoopStart.GetZoneIndex() = " + forEnd.ForLoopStart.GetZoneIndex());
 
             // Test for invalid move
-            // if (forEnd.ForLoopStart.GetZoneIndex() != leftForStartIndex &&
-            //     leftForStartIndex < targetZoneIndex &&
-            //     (leftForStart.ForLoopEnd.GetZoneIndex() > targetZoneIndex || leftForStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex))
             if (forEnd.ForLoopStart.GetZoneIndex() != leftForStartIndex &&
                 leftForStartIndex < targetZoneIndex
                 )
@@ -827,19 +600,6 @@ namespace Kubs
             }
             return -1;
         }
-        // private int GetNearestRightForLoopEnd(int index)
-        // {
-        //     for (int i = index; i < _zones.Count; i++)
-        //     {
-        //         var block = GetZoneControllerByGameObject(_zones[i]).GetAttachedProgramBlock();
-        //         // Get first ForLoopEnd
-        //         if (block != null && block.Type == ProgramBlockType.ForLoopEnd)
-        //         {
-        //             return i;
-        //         }
-        //     }
-        //     return -1;
-        // }
         private bool IsZoneTailEmpty()
         {
             if (_zones.Count == 0) { return false; }
