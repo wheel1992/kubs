@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 114295804295715178}
   - component: {fileID: 122194867397173090}
   - component: {fileID: 114530365711611646}
+  - component: {fileID: 114158823078842714}
   m_Layer: 0
   m_Name: RotateLeft_ProgramBlock_New
   m_TagString: Block_Program
@@ -383,6 +384,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114158823078842714
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1624275279796936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2315305343a584e8758755b54117c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipOnTouch: {fileID: 0}
+  strengthOnTouch: 0
+  durationOnTouch: 0
+  intervalOnTouch: 0.05
+  clipOnGrab: {fileID: 0}
+  strengthOnGrab: 1
+  durationOnGrab: 0.3
+  intervalOnGrab: 0.0001
+  clipOnUse: {fileID: 0}
+  strengthOnUse: 0
+  durationOnUse: 0
+  intervalOnUse: 0.05
 --- !u!114 &114295804295715178
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 114075940671143576}
   - component: {fileID: 114889820288321482}
   - component: {fileID: 122425784811559660}
+  - component: {fileID: 114483354801568202}
   m_Layer: 0
   m_Name: ForEnd_ProgramBlock
   m_TagString: Block_Program
@@ -516,6 +517,29 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
+--- !u!114 &114483354801568202
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1463387355303930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2315305343a584e8758755b54117c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipOnTouch: {fileID: 0}
+  strengthOnTouch: 0
+  durationOnTouch: 0
+  intervalOnTouch: 0.05
+  clipOnGrab: {fileID: 0}
+  strengthOnGrab: 1
+  durationOnGrab: 0.3
+  intervalOnGrab: 0.0001
+  clipOnUse: {fileID: 0}
+  strengthOnUse: 0
+  durationOnUse: 0
+  intervalOnUse: 0.05
 --- !u!114 &114687700140011960
 MonoBehaviour:
   m_ObjectHideFlags: 1

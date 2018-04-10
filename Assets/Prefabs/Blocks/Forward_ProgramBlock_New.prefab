@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114309855176837452}
   - component: {fileID: 122468606558844416}
   - component: {fileID: 114521439009543188}
+  - component: {fileID: 114380235262494368}
   m_Layer: 0
   m_Name: Forward_ProgramBlock_New
   m_TagString: Block_Program
@@ -596,6 +597,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48111d783297d4729b536c68778bbcb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114380235262494368
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1157666413697690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2315305343a584e8758755b54117c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clipOnTouch: {fileID: 0}
+  strengthOnTouch: 0
+  durationOnTouch: 0
+  intervalOnTouch: 0.05
+  clipOnGrab: {fileID: 0}
+  strengthOnGrab: 1
+  durationOnGrab: 0.3
+  intervalOnGrab: 0.0001
+  clipOnUse: {fileID: 0}
+  strengthOnUse: 0
+  durationOnUse: 0
+  intervalOnUse: 0.05
 --- !u!114 &114397653576657926
 MonoBehaviour:
   m_ObjectHideFlags: 1
