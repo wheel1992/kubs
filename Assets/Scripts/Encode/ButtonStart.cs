@@ -25,7 +25,7 @@ namespace Kubs
         private ZoneMovementController _zoneMovementController;
 
         private bool HasTouchedByController = false;
-
+        private bool IsTouched = false;
         // Use this for initialization
         void Start()
         {
@@ -46,12 +46,21 @@ namespace Kubs
 
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
+
+            DisableHalo();
         }
 
         // Update is called once per frame
         void Update()
         {
-
+            if (IsTouched)
+            {
+                EnableHalo();
+            }
+            else
+            {
+                DisableHalo();
+            }
         }
 
         //Testing Method
@@ -84,16 +93,20 @@ namespace Kubs
             // Debug.Log("HandleOnTouched: " + args.interactingObject);
             if (args.interactingObject.name.CompareTo("RightController") == 0 || args.interactingObject.name.CompareTo("LeftController") == 0)
             {
-                HasTouchedByController = true;
-                _audioSourceButtonPressed.Play();
-                StartCoroutine(Depress());
+                if (!HasTouchedByController)
+                {
+                    HasTouchedByController = true;
+                    _audioSourceButtonPressed.Play();
+                    StartCoroutine(Depress());
+                }
             }
         }
         private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
         {
             // Debug.Log("HandleOnUntouched: " + args.interactingObject);
-            if (HasTouchedByController) {
-                HasTouchedByController = false;  
+            if (HasTouchedByController)
+            {
+                HasTouchedByController = false;
                 Run();
             }
         }
@@ -103,6 +116,16 @@ namespace Kubs
         //    VRTK_Logger.Info("Pushed");
         //    Run();
         //}
+        void DisableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = false;
+        }
+        void EnableHalo()
+        {
+            var halo = GetHalo();
+            halo.enabled = true;
+        }
         private void InitAudioClips()
         {
             _audioSourceButtonPressed = gameObject.AddComponent<AudioSource>();
@@ -111,6 +134,7 @@ namespace Kubs
             _audioSourceButtonPressed.playOnAwake = false;
             _audioSourceButtonPressed.volume = 1.0f;
         }
+
         private void Run()
         {
             // var listBlocks = GetSnapDropZoneBlockGroup().GetListOfSnappedProgramBlocks();
@@ -159,7 +183,7 @@ namespace Kubs
             var endScale = startScale;
             endScale.y /= 2;
 
-            var incrementor = 0f;
+            var incrementor = 0.5f;
 
             // Debug.Log(Vector3.SqrMagnitude(transform.localScale - endScale));
             // Debug.Log("+");
@@ -175,7 +199,7 @@ namespace Kubs
 
             endScale = startScale;
             startScale = transform.localScale;
-            incrementor = 0f;
+            incrementor = 0.5f;
 
             while (Vector3.SqrMagnitude(transform.localScale - endScale) > 0.00000001)
             {
@@ -200,7 +224,10 @@ namespace Kubs
         {
             return gameObject.GetComponent<VRTK_InteractableObject>();
         }
-
+        private Behaviour GetHalo()
+        {
+            return (Behaviour)gameObject.GetComponent("Halo");
+        }
         private ZoneGroupController GetZoneGroupController()
         {
             return GameObject.Find(Constant.NAME_ZONES).GetComponent<ZoneGroupController>();
