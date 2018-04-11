@@ -3119,8 +3119,8 @@ MonoBehaviour:
   selectOnPress: 0
   selectionDelay: 0
   selectAfterHoverDuration: 0
-  interactWithObjects: 1
-  grabToPointerTip: 1
+  interactWithObjects: 0
+  grabToPointerTip: 0
   controller: {fileID: 0}
   interactUse: {fileID: 0}
   customOrigin: {fileID: 0}
