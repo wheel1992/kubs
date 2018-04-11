@@ -23,9 +23,8 @@ namespace Kubs
         private GameObject _zonesObject;
         private ZoneGroupController _zoneGroupController;
         private ZoneMovementController _zoneMovementController;
-
         private bool HasTouchedByController = false;
-        private bool IsTouched = false;
+
         // Use this for initialization
         void Start()
         {
@@ -46,21 +45,11 @@ namespace Kubs
 
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
-
-            DisableHalo();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (IsTouched)
-            {
-                EnableHalo();
-            }
-            else
-            {
-                DisableHalo();
-            }
         }
 
         //Testing Method
@@ -116,16 +105,6 @@ namespace Kubs
         //    VRTK_Logger.Info("Pushed");
         //    Run();
         //}
-        void DisableHalo()
-        {
-            var halo = GetHalo();
-            halo.enabled = false;
-        }
-        void EnableHalo()
-        {
-            var halo = GetHalo();
-            halo.enabled = true;
-        }
         private void InitAudioClips()
         {
             _audioSourceButtonPressed = gameObject.AddComponent<AudioSource>();
@@ -223,10 +202,6 @@ namespace Kubs
         public VRTK_InteractableObject GetVRTKInteractableObject()
         {
             return gameObject.GetComponent<VRTK_InteractableObject>();
-        }
-        private Behaviour GetHalo()
-        {
-            return (Behaviour)gameObject.GetComponent("Halo");
         }
         private ZoneGroupController GetZoneGroupController()
         {
