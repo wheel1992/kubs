@@ -71,12 +71,13 @@ namespace Kubs
                 Invoke("RotateLeft", 5);
                 Invoke("Forward", 5);
 
-                Invoke("Forward", 10);
-                Invoke("RotateLeft", 10);
-                Invoke("Forward", 10);
-                Invoke("Jump", 10);
+                var delay = 11;
+                Invoke("Forward", delay);
+                Invoke("RotateLeft", delay);
+                Invoke("Forward", delay);
+                Invoke("Jump", delay);
 
-                var delay = 16;
+                delay = 18;
                 for (int i = 1; i <= 4; i++)
                 {
                     Invoke("Forward", delay);
