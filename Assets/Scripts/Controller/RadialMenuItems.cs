@@ -14,27 +14,30 @@ namespace Kubs
 
         public void OnOptionMenuClick()
         {
-            Debug.Log("RadialMenuItems OnOptionMenuClick:");
+            // Debug.Log("RadialMenuItems OnOptionMenuClick:");
         }
         public void OnOptionSelectClick()
         {
-            Debug.Log("RadialMenuItems OnOptionSelectClick:");
-            // Debug.Log("RadialMenuItems OnOptionSelectClick: " + transform.parent.name);
-            // EnablePointer(false);
+            // Debug.Log("RadialMenuItems OnOptionSelectClick:");
             isPointerEnabled = true;
             isPointerAllowTeleport = false;
         }
         public void OnOptionSelectHoverExit()
         {
-            Debug.Log("RadialMenuItems OnOptionSelectHoverExit:");
-            // DisablePointer();
+            // Debug.Log("RadialMenuItems OnOptionSelectHoverExit:");
             isPointerEnabled = false;
         }
         public void OnOptionTeleportClick()
         {
-            Debug.Log("RadialMenuItems OnOptionTeleportClick:");
+            // Debug.Log("RadialMenuItems OnOptionTeleportClick:");
+            isPointerEnabled = true;
+            isPointerAllowTeleport = true;
         }
-
+        public void OnOptionTeleportHoverExit()
+        {
+            // Debug.Log("RadialMenuItems OnOptionSelectHoverExit:");
+            isPointerEnabled = false;
+        }
         // Use this for initialization
         void Start()
         {

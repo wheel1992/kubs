@@ -27,6 +27,11 @@ public class VRTK_UIInput : MonoBehaviour
 
     private void HandleTriggerClicked(object sender, DestinationMarkerEventArgs e)
     {
+        if (laserPointer.enableTeleport)
+        {
+            return;
+        }
+
         if (EventSystem.current.currentSelectedGameObject != null)
         {
             ExecuteEvents.Execute(EventSystem.current.currentSelectedGameObject, new PointerEventData(EventSystem.current), ExecuteEvents.submitHandler);
