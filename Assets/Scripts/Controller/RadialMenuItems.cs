@@ -19,6 +19,10 @@ namespace Kubs
         public void OnOptionSelectClick()
         {
             // Debug.Log("RadialMenuItems OnOptionSelectClick:");
+        }
+        public void OnOptionSelectHoverEnter()
+        {
+            // Debug.Log("RadialMenuItems OnOptionSelectHoverEnter:");
             isPointerEnabled = true;
             isPointerAllowTeleport = false;
         }
@@ -30,6 +34,10 @@ namespace Kubs
         public void OnOptionTeleportClick()
         {
             // Debug.Log("RadialMenuItems OnOptionTeleportClick:");
+        }
+        public void OnOptionTeleportHoverEnter()
+        {
+            // Debug.Log("RadialMenuItems OnOptionTeleportHoverEnter:");
             isPointerEnabled = true;
             isPointerAllowTeleport = true;
         }
