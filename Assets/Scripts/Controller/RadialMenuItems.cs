@@ -60,14 +60,8 @@ namespace Kubs
             var pointer = GetPointer(controller);
             if (pointer == null) { return; }
 
-            pointer.enabled = true;
             pointer.enableTeleport = enableTeleport;
-
-            pointer.activationButton = VRTK_ControllerEvents.ButtonAlias.TouchpadPress;
-            pointer.holdButtonToActivate = true;
-
-            pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TouchpadPress;
-            pointer.selectOnPress = true;
+            pointer.Toggle(true);
         }
         void DisablePointer()
         {
@@ -76,14 +70,7 @@ namespace Kubs
             var pointer = GetPointer(controller);
             if (pointer == null) { return; }
 
-            pointer.enabled = false;
-            pointer.enableTeleport = false;
-
-            pointer.activationButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
-            pointer.holdButtonToActivate = false;
-
-            pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
-            pointer.selectOnPress = false;
+            pointer.Toggle(false);
         }
         GameObject GetController()
         {
