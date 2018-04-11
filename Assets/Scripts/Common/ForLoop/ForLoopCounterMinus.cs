@@ -15,6 +15,7 @@ namespace Kubs
         public event CounterMinusEventHandler OnEnter;
         public event CounterMinusEventHandler OnExit;
         private bool IsTriggered = false;
+        private bool IsTouched = false;
         // Use this for initialization
         void Start()
         {
@@ -26,6 +27,14 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
+            if (IsTouched)
+            {
+                EnableHalo();
+            }
+            else
+            {
+                DisableHalo();
+            }
         }
         void OnTriggerEnter(Collider other)
         {
@@ -45,11 +54,13 @@ namespace Kubs
         }
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {
-            EnableHalo();
+            if (!IsController(args.interactingObject)) return;
+            IsTouched = true;
         }
         private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
         {
-            DisableHalo();
+            if (!IsController(args.interactingObject)) return;
+            IsTouched = false;
         }
         void DisableHalo()
         {
@@ -71,7 +82,8 @@ namespace Kubs
         }
         bool IsController(GameObject obj)
         {
-            return obj.name.CompareTo("Head") == 0 || obj.name.CompareTo("SideA") == 0 || obj.name.CompareTo("SideB") == 0;
+            return obj.name.CompareTo("Head") == 0 || obj.name.CompareTo("SideA") == 0 || obj.name.CompareTo("SideB") == 0 ||
+            obj.name.CompareTo("RightController") == 0 || obj.name.CompareTo("LeftController") == 0;
         }
     }
 }
