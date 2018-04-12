@@ -5,7 +5,13 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - CharacterPrefab: {fileID: 1689716247661856, guid: 11a59f5cda98c7140a41884c2f977922,
+      type: 2}
+  - GrassPrefab: {fileID: 1457686693877260, guid: 126417fa8639fec48924968ea2e62b00,
+      type: 2}
+  - HolePrefab: {fileID: 1713203723102424, guid: 3a407dd42627acd4898cfa4288f7a159,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
