@@ -30,6 +30,7 @@ namespace Kubs
 
         // Flags and miscellaneous
         private bool _isDebug = false;
+        private bool _resetFlag = false;
         public float _scale;
 
         // Audio
@@ -70,12 +71,13 @@ namespace Kubs
                 Invoke("RotateLeft", 5);
                 Invoke("Forward", 5);
 
-                Invoke("Forward", 10);
-                Invoke("RotateLeft", 10);
-                Invoke("Forward", 10);
-                Invoke("Jump", 10);
+                var delay = 11;
+                Invoke("Forward", delay);
+                Invoke("RotateLeft", delay);
+                Invoke("Forward", delay);
+                Invoke("Jump", delay);
 
-                var delay = 16;
+                delay = 18;
                 for (int i = 1; i <= 4; i++)
                 {
                     Invoke("Forward", delay);
@@ -104,15 +106,7 @@ namespace Kubs
         {
             if (_isAnimating)
             {
-                switch (_type)
-                {
-                    case ProgramBlockType.Forward:
-                    case ProgramBlockType.Jump:
-                    case ProgramBlockType.RotateLeft:
-                    case ProgramBlockType.RotateRight:
-                    default:
-                        break;
-                }
+                // No action
             }
             else if (IsFalling())
             {
@@ -137,6 +131,11 @@ namespace Kubs
                     default:
                         break;
                 }
+            }
+            else if (_resetFlag)
+            {
+                _resetFlag = false;
+                Invoke("Reset", 2f);
             }
         }
 
@@ -165,7 +164,7 @@ namespace Kubs
                 Stop();
                 _queue.Clear();
 
-                Invoke("Reset", 2f);
+                SetResetFlag();
             }
             else if (other.gameObject.tag == "Collectable")
             {
@@ -183,7 +182,7 @@ namespace Kubs
                         var tutorialBlock = collectableBlock.GetComponent<TutorialBlock>();
                         if (tutorialBlock == null || tutorialBlock.stage != tutorialManager.lastStage)
                         {
-                            Invoke("Reset", 2f);
+                            SetResetFlag();
                         }
                     }
 
@@ -194,6 +193,8 @@ namespace Kubs
 
         public bool Forward()
         {
+            SetResetFlag();
+
             if (_isAnimating)
             {
                 _queue.Enqueue(ProgramBlockType.Forward);
@@ -215,6 +216,8 @@ namespace Kubs
 
         public bool Jump()
         {
+            SetResetFlag();
+
             if (_isAnimating)
             {
                 _queue.Enqueue(ProgramBlockType.Jump);
@@ -247,6 +250,8 @@ namespace Kubs
 
         public bool RotateLeft()
         {
+            SetResetFlag();
+
             if (_isAnimating)
             {
                 _queue.Enqueue(ProgramBlockType.RotateLeft);
@@ -265,6 +270,8 @@ namespace Kubs
 
         public bool RotateRight()
         {
+            SetResetFlag();
+
             if (_isAnimating)
             {
                 _queue.Enqueue(ProgramBlockType.RotateRight);
@@ -325,7 +332,9 @@ namespace Kubs
 
         public void Reset()
         {
-            Debug.Log("Reset");
+            DebugLog("Reset");
+            _resetFlag = false;
+
             transform.localPosition = _originalPos;
             transform.localRotation = _originalRot;
 
@@ -337,6 +346,12 @@ namespace Kubs
                 _zonesObject.SetActive(true);
                 // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
             }
+        }
+
+        private void SetResetFlag()
+        {
+            DebugLog("SetResetFlag");
+            _resetFlag = true;
         }
 
         private void Stop()
