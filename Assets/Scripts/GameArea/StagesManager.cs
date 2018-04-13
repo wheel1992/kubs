@@ -12,6 +12,9 @@ namespace Kubs
 
 		private const string CHARACTER_STAGE = "CharacterScene";
 		private const string STAGE_PREFIX = "KubScene";
+		private const string WIN_SCENE = STAGE_PREFIX + "WIN";
+
+		private const int WIN_STAGE = 5;
 
 		public static int GetActiveStage()
 		{
@@ -21,7 +24,7 @@ namespace Kubs
 			var stageString = sceneName.Substring(STAGE_PREFIX.Length);
 			return stageString == "" ? -1 : int.Parse(stageString);
 		}
- 
+
 		private static int? TryGetActiveStage()
 		{
 			try
@@ -38,6 +41,12 @@ namespace Kubs
 		{
 			if (stage == TryGetActiveStage())
 			{
+				return;
+			}
+
+			if (stage == WIN_STAGE)
+			{
+				monoBehaviour.StartCoroutine(LoadSceneAsync(WIN_SCENE));
 				return;
 			}
 
