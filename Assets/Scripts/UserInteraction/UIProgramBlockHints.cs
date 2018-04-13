@@ -20,7 +20,7 @@ public class UIProgramBlockHints : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //_onHover = true;
+        _onHover = true;
         if (this.gameObject.GetComponent<VRTK_InteractableObject>() != null)
         {
             var io = gameObject.GetComponent<VRTK_InteractableObject>();
@@ -139,6 +139,8 @@ public class UIProgramBlockHints : MonoBehaviour
 
     private IEnumerator MoveCharacterAfterTwoFrames(ProgramBlockType programBlockType)
     {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame();
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
@@ -320,7 +322,7 @@ public class UIProgramBlockHints : MonoBehaviour
         _character.name = "MiniCharacter";
         _character.tag = "UICharacter";
         Debug.Log(area.name);
-        _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1f, 0);
+        _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1, 0);
         _character.gameObject.SetActive(true);
         return _character;
     }
