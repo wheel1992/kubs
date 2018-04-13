@@ -432,7 +432,11 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
-            OnReset();
+            if (OnReset != null)
+            {
+                OnReset();
+            }
+
             //if (_zonesObject != null)
             //{
             //    _zonesObject.SetActive(true);

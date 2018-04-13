@@ -6,6 +6,7 @@ using VRTK;
 
 public class UIProgramBlockHints : MonoBehaviour
 {
+    private Transform transformHint;
     private bool _onHover = false;
     private bool _animating = false;
     private GameObject currentGameObject;
@@ -19,7 +20,7 @@ public class UIProgramBlockHints : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _onHover = true;
+        // _onHover = true;
         if (this.gameObject.GetComponent<VRTK_InteractableObject>() != null)
         {
             var io = gameObject.GetComponent<VRTK_InteractableObject>();
@@ -48,6 +49,7 @@ public class UIProgramBlockHints : MonoBehaviour
                     if (_character == null) CreateChar(UIProgramBlockHintsPointer);
                     else if (!_animating)
                     {
+                        //_character = this.transform.Find("MiniCharacter").gameObject.GetComponent<Character>();
                         _animating = true;
                         //_character.Reset();
                         _character.gameObject.SetActive(true);
@@ -59,33 +61,41 @@ public class UIProgramBlockHints : MonoBehaviour
         }
         else
         {
-            if (GameObject.Find("UIProgramBlockHints"))
+            transformHint = this.transform.Find("UIProgramBlockHints");
+            if (transformHint != null)
             {
+                if (_character != null)
+                {
+                    _character.Reset();
+                }
                 StopCoroutine("MoveCharacterAfterOneSecond");
-                UIProgramBlockHintsPointer = GameObject.Find("UIProgramBlockHints");
+                UIProgramBlockHintsPointer = transformHint.gameObject;
                 UIProgramBlockHintsPointer.SetActive(false);
             }
         }
     }
 
-    void OnEnable()
-    {
-        EventManager.StartListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
-    }
+    // void OnEnable()
+    // {
+    //     EventManager.StartListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
+    // }
 
-    void OnDisable()
-    {
-        EventManager.StopListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
-    }
+    // void OnDisable()
+    // {
+    //     EventManager.StopListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);
+    // }
 
-    private void SetCharacter(object character)
-    {
-        _character = (Character)character;
-    }
+    // private void SetCharacter(object character)
+    // {
+    //     _character = (Character)character;
+    // }
 
     void HandleOnTouch(object sender, VRTK.InteractableObjectEventArgs e)
     {
-        _onHover = true;
+        if (gameObject.GetComponent<ProgramBlock>().IsInSnapDropZoneClone())
+        {
+            _onHover = true;
+        }
     }
 
     void HandleUnTouch(object sender, VRTK.InteractableObjectEventArgs e)
