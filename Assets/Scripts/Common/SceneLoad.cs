@@ -26,7 +26,7 @@ namespace Kubs
         private AudioSource _mAudioSource;
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
-
+        private GameObject _menu;
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -52,39 +52,69 @@ namespace Kubs
             // Load tutorial
             Invoke("LoadTutorial", 1);
         }
-
+        void DisableMenu()
+        {
+            _menu.SetActive(false);
+        }
+        void EnableMenu()
+        {
+            _menu.SetActive(true);
+        }
+        void HandleMenuDisable(object sender)
+        {
+            DisableMenu();
+        }
+        void HandleMenuEnable(object sender)
+        {
+            EnableMenu();
+        }
         void LoadTutorial()
         {
             // Set skybox
             GameObject.FindGameObjectWithTag("MainCamera").AddComponent<Skybox>().material = skybox;
 
-            StartCoroutine(LoadSceneAsync("MenuScene"));
+            StartCoroutine(LoadSceneAsync(Constant.NAME_SCENE_MENU_SCENE));
         }
-
         private IEnumerator LoadSceneAsync(string sceneName)
-	    {
-	        // Set the current Scene to be able to unload it later
-	        Scene currentScene = SceneManager.GetActiveScene();
+        {
+            // Set the current Scene to be able to unload it later
+            Scene currentScene = SceneManager.GetActiveScene();
 
-	        // The Application loads the Scene in the background at the same time as the current Scene.
-	        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            // The Application loads the Scene in the background at the same time as the current Scene.
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
-	        // Wait until the last operation fully loads to return anything
-	        while (!asyncLoad.isDone)
-	        {
-	            yield return null;
-	        }
+            // Wait until the last operation fully loads to return anything
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
 
-	        // Merge scenes
+            // Merge scenes
             var nextScene = SceneManager.GetSceneByName(sceneName);
-	        SceneManager.MergeScenes(nextScene, currentScene);
+            SceneManager.MergeScenes(nextScene, currentScene);
 
             // Load tutorial
             StagesManager.loadPos = new Vector3(-25, 0, 0);
             StagesManager.loadScale = new Vector3(3, 3, 3);
             StagesManager.LoadStageAsync(0, this);
-	    }
 
+            if (sceneName.Equals(Constant.NAME_SCENE_MENU_SCENE))
+            {
+                _menu = GetMenu();
+                DisableMenu();
+            }
+        }
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
         // Update is called once per frame
         void Update()
         {
@@ -166,6 +196,10 @@ namespace Kubs
                 }
             }
             return null;
+        }
+        GameObject GetMenu()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_CANVAS_MENU);
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using VRTK;
+using UnityEngine.SceneManagement;
 
 namespace Kubs
 {
@@ -11,10 +12,23 @@ namespace Kubs
     {
         private bool isPointerEnabled = false;
         private bool isPointerAllowTeleport = false;
+        private bool isMenuEnabled = false;
 
         public void OnOptionMenuClick()
         {
             // Debug.Log("RadialMenuItems OnOptionMenuClick:");
+            if (isMenuEnabled)
+            {
+                // Current enable, click to disable
+                EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
+            }
+            else
+            {
+                // Current disable, click to enable
+                EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_ENABLE, null);
+            }
+
+            isMenuEnabled = !isMenuEnabled;
         }
         public void OnOptionSelectClick()
         {

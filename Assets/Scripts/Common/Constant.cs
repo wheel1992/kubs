@@ -5,8 +5,10 @@ namespace Kubs
 {
     public class Constant
     {
-        public static string EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT = "Clone_Block_Program_Register_Hover_Event";
-        public static string EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT = "Clone_Block_Program_Register_Snap_Event";
+        // public static string EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_HOVER_EVENT = "Clone_Block_Program_Register_Hover_Event";
+        // public static string EVENT_NAME_CLONE_BLOCK_PROGRAM_REGISTER_SNAP_EVENT = "Clone_Block_Program_Register_Snap_Event";
+        public static string EVENT_NAME_MENU_DISABLE = "Event_Menu_Disable";
+        public static string EVENT_NAME_MENU_ENABLE = "Event_Menu_Enable";
         public static float DEFAULT_Y = 0.63f;
         public static float DEFAULT_BLOCK_SIZE = 1f;
         public static float DEFAULT_SNAP_DROP_ZONE_SCALE = 0.5f;
@@ -16,14 +18,16 @@ namespace Kubs
         public static string NAME_PROGRAM_BLOCK_FORLOOPSTART = "ForStart_ProgramBlock";
         public static string NAME_PROGRAM_BLOCK_FORLOOPEND = "ForEnd_ProgramBlock";
         public static string NAME_PROGRAM_BLOCK_FORWARD = "Forward_ProgramBlock_New";
-        public static string NAME_PROGRAM_BLOCK_ROTATELEFT= "RotateLeft_ProgramBlock_New";
-        public static string NAME_PROGRAM_BLOCK_ROTATERIGHT= "RotateRight_ProgramBlock_New";
+        public static string NAME_PROGRAM_BLOCK_ROTATELEFT = "RotateLeft_ProgramBlock_New";
+        public static string NAME_PROGRAM_BLOCK_ROTATERIGHT = "RotateRight_ProgramBlock_New";
         public static string NAME_PROGRAM_BLOCK_JUMP = "Jump_ProgramBlock_New";
         public static string NAME_SNAP_DROP_ZONE_PROGRAM_BLOCK = "Program_Block_SnapDropZone";
+        public const string NAME_SCENE_MENU_SCENE = "MenuScene";
         public static string NAME_ZONES = "Zones";
         public static string NAME_TRAIN_MOVE = "Train_Move";
         public static string TAG_BLOCK_PROGRAM = "Block_Program";
         public static string TAG_BLOCK_SWEEP_TEST_CHILD = "SweepTestChild";
+        public const string TAG_CANVAS_MENU = "CanvasMenu";
         public static string TAG_LEVEL = "Level";
         // public static string TAG_SNAP_DROP_ZONE_GROUP = "SnapDropZoneGroup";
         // public static string TAG_SNAP_DROP_ZONE_PLATE = "SnapDropZonePlate";
