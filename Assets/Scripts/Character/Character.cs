@@ -314,13 +314,13 @@ namespace Kubs
             {
                 // Jump up
                 endPos = transform.position + (transform.forward + transform.up) * _scale;
-                trajectoryHeight = 1f;
+                trajectoryHeight = 1f * _scale;
             }
             else
             {
                 // Jump over
                 endPos = transform.position + (transform.forward + transform.forward) * _scale;
-                trajectoryHeight = 0.5f;
+                trajectoryHeight = 0.5f * _scale;
             }
 
             Set(Animations.Jump);
@@ -479,7 +479,7 @@ namespace Kubs
 
             var incrementor = 0f;
 
-            while (transform.position != endPos)
+            while (Vector3.SqrMagnitude(transform.position - endPos) > 0.00000001)
             {
                 // https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
                 // calculate current time within our lerping time range
