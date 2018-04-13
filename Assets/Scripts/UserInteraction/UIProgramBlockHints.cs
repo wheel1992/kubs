@@ -13,6 +13,8 @@ public class UIProgramBlockHints : MonoBehaviour
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
     private Character _character;
+    private IEnumerator _moveCoroutine;
+
     [SerializeField] private GameObject CharacterPrefab;
     [SerializeField] private GameObject GrassPrefab;
     [SerializeField] private GameObject HolePrefab;
@@ -53,7 +55,9 @@ public class UIProgramBlockHints : MonoBehaviour
                         _animating = true;
                         //_character.Reset();
                         _character.gameObject.SetActive(true);
-                        StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
+
+                        _moveCoroutine = MoveCharacterAfterOneSecond(programBlockType);
+                        StartCoroutine(_moveCoroutine);
                     }
                 }
                 else UIProgramBlockHintsPointer = CreateProgramBlockUIHint(programBlockType);
@@ -68,7 +72,12 @@ public class UIProgramBlockHints : MonoBehaviour
                 {
                     _character.Reset();
                 }
-                StopCoroutine("MoveCharacterAfterOneSecond");
+
+                if (_moveCoroutine != null)
+                {
+                    StopCoroutine(_moveCoroutine);
+                }
+
                 UIProgramBlockHintsPointer = transformHint.gameObject;
                 UIProgramBlockHintsPointer.SetActive(false);
             }
@@ -302,7 +311,6 @@ public class UIProgramBlockHints : MonoBehaviour
         List<GameObject> cubeCollection = new List<GameObject>();
         if (area != null)
         {
-            Debug.Log("Area Null");
             foreach (Transform child in area.transform)
             {
                 if (child.tag == "Cubes" || child.tag == "Grass" || child.tag == "Hole" || child.name.Contains("Grass") || child.name.Contains("Hole"))
@@ -330,7 +338,6 @@ public class UIProgramBlockHints : MonoBehaviour
         _character.gameObject.SetActive(false);
         _character.name = "MiniCharacter";
         _character.tag = "UICharacter";
-        Debug.Log(area.name);
         _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1, 0);
         _character.gameObject.SetActive(true);
         _character.OnReset += new Character.CharacterEventHandler(HandleCharReset);
