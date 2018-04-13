@@ -19,21 +19,17 @@ namespace Kubs
         public Material skybox;
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _forLoopStartBlockPrefab;
-        // [SerializeField] private GameObject _forLoopEndBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
         [SerializeField] private GameObject _rotateRightBlockPrefab;
         [SerializeField] private GameObject _jumpBlockPrefab;
         [SerializeField] private GameObject _sweepTestChildBlockPrefab;
         private AudioSource _mAudioSource;
-        // private UnityAction<object> onBlockProgramRegisterHoverEventListener;
-        // private UnityAction<object> onBlockProgramRegisterSnapEventListener;
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
-
+        private GameObject _menu;
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
-            //_mAudioSource.Stop();
             _mAudioSource.Play();
         }
         void Start()
@@ -43,11 +39,7 @@ namespace Kubs
 
             var forStartBlock = CreateForStartBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneForStartEnd().ForceSnap(forStartBlock);
-            // var forStartblock = GetForLoopStartProgramBlock();
-            // if (forStartblock != null) {
-            //     forStartblock.Type = ProgramBlockType.ForLoopStart;
-            // }
-  
+
             var jumpBlock = CreateJumpBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneJump().ForceSnap(jumpBlock);
 
@@ -60,82 +52,74 @@ namespace Kubs
             // Load tutorial
             Invoke("LoadTutorial", 1);
         }
-
+        void DisableMenu()
+        {
+            _menu.SetActive(false);
+        }
+        void EnableMenu()
+        {
+            _menu.SetActive(true);
+        }
+        void HandleMenuDisable(object sender)
+        {
+            DisableMenu();
+        }
+        void HandleMenuEnable(object sender)
+        {
+            EnableMenu();
+        }
         void LoadTutorial()
         {
             // Set skybox
             GameObject.FindGameObjectWithTag("MainCamera").AddComponent<Skybox>().material = skybox;
 
-            StartCoroutine(LoadSceneAsync("MenuScene"));
+            StartCoroutine(LoadSceneAsync(Constant.NAME_SCENE_MENU_SCENE));
         }
-
         private IEnumerator LoadSceneAsync(string sceneName)
-	    {
-	        // Set the current Scene to be able to unload it later
-	        Scene currentScene = SceneManager.GetActiveScene();
+        {
+            // Set the current Scene to be able to unload it later
+            Scene currentScene = SceneManager.GetActiveScene();
 
-	        // The Application loads the Scene in the background at the same time as the current Scene.
-	        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            // The Application loads the Scene in the background at the same time as the current Scene.
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
-	        // Wait until the last operation fully loads to return anything
-	        while (!asyncLoad.isDone)
-	        {
-	            yield return null;
-	        }
+            // Wait until the last operation fully loads to return anything
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
 
-	        // Merge scenes
+            // Merge scenes
             var nextScene = SceneManager.GetSceneByName(sceneName);
-	        SceneManager.MergeScenes(nextScene, currentScene);
+            SceneManager.MergeScenes(nextScene, currentScene);
 
             // Load tutorial
             StagesManager.loadPos = new Vector3(-25, 0, 0);
             StagesManager.loadScale = new Vector3(3, 3, 3);
             StagesManager.LoadStageAsync(0, this);
-	    }
 
+            if (sceneName.Equals(Constant.NAME_SCENE_MENU_SCENE))
+            {
+                _menu = GetMenu();
+                DisableMenu();
+            }
+        }
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
         // Update is called once per frame
         void Update()
         {
             // ...
         }
-
-        // private void DoProgramBlockHover(int targetZoneId)
-        // {
-        //     ProgramBlockShiftRightWhenHover(targetZoneId);
-        // }
-        // private void DoProgramBlockUnhover(int targetZoneId)
-        // {
-        //     ProgramBlockShiftRevert(targetZoneId);
-        // }
-        // private void DoProgramBlockSnap(GameObject block, int zoneId)
-        // {
-        //     ProgramBlockSnap(block, zoneId);
-        // }
-        // private void HandleBlockProgramRegisterHoverEventListener(object item)
-        // {
-        //     if (item is GameObject)
-        //     {
-        //         GameObject obj = (GameObject)item;
-        //         RegisterProgramBlockHoverEventHandler(obj.GetComponent<ProgramBlock>());
-        //     }
-        // }
-        // private void HandleBlockProgramRegisterSnapEventListener(object item)
-        // {
-        //     if (item is GameObject)
-        //     {
-        //         GameObject obj = (GameObject)item;
-        //         RegisterProgramBlockSnapEventHandler(obj.GetComponent<ProgramBlock>());
-        //     }
-        // }
-        // private void RegisterProgramBlockHoverEventHandler(ProgramBlock block)
-        // {
-        //     block.Hover += new ProgramBlock.HoverEventHandler(DoProgramBlockHover);
-        //     block.Unhover += new ProgramBlock.HoverEventHandler(DoProgramBlockUnhover);
-        // }
-        // private void RegisterProgramBlockSnapEventHandler(ProgramBlock block)
-        // {
-        //     block.Snap += new ProgramBlock.SnapEventHandler(DoProgramBlockSnap);
-        // }
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(
@@ -212,6 +196,10 @@ namespace Kubs
                 }
             }
             return null;
+        }
+        GameObject GetMenu()
+        {
+            return GameObject.FindGameObjectWithTag(Constant.TAG_CANVAS_MENU);
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {

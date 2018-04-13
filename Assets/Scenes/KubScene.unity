@@ -3285,7 +3285,7 @@ MonoBehaviour:
   tracerVisibility: 0
   cursorVisibility: 0
   maximumLength: 100
-  scaleFactor: 0.002
+  scaleFactor: 0.015
   cursorScaleMultiplier: 25
   cursorMatchTargetRotation: 0
   cursorDistanceRescale: 0
@@ -8755,7 +8755,7 @@ Prefab:
     - target: {fileID: 11411068, guid: d5fe2f7f9d3e98a478d151422643620c, type: 2}
       propertyPath: buttons.Array.data[2].ButtonIcon
       value: 
-      objectReference: {fileID: 21300000, guid: 5eaffc5eebfd91e40beb05788b92e4f5,
+      objectReference: {fileID: 21300000, guid: 839586661695e1540b8fbc1a8c0824b4,
         type: 3}
     - target: {fileID: 11411068, guid: d5fe2f7f9d3e98a478d151422643620c, type: 2}
       propertyPath: buttons.Array.data[0].OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
