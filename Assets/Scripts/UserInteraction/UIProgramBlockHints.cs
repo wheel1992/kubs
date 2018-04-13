@@ -6,7 +6,6 @@ using VRTK;
 
 public class UIProgramBlockHints : MonoBehaviour
 {
-
     private bool _onHover = false;
     private bool _animating = false;
     private GameObject currentGameObject;
@@ -49,10 +48,10 @@ public class UIProgramBlockHints : MonoBehaviour
                     if (_character == null) CreateChar(UIProgramBlockHintsPointer);
                     else if (!_animating)
                     {
-                        _character.Reset();
-                        _character.gameObject.SetActive(true);
                         _animating = true;
-                        StartCoroutine(MoveCharacterAfterTwoFrames(programBlockType));
+                        //_character.Reset();
+                        _character.gameObject.SetActive(true);
+                        StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
                     }
                 }
                 else UIProgramBlockHintsPointer = CreateProgramBlockUIHint(programBlockType);
@@ -62,7 +61,7 @@ public class UIProgramBlockHints : MonoBehaviour
         {
             if (GameObject.Find("UIProgramBlockHints"))
             {
-                StopCoroutine("MoveCharacterAfterTwoFrames");
+                StopCoroutine("MoveCharacterAfterOneSecond");
                 UIProgramBlockHintsPointer = GameObject.Find("UIProgramBlockHints");
                 UIProgramBlockHintsPointer.SetActive(false);
             }
@@ -125,22 +124,21 @@ public class UIProgramBlockHints : MonoBehaviour
         //Instantiate Char
         // _character = CreateChar(UIProgramBlockHints);
         //Make character move
-        // StartCoroutine(MoveCharacterAfterTwoFrames(programBlockType));
+        // StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
 
         //Destroy(GetCharacterFromGameArea(UIProgramBlockHints), 0);
         // yield return new WaitForSeconds(3);
 
         // _character.Reset();
-        // StartCoroutine(MoveCharacterAfterTwoFrames(programBlockType));
-
+        // StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
+        UIProgramBlockHints.transform.localEulerAngles = new Vector3(0, 45, 0);
         return UIProgramBlockHints;
         // _animating = false;
     }
 
-    private IEnumerator MoveCharacterAfterTwoFrames(ProgramBlockType programBlockType)
+    private IEnumerator MoveCharacterAfterOneSecond(ProgramBlockType programBlockType)
     {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSecondsRealtime(1);
         switch (programBlockType)
         {
             case ProgramBlockType.Forward:
@@ -161,9 +159,10 @@ public class UIProgramBlockHints : MonoBehaviour
         //Start here
         //_character.gameObject.SetActive(false);
         //_character.Reset();
-        yield return new WaitForSecondsRealtime(3);
-        Debug.Log("Wait For 3 Seconds");
-        _animating = false;
+        //yield return new WaitForSeconds(3);
+        //_animating = false;
+        //Debug.Log("Wait For 3 Seconds");
+        yield return null;
     }
 
     private GameObject CreateMiniGameArea(int numTerrain, string programBlockTypeOnFieldString)
@@ -324,7 +323,17 @@ public class UIProgramBlockHints : MonoBehaviour
         Debug.Log(area.name);
         _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1, 0);
         _character.gameObject.SetActive(true);
+        _character.OnReset += new Character.CharacterEventHandler(HandleCharReset);
+        //new WaitForSecondsRealtime(2);
         return _character;
+    }
+
+    private void HandleCharReset()
+    {
+        //Debug.Log("HandleCharReset()");
+        // new WaitForSecondsRealtime(2f);
+        // Debug.Log("After 2 seconds");
+        _animating = false;
     }
 
     //private void AssignBlockType(string blockTypeInString, GameObject cube)

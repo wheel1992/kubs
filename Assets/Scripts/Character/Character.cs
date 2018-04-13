@@ -6,6 +6,9 @@ namespace Kubs
 {
     public class Character : MonoBehaviour
     {
+        public delegate void CharacterEventHandler();
+        public event CharacterEventHandler OnReset;
+
         public TutorialManager tutorialManager;
 
         // Components
@@ -341,11 +344,12 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
-            if (_zonesObject != null)
-            {
-                _zonesObject.SetActive(true);
-                // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-            }
+            OnReset();
+            //if (_zonesObject != null)
+            //{
+            //    _zonesObject.SetActive(true);
+            //    // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            //}
         }
 
         private void SetResetFlag()
