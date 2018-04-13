@@ -60,6 +60,8 @@ namespace Kubs
 			{
 				ShowStagesInRange(prevStage + 1, stage);
 			}
+
+			EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
 		}
 
 		public void TransferComponent(GameObject from, GameObject to)

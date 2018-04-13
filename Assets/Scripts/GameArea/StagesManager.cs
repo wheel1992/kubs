@@ -21,7 +21,7 @@ namespace Kubs
 			var stageString = sceneName.Substring(STAGE_PREFIX.Length);
 			return stageString == "" ? -1 : int.Parse(stageString);
 		}
-
+ 
 		private static int? TryGetActiveStage()
 		{
 			try
@@ -68,6 +68,8 @@ namespace Kubs
 
 	        // Unload the previous Scene
 	        SceneManager.UnloadSceneAsync(currentScene);
+
+			EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
 	    }
 
 		private static List<GameObject> GetGameObjectsFromScene(Scene scene)
