@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VRTK;
 
 namespace Kubs
 {
@@ -35,6 +37,7 @@ namespace Kubs
         private bool _isDebug = false;
         private bool _resetFlag = false;
         public float _scale;
+        public bool showPopup;
 
         // Audio
         public AudioClip audioClipWalk;
@@ -45,6 +48,53 @@ namespace Kubs
         private AudioSource _audioSourceJump;
 
         private GameObject _zonesObject;
+
+        public HintPrefabs HintProgramBlockPrefabs;
+        private bool IsShowingPopup = false;
+
+        [Serializable]
+        public struct HintPrefabs
+        {
+            public GameObject forwardBlockPrefab;
+            public GameObject JumpBlockPrefab;
+            public GameObject RotateLeftBlockPrefab;
+            public GameObject RotateRightBlockPrefab;
+        }
+
+        GameObject GetCurrentChildPopup()
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                if (transform.GetChild(i).CompareTag(Constant.TAG_BLOCK_PROGRAM))
+                {
+                    return transform.GetChild(i).gameObject;
+                }
+            }
+            return null;
+        }
+        void ShowPopup(GameObject popupPrefab)
+        {
+            if (popupPrefab == null) { return; }
+
+            DestroyPopupIfAny();
+
+            var popupObject = Instantiate(popupPrefab, new Vector3(transform.position.x, transform.position.y + (_scale * 1.2f), transform.position.z), Quaternion.identity);
+            popupObject.transform.SetParent(transform);
+            popupObject.GetComponent<Rigidbody>().isKinematic = true;
+            popupObject.GetComponent<VRTK_InteractableObject>().enabled = false;
+            popupObject.GetComponent<BoxCollider>().enabled = false;
+
+            IsShowingPopup = true;
+        }
+        void DestroyPopupIfAny()
+        {
+            var childObj = GetCurrentChildPopup();
+            if (childObj != null)
+            {
+                Destroy(childObj);
+                IsShowingPopup = false;
+            }
+        }
 
         // Use this for initialization
         void Start()
@@ -107,6 +157,24 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
+            if (IsShowingPopup)
+            {
+                var child = GetCurrentChildPopup();
+                // var headRot = VRTK_DeviceFinder.HeadsetTransform().rotation;
+                // var targetRot = new Vector3(headRot.x, headRot.y, -90f);
+                // child.transform.LookAt(targetRot);
+
+                // Vector3 direction = VRTK_DeviceFinder.HeadsetCamera().position - child.transform.position;
+                // direction.z -= 0;
+                // child.transform.rotation = Quaternion.Slerp(child.transform.rotation, Quaternion.LookRotation(direction), 100f * Time.deltaTime);
+                Debug.Log("LookAtRotation");
+                child.transform.LookAt(VRTK_DeviceFinder.HeadsetCamera());
+                child.transform.Rotate(0f, -90f, -90f);
+
+
+                // child.transform.rotation = Quaternion.Euler();
+            }
+
             if (_isAnimating)
             {
                 // No action
@@ -204,6 +272,11 @@ namespace Kubs
                 return false;
             }
 
+            if (showPopup)
+            {
+                ShowPopup(HintProgramBlockPrefabs.forwardBlockPrefab);
+            }
+
             startPos = transform.position;
             endPos = transform.position + transform.forward * _scale;
             trajectoryHeight = 0;
@@ -225,6 +298,11 @@ namespace Kubs
             {
                 _queue.Enqueue(ProgramBlockType.Jump);
                 return false;
+            }
+
+            if (showPopup)
+            {
+                ShowPopup(HintProgramBlockPrefabs.JumpBlockPrefab);
             }
 
             startPos = transform.position;
@@ -261,6 +339,11 @@ namespace Kubs
                 return false;
             }
 
+            if (showPopup)
+            {
+                ShowPopup(HintProgramBlockPrefabs.RotateLeftBlockPrefab);
+            }
+
             startRot = transform.rotation;
             endRot = Quaternion.LookRotation(-transform.right);
 
@@ -279,6 +362,11 @@ namespace Kubs
             {
                 _queue.Enqueue(ProgramBlockType.RotateRight);
                 return false;
+            }
+
+            if (showPopup)
+            {
+                ShowPopup(HintProgramBlockPrefabs.RotateRightBlockPrefab);
             }
 
             startRot = transform.rotation;
@@ -405,6 +493,9 @@ namespace Kubs
 
             _rigidbody.velocity = Vector3.zero;
             _isAnimating = false;
+
+            DestroyPopupIfAny();
+
             yield break;
         }
 

@@ -1424,8 +1424,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1e6a8efa23a2d4dadb045c1a636b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClipButtonPressed: {fileID: 8300000, guid: 493cb9456dfa8ac43aaa730f82ce0022,
-    type: 3}
+  audioClipButtonPressed: {fileID: 0}
 --- !u!54 &324244390
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4481,9 +4480,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialManager: {fileID: 518171593}
   _scale: 0
+  showPopup: 1
   audioClipWalk: {fileID: 8300000, guid: 93f920ff3130e514fb1f0d1d61edc75c, type: 3}
   audioClipChewFood: {fileID: 8300000, guid: a0aab0dc54c98c346bc2f7b1caa0d298, type: 3}
   audioClipJump: {fileID: 8300000, guid: 15e57742199a41440884d6337e7ef47c, type: 3}
+  HintProgramBlockPrefabs:
+    forwardBlockPrefab: {fileID: 1157666413697690, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
+      type: 2}
+    JumpBlockPrefab: {fileID: 1890968634550186, guid: 4856c757d47fafa468ba4cbc83cf4160,
+      type: 2}
+    RotateLeftBlockPrefab: {fileID: 1624275279796936, guid: adf0896c4868463409dbe475f2e4a998,
+      type: 2}
+    RotateRightBlockPrefab: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
+      type: 2}
 --- !u!65 &1114753326
 BoxCollider:
   m_ObjectHideFlags: 0
