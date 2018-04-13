@@ -314,7 +314,7 @@ namespace Kubs
             {
                 // Jump up
                 endPos = transform.position + (transform.forward + transform.up) * _scale;
-                trajectoryHeight = 1f * _scale;
+                trajectoryHeight = 1.2f * _scale;
             }
             else
             {

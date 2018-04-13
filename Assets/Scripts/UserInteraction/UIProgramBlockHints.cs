@@ -9,6 +9,7 @@ public class UIProgramBlockHints : MonoBehaviour
     private Transform transformHint;
     private bool _onHover = false;
     private bool _animating = false;
+    private bool _changeJump = false;
     private GameObject currentGameObject;
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
@@ -165,6 +166,7 @@ public class UIProgramBlockHints : MonoBehaviour
                 break;
             case ProgramBlockType.Jump:
                 _character.Jump();
+                _changeJump = !_changeJump;
                 break;
             case ProgramBlockType.RotateLeft:
                 _character.RotateLeft();
@@ -262,12 +264,30 @@ public class UIProgramBlockHints : MonoBehaviour
                         cubeOne = cubeCollection[0];
                         cubeTwo = cubeCollection[1];
                         cubeThree = cubeCollection[2];
-                        cubeOne.transform.localPosition = new Vector3(0, 0, -1f);
                         cubeOne.tag = "Grass";
-                        cubeTwo.transform.localPosition = new Vector3(0, 0, 0);
-                        cubeTwo.tag = "Hole";
-                        cubeThree.transform.localPosition = new Vector3(0, 0, 1f);
+                        // cubeTwo.tag = "Hole";
                         cubeThree.tag = "Grass";
+
+                        if (_changeJump)
+                        {
+                            cubeTwo.tag = "Grass";
+                            
+                            cubeOne.transform.localPosition = new Vector3(0, 0, -0.5f);
+                            cubeTwo.transform.localPosition = new Vector3(0, 0, 0.5f);
+                            cubeThree.transform.localPosition = new Vector3(0, 1f, 0.5f);
+
+                            var characterPosition = _character.transform.localPosition;
+                            characterPosition.z = -0.5f;
+                            _character.transform.localPosition = characterPosition;
+                        }
+                        else
+                        {
+                            cubeTwo.tag = "Hole";
+                            
+                            cubeOne.transform.localPosition = new Vector3(0, 0, -1f);
+                            cubeTwo.transform.localPosition = new Vector3(0, 0, 0);
+                            cubeThree.transform.localPosition = new Vector3(0, 0, 1f);
+                        }
                         //if (GetCharacterFromGameArea(area) != null)
                         //{
                         //    miniChar = GetCharacterFromGameArea(area);
@@ -350,6 +370,12 @@ public class UIProgramBlockHints : MonoBehaviour
         //Debug.Log("HandleCharReset()");
         // new WaitForSecondsRealtime(2f);
         // Debug.Log("After 2 seconds");
+
+        if (gameObject.name.Contains("Jump") && transform.Find("UIProgramBlockHints") != null)
+        {
+            ArrangeGameArea(transform.Find("UIProgramBlockHints").gameObject);
+        }
+
         _animating = false;
     }
 
