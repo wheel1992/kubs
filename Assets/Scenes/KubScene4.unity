@@ -374,11 +374,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -407,6 +407,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -1089,15 +1093,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 4.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1122,6 +1126,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -1224,11 +1232,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1257,6 +1265,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -1451,7 +1463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &736256948
 Transform:
   m_ObjectHideFlags: 0
@@ -1524,11 +1536,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1557,6 +1569,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -2163,7 +2179,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
@@ -2196,6 +2212,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -2327,11 +2347,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2360,6 +2380,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -2589,15 +2613,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2622,6 +2646,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -2789,15 +2817,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 2
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -2822,6 +2850,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -3010,15 +3042,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -3039,6 +3071,10 @@ Prefab:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -3309,15 +3345,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -3342,6 +3378,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -3559,15 +3599,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalRotation.x
@@ -3592,6 +3632,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
@@ -3775,11 +3819,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 1.03
+      value: 2.03
       objectReference: {fileID: 0}
     - target: {fileID: 4148773989651068, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_LocalPosition.z
@@ -3808,6 +3852,10 @@ Prefab:
     - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
       propertyPath: m_Name
       value: FishmaceA4 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634861346578422, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9bb431b6368861843bf7f01329ce310b, type: 2}
