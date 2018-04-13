@@ -151,7 +151,10 @@ namespace Kubs
 
             _zonesObject = GetZonesGameObject();
 
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            if (gameObject.tag != "UICharacter")
+            {
+                EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            }
         }
 
         // Update is called once per frame
