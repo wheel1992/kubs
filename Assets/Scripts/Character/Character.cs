@@ -490,6 +490,12 @@ namespace Kubs
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
                 // finally assign the computed position to our gameObject:
                 transform.position = currentPos;
+                
+                if (Vector3.SqrMagnitude(transform.position - endPos) < 0.00000001)
+                {
+                    break;
+                }
+                
                 yield return null;
             }
 
