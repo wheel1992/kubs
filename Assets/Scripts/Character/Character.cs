@@ -47,6 +47,7 @@ namespace Kubs
         private GameObject _zonesObject;
 
         public HintPrefabs HintProgramBlockPrefabs;
+        private bool IsShowingPopup = false;
 
         [Serializable]
         public struct HintPrefabs
@@ -70,17 +71,17 @@ namespace Kubs
         }
         void ShowPopup(GameObject popupPrefab)
         {
-            Debug.Log("ShowHint: of " + popupPrefab.name);
             if (popupPrefab == null) { return; }
 
             DestroyPopupIfAny();
 
             var popupObject = Instantiate(popupPrefab, new Vector3(transform.position.x, transform.position.y + (_scale * 1.2f), transform.position.z), Quaternion.identity);
             popupObject.transform.SetParent(transform);
-            popupObject.transform.LookAt(VRTK_DeviceFinder.HeadsetTransform());
-            popupObject.transform.rotation = Quaternion.Euler(popupObject.transform.rotation.x, popupObject.transform.rotation.y, -90f);
             popupObject.GetComponent<Rigidbody>().isKinematic = true;
             popupObject.GetComponent<VRTK_InteractableObject>().enabled = false;
+            popupObject.GetComponent<BoxCollider>().enabled = false;
+
+            IsShowingPopup = true;
         }
         void DestroyPopupIfAny()
         {
@@ -88,6 +89,7 @@ namespace Kubs
             if (childObj != null)
             {
                 Destroy(childObj);
+                IsShowingPopup = false;
             }
         }
 
@@ -152,6 +154,24 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
+            if (IsShowingPopup)
+            {
+                var child = GetCurrentChildPopup();
+                // var headRot = VRTK_DeviceFinder.HeadsetTransform().rotation;
+                // var targetRot = new Vector3(headRot.x, headRot.y, -90f);
+                // child.transform.LookAt(targetRot);
+
+                // Vector3 direction = VRTK_DeviceFinder.HeadsetCamera().position - child.transform.position;
+                // direction.z -= 0;
+                // child.transform.rotation = Quaternion.Slerp(child.transform.rotation, Quaternion.LookRotation(direction), 100f * Time.deltaTime);
+                Debug.Log("LookAtRotation");
+                child.transform.LookAt(VRTK_DeviceFinder.HeadsetCamera());
+                child.transform.Rotate(0f, -90f, -90f);
+
+
+                // child.transform.rotation = Quaternion.Euler();
+            }
+
             if (_isAnimating)
             {
                 // No action
