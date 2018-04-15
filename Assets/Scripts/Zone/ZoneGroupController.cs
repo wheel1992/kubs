@@ -93,6 +93,11 @@ namespace Kubs
             Debug.Log("CompileProgramBlocks: " + msg);
             return list;
         }
+        public void Reset() 
+        {
+            DestroyAllZones();
+            AddZoneAt(0);
+        }
 
         #endregion
 
@@ -448,6 +453,14 @@ namespace Kubs
             {
                 //Debug.Log("Shift: at = " + i);
                 MoveZoneToRight(i);
+            }
+        }
+        private void DestroyAllZones()
+        {
+            if (_zones.Count == 0) { return; }
+            for(var i = 0; i < _zones.Count; i++) 
+            {
+                DestroyZone(i);
             }
         }
         private void DestroyZone(int index)
