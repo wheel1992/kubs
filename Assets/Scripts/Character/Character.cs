@@ -170,7 +170,7 @@ namespace Kubs
                 // Vector3 direction = VRTK_DeviceFinder.HeadsetCamera().position - child.transform.position;
                 // direction.z -= 0;
                 // child.transform.rotation = Quaternion.Slerp(child.transform.rotation, Quaternion.LookRotation(direction), 100f * Time.deltaTime);
-                Debug.Log("LookAtRotation");
+                // Debug.Log("LookAtRotation");
                 child.transform.LookAt(VRTK_DeviceFinder.HeadsetCamera());
                 child.transform.Rotate(0f, -90f, -90f);
 
