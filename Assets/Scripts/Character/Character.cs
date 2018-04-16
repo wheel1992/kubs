@@ -463,7 +463,7 @@ namespace Kubs
 
         private void Set(Animations animation)
         {
-            if (showPopup)
+            if (gameObject.transform.parent.gameObject.activeSelf)
             {
                 _animator.SetInteger("animation", (int)animation);
             }
