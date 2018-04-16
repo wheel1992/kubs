@@ -474,6 +474,12 @@ namespace Kubs
             //Debug.Log("DestroyZone: at " + index);
             if (index < 0 || index >= _zones.Count) { return; }
             var zone = _zones[index];
+            var block = GetZoneControllerByGameObject(zone).GetAttachedProgramBlock();
+            if (block != null)
+            {
+                Destroy(block.gameObject);
+            }
+
             _zones.RemoveAt(index);
             Destroy(zone);
         }
