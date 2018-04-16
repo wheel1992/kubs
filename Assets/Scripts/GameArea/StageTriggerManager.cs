@@ -7,6 +7,8 @@ namespace Kubs
 {
 	public class StageTriggerManager : MonoBehaviour
 	{
+		public TutorialManager tutorialManager;
+
 		public bool autoSetNextStage = true;
 		public int stage;
 
@@ -29,6 +31,11 @@ namespace Kubs
 		private void CollectChildren()
 		{
 			_stageTriggers = GetComponentsInChildren<StageTrigger>();
+
+			if (tutorialManager != null)
+			{
+				tutorialManager.CollectChildren(transform);
+			}
 		}
 
 		private void OnChildTriggerEnter(StageTrigger trigger)

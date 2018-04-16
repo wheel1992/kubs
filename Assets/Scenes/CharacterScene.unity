@@ -256,7 +256,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 481754780}
-  - component: {fileID: 481754781}
   - component: {fileID: 481754782}
   - component: {fileID: 481754783}
   m_Layer: 0
@@ -282,18 +281,6 @@ Transform:
   m_Father: {fileID: 1531116116}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &481754781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 481754779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d48f9d01fce924f9c2b70444b5e2c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 518171593}
 --- !u!114 &481754782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,6 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa9dfd9530012a4a9ac610d217a1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 0}
   autoSetNextStage: 1
   stage: 0
 --- !u!114 &481754783
@@ -913,9 +901,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialManager: {fileID: 518171593}
   _scale: 0
+  showPopup: 0
   audioClipWalk: {fileID: 0}
   audioClipChewFood: {fileID: 0}
   audioClipJump: {fileID: 0}
+  HintProgramBlockPrefabs:
+    forwardBlockPrefab: {fileID: 0}
+    JumpBlockPrefab: {fileID: 0}
+    RotateLeftBlockPrefab: {fileID: 0}
+    RotateRightBlockPrefab: {fileID: 0}
 --- !u!65 &1114753326
 BoxCollider:
   m_ObjectHideFlags: 0

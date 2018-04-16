@@ -1862,7 +1862,6 @@ GameObject:
   m_Component:
   - component: {fileID: 736256948}
   - component: {fileID: 736256949}
-  - component: {fileID: 736256951}
   - component: {fileID: 736256950}
   m_Layer: 0
   m_Name: Collectables
@@ -1920,20 +1919,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa9dfd9530012a4a9ac610d217a1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 0}
   autoSetNextStage: 0
   stage: 5
---- !u!114 &736256951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 736256947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d48f9d01fce924f9c2b70444b5e2c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 0}
 --- !u!1001 &736833533
 Prefab:
   m_ObjectHideFlags: 0
