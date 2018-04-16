@@ -649,6 +649,9 @@ Prefab:
       value: 
       objectReference: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
         type: 2}
+      propertyPath: stageTriggerManager
+      value: 
+      objectReference: {fileID: 1047114548}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
   m_IsPrefabParent: 0
@@ -1206,7 +1209,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1047114545}
   - component: {fileID: 1047114546}
-  - component: {fileID: 1047114547}
   - component: {fileID: 1047114548}
   m_Layer: 0
   m_Name: Collectables
@@ -1255,18 +1257,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeOutTexture: {fileID: 0}
   fadeSpeed: 0.2
---- !u!114 &1047114547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1047114544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d48f9d01fce924f9c2b70444b5e2c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 0}
 --- !u!114 &1047114548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1278,6 +1268,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa9dfd9530012a4a9ac610d217a1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 0}
   autoSetNextStage: 0
   stage: 3
 --- !u!1 &1051579695

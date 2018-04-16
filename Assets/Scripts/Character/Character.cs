@@ -11,6 +11,7 @@ namespace Kubs
         public delegate void CharacterEventHandler();
         public event CharacterEventHandler OnReset;
 
+        public StageTriggerManager stageTriggerManager;
         public TutorialManager tutorialManager;
 
         // Components
@@ -251,7 +252,7 @@ namespace Kubs
                 {
                     if (tutorialManager != null)
                     {
-                        tutorialManager.ShowStage(collectableBlock.nextStage);
+                        tutorialManager.ShowStage(collectableBlock.nextStage, false);
 
                         var tutorialBlock = collectableBlock.GetComponent<TutorialBlock>();
                         if (tutorialBlock == null || tutorialBlock.stage != tutorialManager.lastStage)
@@ -447,6 +448,8 @@ namespace Kubs
             //    _zonesObject.SetActive(true);
             //    // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
             //}
+
+            stageTriggerManager.Reset();
         }
 
         private void SetResetFlag()
@@ -492,12 +495,12 @@ namespace Kubs
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
                 // finally assign the computed position to our gameObject:
                 transform.position = currentPos;
-                
+
                 if (Vector3.SqrMagnitude(transform.position - endPos) < 0.00000001)
                 {
                     break;
                 }
-                
+
                 yield return null;
             }
 

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Kubs
 {
     public class Decoder : MonoBehaviour
     {
+        public int lastSolutionCount;
+
         [SerializeField] private Character _character;
         private List<ProgramBlock> listForLoopStart;
         private IEnumerator blockEnumerator;
@@ -37,6 +40,8 @@ namespace Kubs
         //Decodes the program blocks that were encoded according to the type of program block
         public bool Decode(List<ProgramBlock> blockchain)
         {
+            lastSolutionCount = blockchain.Count(p => p.Type != ProgramBlockType.ForLoopEnd);
+
             listForLoopStart  = new List<ProgramBlock>();
             blockEnumerator = blockchain.GetEnumerator();
             try

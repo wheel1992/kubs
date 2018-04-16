@@ -1778,7 +1778,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 481754780}
-  - component: {fileID: 481754781}
   m_Layer: 0
   m_Name: Collectables
   m_TagString: Untagged
@@ -1802,18 +1801,6 @@ Transform:
   m_Father: {fileID: 1531116116}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &481754781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 481754779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d48f9d01fce924f9c2b70444b5e2c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 518171593}
 --- !u!1 &483764116
 GameObject:
   m_ObjectHideFlags: 0
@@ -4467,6 +4454,50 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d46fddf600275384a968241b3b7f47a0, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1114753323 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1954781504214606, guid: d46fddf600275384a968241b3b7f47a0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1114753322}
+--- !u!114 &1114753324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1114753323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c776995a056d4829ad26e253a96e2d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stageTriggerManager: {fileID: 0}
+  tutorialManager: {fileID: 518171593}
+  _scale: 0
+  showPopup: 1
+  audioClipWalk: {fileID: 8300000, guid: 93f920ff3130e514fb1f0d1d61edc75c, type: 3}
+  audioClipChewFood: {fileID: 8300000, guid: a0aab0dc54c98c346bc2f7b1caa0d298, type: 3}
+  audioClipJump: {fileID: 8300000, guid: 15e57742199a41440884d6337e7ef47c, type: 3}
+  HintProgramBlockPrefabs:
+    forwardBlockPrefab: {fileID: 1157666413697690, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
+      type: 2}
+    JumpBlockPrefab: {fileID: 1890968634550186, guid: 4856c757d47fafa468ba4cbc83cf4160,
+      type: 2}
+    RotateLeftBlockPrefab: {fileID: 1624275279796936, guid: adf0896c4868463409dbe475f2e4a998,
+      type: 2}
+    RotateRightBlockPrefab: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
+      type: 2}
+--- !u!65 &1114753326
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1114753323}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 0.6, z: 0.4}
+  m_Center: {x: 0, y: 0.3, z: 0}
 --- !u!4 &1114753327 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4342492446589712, guid: d46fddf600275384a968241b3b7f47a0,
@@ -5873,7 +5904,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ca9fdc8094d44d7fb867edd0e7686a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _character: {fileID: 0}
+  lastSolutionCount: 0
+  _character: {fileID: 1114753324}
 --- !u!82 &1353468105
 AudioSource:
   m_ObjectHideFlags: 0
