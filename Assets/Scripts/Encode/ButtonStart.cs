@@ -86,17 +86,19 @@ namespace Kubs
                 {
                     HasTouchedByController = true;
                     _audioSourceButtonPressed.Play();
+                    Run();
                     StartCoroutine(Depress());
+                    DisableHaptic();
                 }
             }
         }
         private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
         {
             // Debug.Log("HandleOnUntouched: " + args.interactingObject);
-            if (HasTouchedByController)
+            if (HasTouchedByController && !_isAnimating)
             {
                 HasTouchedByController = false;
-                Run();
+                EnableHaptic();
             }
         }
 
@@ -132,7 +134,18 @@ namespace Kubs
             var listBlocks = _zoneGroupController.CompileProgramBlocks();
             GetDecoder().Decode(listBlocks);
         }
-
+        private void DisableHaptic()
+        {
+            var haptic = GetVRTKInteractHaptics();
+            if (haptic != null)
+                haptic.strengthOnTouch = 0;
+        }
+        private void EnableHaptic()
+        {
+            var haptic = GetVRTKInteractHaptics();
+            if(haptic != null) 
+                haptic.strengthOnTouch = 1;
+        }
         private void ChangeColor()
         {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
@@ -198,6 +211,10 @@ namespace Kubs
         private Decoder GetDecoder()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
+        }
+        public VRTK_InteractHaptics GetVRTKInteractHaptics()
+        {
+            return GetComponent<VRTK_InteractHaptics>();
         }
         public VRTK_InteractableObject GetVRTKInteractableObject()
         {
