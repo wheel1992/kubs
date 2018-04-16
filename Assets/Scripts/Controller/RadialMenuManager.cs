@@ -17,6 +17,7 @@ namespace Kubs
         [SerializeField] private int IndexPointer;
         [SerializeField] private int IndexHelp;
         [SerializeField] private int IndexMenu;
+        private GameObject controllerTooltips;
         private bool isPointerEnabled = false;
         private bool isPointerAllowTeleport = false;
         private bool isMenuEnabled = false;
@@ -89,14 +90,17 @@ namespace Kubs
         public void OnHelpClick()
         {
             Debug.Log("OnHelpClick:");
+            EnableTooltips();
         }
         public void OnHelpHoverEnter()
         {
             Debug.Log("OnHelpHoverEnter:");
+            EnableTooltips();
         }
         public void OnHelpHoverExit()
         {
             Debug.Log("OnHelpHoverExit:");
+            DisableTooltips();
         }
         #endregion 
 
@@ -135,6 +139,8 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
+            controllerTooltips = GetVRTKControllerTooltips().gameObject;
+            DisableTooltips();
             DisablePointer();
         }
 
@@ -181,6 +187,9 @@ namespace Kubs
             pointer.enableTeleport = enableTeleport;
             pointer.Toggle(true);
         }
+        void EnableTooltips() {
+            controllerTooltips.SetActive(true);
+        }
         void DisablePointer()
         {
             var controller = GetController();
@@ -190,10 +199,18 @@ namespace Kubs
 
             pointer.Toggle(false);
         }
+        void DisableTooltips() {
+            controllerTooltips.SetActive(false);
+        }
         GameObject GetController()
         {
             if (transform.parent == null) { return null; }
             return transform.parent.gameObject;
+        }
+        VRTK_ControllerTooltips GetVRTKControllerTooltips() {
+            var tooltip = controller.transform.Find("ControllerTooltips");
+            if (tooltip == null) { return null; }
+            return tooltip.GetComponent<VRTK_ControllerTooltips>();
         }
         VRTK_Pointer GetPointer(GameObject obj)
         {
