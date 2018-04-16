@@ -361,6 +361,7 @@ public class UIProgramBlockHints : MonoBehaviour
         _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1, 0);
         _character.gameObject.SetActive(true);
         _character.OnReset += new Character.CharacterEventHandler(HandleCharReset);
+        _character.showPopup = false;
         //new WaitForSecondsRealtime(2);
         return _character;
     }
