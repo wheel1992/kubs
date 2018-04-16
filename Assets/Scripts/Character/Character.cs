@@ -252,7 +252,7 @@ namespace Kubs
                 {
                     if (tutorialManager != null)
                     {
-                        tutorialManager.ShowStage(collectableBlock.nextStage);
+                        tutorialManager.ShowStage(collectableBlock.nextStage, false);
 
                         var tutorialBlock = collectableBlock.GetComponent<TutorialBlock>();
                         if (tutorialBlock == null || tutorialBlock.stage != tutorialManager.lastStage)
