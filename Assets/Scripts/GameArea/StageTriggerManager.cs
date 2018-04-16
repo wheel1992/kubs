@@ -7,6 +7,7 @@ namespace Kubs
 {
 	public class StageTriggerManager : MonoBehaviour
 	{
+		public Menu menu;
 		public TutorialManager tutorialManager;
 
 		public bool autoSetNextStage = true;
@@ -58,6 +59,7 @@ namespace Kubs
 
 		private void LoadStage()
 		{
+			menu.ShowMedal(stage - 1);
 			StagesManager.LoadStageAsync(stage, this);
 		}
 	}
