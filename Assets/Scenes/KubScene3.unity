@@ -387,6 +387,35 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: -0.0014533695
       objectReference: {fileID: 0}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: HintProgramBlockPrefabs.RotateRightBlockPrefab
+      value: 
+      objectReference: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
+        type: 2}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: HintProgramBlockPrefabs.RotateLeftBlockPrefab
+      value: 
+      objectReference: {fileID: 1624275279796936, guid: adf0896c4868463409dbe475f2e4a998,
+        type: 2}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: HintProgramBlockPrefabs.JumpBlockPrefab
+      value: 
+      objectReference: {fileID: 1890968634550186, guid: 4856c757d47fafa468ba4cbc83cf4160,
+        type: 2}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: HintProgramBlockPrefabs.forwardBlockPrefab
+      value: 
+      objectReference: {fileID: 1157666413697690, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
+        type: 2}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: showPopup
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
   m_IsPrefabParent: 0
