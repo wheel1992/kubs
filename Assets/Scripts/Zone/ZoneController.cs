@@ -111,11 +111,6 @@ namespace Kubs
             HideHint();
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         #endregion
 
         #region Private Event Handler Listener 

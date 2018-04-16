@@ -127,11 +127,6 @@ namespace Kubs
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         #region Private Methods
         private void HandleOnGrabbed(object sender, InteractableObjectEventArgs args)
         {

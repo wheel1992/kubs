@@ -14,16 +14,6 @@ namespace Kubs
         public event ZoneHintPredicterEventHandler OnPredicterTriggerEnter;
         public event ZoneHintPredicterEventHandler OnPredicterTriggerExit;
 
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         void OnTriggerEnter(Collider other)
         {
             if (other != null)

@@ -56,11 +56,7 @@ namespace Kubs
             InitAudioClips();
             InitDefaultFirstZone();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
+        
         void OnDisable()
         {
             EventManager.StopListening(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, HandleForLoopEndUngrab);

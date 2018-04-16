@@ -15,12 +15,6 @@ namespace Kubs
         {
             gameObject.AddComponent<BlockController>();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 
     public enum BlockCategory

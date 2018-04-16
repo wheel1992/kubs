@@ -117,11 +117,7 @@ namespace Kubs
             EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
             EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
         }
-        // Update is called once per frame
-        void Update()
-        {
-            // ...
-        }
+        
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(

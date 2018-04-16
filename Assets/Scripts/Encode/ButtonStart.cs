@@ -47,11 +47,6 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         //Testing Method
         public void buttonPressed()
         {

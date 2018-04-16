@@ -92,12 +92,6 @@ namespace Kubs
             GetProgramBlock().GetVRTKInteractableObject().InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleOnUngrabbed);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         #region  Private Event Handler Methods
         private void HandleOnUngrabbed(object sender, InteractableObjectEventArgs args)
         {

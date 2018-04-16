@@ -15,16 +15,6 @@ namespace Kubs
         private IEnumerator blockEnumerator;
         private bool reset = false;
 
-        // Use this for initialization
-        void Start()
-        {
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         void OnEnable()
         {
             EventManager.StartListening(Constant.EVENT_NAME_CHARACTER_DID_START, SetCharacter);

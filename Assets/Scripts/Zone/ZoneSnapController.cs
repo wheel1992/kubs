@@ -50,9 +50,6 @@ namespace Kubs
         {
             RegisterVRTKSnapDropZoneEventHandler(GetChildVRTKSnapDropZone());
         }
-        void Update()
-        {
-        }
 
         #endregion
 
