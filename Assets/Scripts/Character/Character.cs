@@ -21,7 +21,6 @@ namespace Kubs
         // Animation
         private bool _isAnimating;
         private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
-        private ProgramBlockType _type;
 
         // Position
         private Vector3 startPos;
@@ -47,8 +46,6 @@ namespace Kubs
         private AudioSource _audioSourceWalk;
         private AudioSource _audioSourceChewFood;
         private AudioSource _audioSourceJump;
-
-        private GameObject _zonesObject;
 
         public HintPrefabs HintProgramBlockPrefabs;
         private bool IsShowingPopup = false;
@@ -149,8 +146,6 @@ namespace Kubs
                 Invoke("Jump", 1);
                 */
             }
-
-            _zonesObject = GetZonesGameObject();
 
             if (gameObject.tag != "UICharacter")
             {
@@ -286,7 +281,6 @@ namespace Kubs
             trajectoryHeight = 0;
 
             Set(Animations.Move);
-            _type = ProgramBlockType.Forward;
 
             _audioSourceWalk.Play();
 
@@ -325,7 +319,6 @@ namespace Kubs
             }
 
             Set(Animations.Jump);
-            _type = ProgramBlockType.Jump;
 
             _audioSourceJump.Play();
 
@@ -352,7 +345,6 @@ namespace Kubs
             endRot = Quaternion.LookRotation(-transform.right);
 
             Set(Animations.Move_L);
-            _type = ProgramBlockType.RotateLeft;
 
             StartCoroutine("UpdateRotation");
             return true;
@@ -377,7 +369,6 @@ namespace Kubs
             endRot = Quaternion.LookRotation(transform.right);
 
             Set(Animations.Move_R);
-            _type = ProgramBlockType.RotateRight;
 
             StartCoroutine("UpdateRotation");
             return true;
@@ -442,12 +433,6 @@ namespace Kubs
             {
                 OnReset();
             }
-
-            //if (_zonesObject != null)
-            //{
-            //    _zonesObject.SetActive(true);
-            //    // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-            //}
 
             stageTriggerManager.Reset();
         }

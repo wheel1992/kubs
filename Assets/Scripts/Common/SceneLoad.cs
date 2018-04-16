@@ -12,9 +12,6 @@ namespace Kubs
         public delegate void ProgramBlockShiftEventHandler(int startZoneIndex);
         public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
-        public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
-        public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
-        public event ProgramBlockSnapEventHandler ProgramBlockSnap;
 
         public Material skybox;
         [SerializeField] private GameObject _forwardBlockPrefab;
