@@ -59,6 +59,11 @@ namespace Kubs
         void EnableMenu()
         {
             _menu.SetActive(true);
+            var menuDistance = 7;
+            var camera = GetVRTKHeadsetCamera();
+            var menuPos = camera.position + camera.forward * menuDistance;
+            _menu.transform.position = menuPos;
+            _menu.transform.rotation = camera.rotation;
         }
         void HandleMenuDisable(object sender)
         {
@@ -200,6 +205,10 @@ namespace Kubs
         GameObject GetMenu()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_CANVAS_MENU);
+        }
+        Transform GetVRTKHeadsetCamera()
+        {
+            return VRTK_DeviceFinder.HeadsetCamera();
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {
