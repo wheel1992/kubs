@@ -93,7 +93,7 @@ namespace Kubs
             Debug.Log("CompileProgramBlocks: " + msg);
             return list;
         }
-        public void Reset() 
+        public void Reset()
         {
             DestroyAllZones();
             AddZoneAt(0);
@@ -458,10 +458,16 @@ namespace Kubs
         private void DestroyAllZones()
         {
             if (_zones.Count == 0) { return; }
-            for(var i = 0; i < _zones.Count; i++) 
+            foreach (var zone in _zones)
             {
-                DestroyZone(i);
+                var block = GetZoneControllerByGameObject(zone).GetAttachedProgramBlock();
+                if (block != null)
+                {
+                    Destroy(block.gameObject);
+                }
+                Destroy(zone);
             }
+            _zones.Clear();
         }
         private void DestroyZone(int index)
         {
