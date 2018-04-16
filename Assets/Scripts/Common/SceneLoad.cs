@@ -13,7 +13,10 @@ namespace Kubs
         public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
 
+        public Menu menu;
+
         public Material skybox;
+
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _forLoopStartBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
@@ -24,6 +27,7 @@ namespace Kubs
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
         private GameObject _menu;
+        
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -103,6 +107,7 @@ namespace Kubs
             if (sceneName.Equals(Constant.NAME_SCENE_MENU_SCENE))
             {
                 _menu = GetMenu();
+                menu = _menu.GetComponent<Menu>();
                 DisableMenu();
             }
         }
