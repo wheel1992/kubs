@@ -434,7 +434,10 @@ namespace Kubs
                 OnReset();
             }
 
-            stageTriggerManager.Reset();
+            if (stageTriggerManager != null)
+            {
+                stageTriggerManager.Reset();
+            }
         }
 
         private void SetResetFlag()
