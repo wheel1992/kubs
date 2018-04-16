@@ -7,16 +7,18 @@ namespace Kubs
 {
 	public class StageTriggerManager : MonoBehaviour
 	{
-		public Menu menu;
 		public TutorialManager tutorialManager;
 
 		public bool autoSetNextStage = true;
 		public int stage;
 
+		private Menu _menu;
 		private StageTrigger[] _stageTriggers;
 
 		void Start()
 		{
+			_menu = GameObject.FindObjectOfType<Menu>();
+
 			AutoSetNextStageIfNeeded();
 			CollectChildren();
 		}
@@ -59,7 +61,7 @@ namespace Kubs
 
 		private void LoadStage()
 		{
-			menu.ShowMedal(stage - 1);
+			_menu.ShowMedal(stage - 1);
 			StagesManager.LoadStageAsync(stage, this);
 		}
 	}

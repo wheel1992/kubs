@@ -23,12 +23,15 @@ namespace Kubs
 		{
 			GetComponent<Button>().onClick.AddListener(TaskOnClick);
 
-			_medal = transform.Find("Medal").gameObject;
-			_medalSilhouette = transform.Find("MedalSilhouette").gameObject;
-			_text = transform.Find("Text").GetComponent<Text>();
-			_shortestSolution = int.Parse(_text.text.Trim());
+			if (transform.childCount > 1)
+			{
+				_medal = transform.Find("Medal").gameObject;
+				_medalSilhouette = transform.Find("MedalSilhouette").gameObject;
+				_text = transform.Find("Text").GetComponent<Text>();
+				_shortestSolution = int.Parse(_text.text.Trim());
 
-			ShowMedalSilhoutte();
+				ShowMedalSilhoutte();
+			}
 		}
 
 		public void ShowMedal(int solution)
