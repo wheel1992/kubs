@@ -435,6 +435,8 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
+            DestroyPopupIfAny();
+
             if (OnReset != null)
             {
                 OnReset();
