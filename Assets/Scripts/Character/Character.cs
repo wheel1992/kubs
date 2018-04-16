@@ -8,6 +8,9 @@ namespace Kubs
 {
     public class Character : MonoBehaviour
     {
+        public delegate void CharacterEventHandler();
+        public event CharacterEventHandler OnReset;
+
         public TutorialManager tutorialManager;
 
         // Components
@@ -148,7 +151,10 @@ namespace Kubs
 
             _zonesObject = GetZonesGameObject();
 
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            if (gameObject.tag != "UICharacter")
+            {
+                EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            }
         }
 
         // Update is called once per frame
@@ -308,13 +314,13 @@ namespace Kubs
             {
                 // Jump up
                 endPos = transform.position + (transform.forward + transform.up) * _scale;
-                trajectoryHeight = 1f;
+                trajectoryHeight = 1.2f * _scale;
             }
             else
             {
                 // Jump over
                 endPos = transform.position + (transform.forward + transform.forward) * _scale;
-                trajectoryHeight = 0.5f;
+                trajectoryHeight = 0.5f * _scale;
             }
 
             Set(Animations.Jump);
@@ -429,11 +435,16 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
-            if (_zonesObject != null)
+            if (OnReset != null)
             {
-                _zonesObject.SetActive(true);
-                // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+                OnReset();
             }
+
+            //if (_zonesObject != null)
+            //{
+            //    _zonesObject.SetActive(true);
+            //    // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
+            //}
         }
 
         private void SetResetFlag()
@@ -468,7 +479,7 @@ namespace Kubs
 
             var incrementor = 0f;
 
-            while (transform.position != endPos)
+            while (Vector3.SqrMagnitude(transform.position - endPos) > 0.00000001)
             {
                 // https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
                 // calculate current time within our lerping time range
@@ -479,6 +490,12 @@ namespace Kubs
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
                 // finally assign the computed position to our gameObject:
                 transform.position = currentPos;
+                
+                if (Vector3.SqrMagnitude(transform.position - endPos) < 0.00000001)
+                {
+                    break;
+                }
+                
                 yield return null;
             }
 

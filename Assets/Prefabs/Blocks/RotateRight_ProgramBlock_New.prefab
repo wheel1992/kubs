@@ -75,8 +75,8 @@ GameObject:
   - component: {fileID: 114241291031732844}
   - component: {fileID: 114034862047136802}
   - component: {fileID: 122209182406187592}
-  - component: {fileID: 114720661083014070}
   - component: {fileID: 114666542404291098}
+  - component: {fileID: 114663800647100334}
   m_Layer: 0
   m_Name: RotateRight_ProgramBlock_New
   m_TagString: Block_Program
@@ -453,6 +453,22 @@ MonoBehaviour:
   hideDelayOnGrab: 0
   hideControllerOnUse: 0
   hideDelayOnUse: 0
+--- !u!114 &114663800647100334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1304932599801270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterPrefab: {fileID: 1689716247661856, guid: 11a59f5cda98c7140a41884c2f977922,
+    type: 2}
+  GrassPrefab: {fileID: 1457686693877260, guid: 126417fa8639fec48924968ea2e62b00,
+    type: 2}
+  HolePrefab: {fileID: 1713203723102424, guid: 3a407dd42627acd4898cfa4288f7a159, type: 2}
 --- !u!114 &114666542404291098
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -476,17 +492,6 @@ MonoBehaviour:
   strengthOnUse: 0
   durationOnUse: 0
   intervalOnUse: 0.05
---- !u!114 &114720661083014070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1304932599801270}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114721545595761450
 MonoBehaviour:
   m_ObjectHideFlags: 1

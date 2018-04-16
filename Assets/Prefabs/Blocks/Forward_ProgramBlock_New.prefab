@@ -42,8 +42,8 @@ GameObject:
   - component: {fileID: 114288662475598514}
   - component: {fileID: 114309855176837452}
   - component: {fileID: 122468606558844416}
-  - component: {fileID: 114521439009543188}
   - component: {fileID: 114380235262494368}
+  - component: {fileID: 114137246577036858}
   m_Layer: 0
   m_Name: Forward_ProgramBlock_New
   m_TagString: Block_Program
@@ -569,6 +569,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18055ba762aa3994f9c10208cd088bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114137246577036858
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1157666413697690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterPrefab: {fileID: 1689716247661856, guid: 11a59f5cda98c7140a41884c2f977922,
+    type: 2}
+  GrassPrefab: {fileID: 1457686693877260, guid: 126417fa8639fec48924968ea2e62b00,
+    type: 2}
+  HolePrefab: {fileID: 1713203723102424, guid: 3a407dd42627acd4898cfa4288f7a159, type: 2}
 --- !u!114 &114288662475598514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -669,17 +685,6 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
---- !u!114 &114521439009543188
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1157666413697690}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!122 &122468606558844416
 Halo:
   m_ObjectHideFlags: 1
