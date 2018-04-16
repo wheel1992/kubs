@@ -18,6 +18,7 @@ namespace Kubs
         [SerializeField] private int IndexHelp;
         [SerializeField] private int IndexMenu;
         private GameObject controllerTooltips;
+        private GameObject radialMenuTooltips;
         private bool isPointerEnabled = false;
         private bool isPointerAllowTeleport = false;
         private bool isMenuEnabled = false;
@@ -77,12 +78,15 @@ namespace Kubs
             isMenuEnabled = !isMenuEnabled;
 
             var menuPointer = GetRadialMenuButton(IndexPointer);
-            if (isMenuEnabled) {
+            if (isMenuEnabled)
+            {
                 menuPointer.ButtonIcon = iconPointer;
-            } else {
+            }
+            else
+            {
                 menuPointer.ButtonIcon = iconTeleport;
             }
-            GetVRTKRadialMenu().RegenerateButtons();
+            _radialMenu.RegenerateButtons();
         }
         #endregion
 
@@ -139,7 +143,9 @@ namespace Kubs
         // Use this for initialization
         void Start()
         {
+            _radialMenu = GetVRTKRadialMenu();
             controllerTooltips = GetVRTKControllerTooltips().gameObject;
+            radialMenuTooltips = GetRadialMenuTooltips();
             DisableTooltips();
             DisablePointer();
         }
@@ -155,11 +161,11 @@ namespace Kubs
             // {
             //     DisablePointer();
             // }
-            
+
 
             if (isMenuEnabled)
             {
-                
+
                 if (isPointerEnabled)
                 {
                     EnablePointer(false);
@@ -177,6 +183,17 @@ namespace Kubs
                 }
             }
         }
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
+        }
         void EnablePointer(bool enableTeleport)
         {
             var controller = GetController();
@@ -187,8 +204,10 @@ namespace Kubs
             pointer.enableTeleport = enableTeleport;
             pointer.Toggle(true);
         }
-        void EnableTooltips() {
+        void EnableTooltips()
+        {
             controllerTooltips.SetActive(true);
+            radialMenuTooltips.SetActive(true);
         }
         void DisablePointer()
         {
@@ -199,18 +218,38 @@ namespace Kubs
 
             pointer.Toggle(false);
         }
-        void DisableTooltips() {
+        void DisableTooltips()
+        {
             controllerTooltips.SetActive(false);
+            radialMenuTooltips.SetActive(false);
+        }
+        void HandleMenuDisable(object sender)
+        {
+            Debug.Log("HandleMenuDisable");
+            var menuPointer = GetRadialMenuButton(IndexPointer);
+            menuPointer.ButtonIcon = iconTeleport;
+            _radialMenu.RegenerateButtons();
+        }
+        void HandleMenuEnable(object sender)
+        {
+
         }
         GameObject GetController()
         {
             if (transform.parent == null) { return null; }
             return transform.parent.gameObject;
         }
-        VRTK_ControllerTooltips GetVRTKControllerTooltips() {
+        VRTK_ControllerTooltips GetVRTKControllerTooltips()
+        {
             var tooltip = controller.transform.Find("ControllerTooltips");
             if (tooltip == null) { return null; }
             return tooltip.GetComponent<VRTK_ControllerTooltips>();
+        }
+        GameObject GetRadialMenuTooltips()
+        {
+            var tooltip = controller.transform.Find("RadialMenuTooltips");
+            if (tooltip == null) { return null; }
+            return tooltip.gameObject;
         }
         VRTK_Pointer GetPointer(GameObject obj)
         {
@@ -222,7 +261,7 @@ namespace Kubs
         }
         VRTK_RadialMenu.RadialMenuButton GetRadialMenuButton(int index)
         {
-            return GetVRTKRadialMenu().GetButton(index);
+            return _radialMenu.GetButton(index);
         }
     }
 }
