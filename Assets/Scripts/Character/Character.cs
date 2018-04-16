@@ -463,7 +463,10 @@ namespace Kubs
 
         private void Set(Animations animation)
         {
-            _animator.SetInteger("animation", (int)animation);
+            if (showPopup)
+            {
+                _animator.SetInteger("animation", (int)animation);
+            }
         }
 
         private IEnumerator UpdatePosition()
