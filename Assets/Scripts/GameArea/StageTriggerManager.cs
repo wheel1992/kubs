@@ -20,6 +20,15 @@ namespace Kubs
 			CollectChildren();
 		}
 
+		public void Reset()
+		{
+			foreach (var stageTrigger in _stageTriggers)
+			{
+				stageTrigger.isTriggered = false;
+				stageTrigger.gameObject.SetActive(true);
+			}
+		}
+
 		private void AutoSetNextStageIfNeeded()
 		{
 			if (autoSetNextStage)

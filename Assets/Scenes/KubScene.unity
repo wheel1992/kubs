@@ -4465,6 +4465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c776995a056d4829ad26e253a96e2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageTriggerManager: {fileID: 0}
   tutorialManager: {fileID: 518171593}
   _scale: 0
   showPopup: 1

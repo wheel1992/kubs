@@ -396,6 +396,11 @@ Prefab:
       propertyPath: tutorialManager
       value: 
       objectReference: {fileID: 518171593}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: stageTriggerManager
+      value: 
+      objectReference: {fileID: 481754782}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
   m_IsPrefabParent: 0

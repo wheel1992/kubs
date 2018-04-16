@@ -387,6 +387,11 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: -0.0014533695
       objectReference: {fileID: 0}
+    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
+        type: 2}
+      propertyPath: stageTriggerManager
+      value: 
+      objectReference: {fileID: 736256950}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
   m_IsPrefabParent: 0
