@@ -5914,6 +5914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ca9fdc8094d44d7fb867edd0e7686a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastSolutionCount: 0
   _character: {fileID: 1114753324}
 --- !u!82 &1353468105
 AudioSource:
