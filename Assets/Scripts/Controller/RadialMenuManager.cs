@@ -20,7 +20,6 @@ namespace Kubs
         private GameObject controllerTooltips;
         private GameObject radialMenuTooltips;
         private bool isPointerEnabled = false;
-        private bool isPointerAllowTeleport = false;
         private bool isMenuEnabled = false;
 
 

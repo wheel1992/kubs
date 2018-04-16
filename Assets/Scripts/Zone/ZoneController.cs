@@ -41,8 +41,6 @@ namespace Kubs
         private const string TAG_ZONE_SNAP = "ZoneSnap";
         private const string TAG_ZONE_CONTAINER = "ZoneContainer";
         private const bool IS_DEBUG = true;
-        private KubsDebug _debugger;
-        private ZoneBaseController _zoneBaseCtrl;
         //private GameObject _zoneContainerGameObject;
         private ZoneHintController _zoneHintCtrl;
         private ZoneSnapController _zoneSnapCtrl;
@@ -89,10 +87,7 @@ namespace Kubs
         #endregion
 
         #region Private Lifecycle Methods
-        void Awake()
-        {
-            _debugger = new KubsDebug(IS_DEBUG);
-        }
+
         // Use this for initialization
         void Start()
         {
@@ -105,8 +100,6 @@ namespace Kubs
             _zoneSnapCtrl.OnExited += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnExited);
             _zoneSnapCtrl.OnSnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnSnapped);
             _zoneSnapCtrl.OnUnsnapped += new ZoneSnapController.ZoneSnapEventHandler(HandleZoneOnUnsnapped);
-
-            _zoneBaseCtrl = GetChildZoneBase();
 
             HideHint();
         }
