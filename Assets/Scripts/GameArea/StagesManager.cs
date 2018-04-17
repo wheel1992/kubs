@@ -59,9 +59,6 @@ namespace Kubs
             // Set the current Scene to be able to unload it later
             Scene currentScene = SceneManager.GetActiveScene();
 
-            // Collect game objects to move
-            var gameObjectsToMove = GetGameObjectsFromScene(currentScene);
-
             // The Application loads the Scene in the background at the same time as the current Scene.
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
 
@@ -70,6 +67,9 @@ namespace Kubs
             {
                 yield return null;
             }
+
+            // Collect game objects to move
+            var gameObjectsToMove = GetGameObjectsFromScene(currentScene);
 
             // Move game objects
             var nextScene = SceneManager.GetSceneByName(sceneName);
