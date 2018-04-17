@@ -17,7 +17,7 @@ namespace Kubs
 
 		void Start()
 		{
-			_menu = GameObject.FindObjectOfType<SceneLoad>().menu.GetComponent<Menu>();
+			_menu = GameObject.FindObjectOfType<SceneLoad>().menu.GetComponentInChildren<Menu>();
 
 			AutoSetNextStageIfNeeded();
 			CollectChildren();
