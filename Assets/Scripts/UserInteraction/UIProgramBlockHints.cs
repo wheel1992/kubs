@@ -13,6 +13,9 @@ public class UIProgramBlockHints : MonoBehaviour
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
     private Character _character;
+    public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
+    public event ProgramBlockGrabEventHandler ProgramBlockGrab;
+
     [SerializeField] private GameObject CharacterPrefab;
     [SerializeField] private GameObject GrassPrefab;
     [SerializeField] private GameObject HolePrefab;
@@ -27,6 +30,7 @@ public class UIProgramBlockHints : MonoBehaviour
             io.InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouch);
             io.InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrab);
             io.InteractableObjectUntouched += new InteractableObjectEventHandler(HandleUnTouch);
+            io.InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleUnGrab);
             //if(gameObject.CompareTag("Block_Program"))
             //{
             currentGameObject = this.gameObject;
@@ -106,6 +110,29 @@ public class UIProgramBlockHints : MonoBehaviour
     void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
+        if (currentGameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        {
+            GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
+            if(GameObject.Find("UIHintsArrowPointer") != null)
+            {
+                GameObject.Find("UIHintsArrowPointer").SetActive(false);
+            }
+        }
+    }
+
+    void HandleUnGrab(object sender, VRTK.InteractableObjectEventArgs e)
+    {
+        if(currentGameObject.GetComponent<ProgramBlock>().Type != ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        {
+            GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+            if(arrowPointer != null)
+            {
+                arrowPointer.SetActive(true);
+            }
+        } else
+        {
+            //if(this.gameObject.)
+        }
     }
 
     private GameObject CreateProgramBlockUIHint(ProgramBlockType programBlockType)

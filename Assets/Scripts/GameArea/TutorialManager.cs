@@ -5,14 +5,34 @@ using UnityEngine;
 
 namespace Kubs
 {
-	public class TutorialManager : MonoBehaviour
-	{
-		public int lastStage;
+    public class TutorialManager : MonoBehaviour
+    {
+        public int lastStage;
+        public bool onShowTutorialArrow { get; set; }
 
-		private int _activeStage = 1;
-		private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
+        private int _activeStage = 1;
+        private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
+        public GameObject arrowPointer { set; get; }
 
-		public void CollectChildren(Transform parent)
+        //For purpose of UI guide Arrows for Demonstration
+        private void Start()
+        {
+        //    var hints = new UIProgramBlockHints.ProgramBlockGrabEventHandler;
+        //    hints.ProgramBlockGrab += new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
+        //    var uiProgramBlockHints = new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
+            onShowTutorialArrow = true;
+            GameObject forwardBlock = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
+            Vector3 arrowPos = forwardBlock.transform.position + new Vector3(0, 2f, 0f);
+            arrowPointer = CreateArrowPointer(arrowPos, forwardBlock.transform);
+        }
+
+        public GameObject CreateArrowPointer(Vector3 position, Transform parent)
+        {
+            UIHintsArrowPointer uIHintsArrowPointer = new UIHintsArrowPointer();
+            return uIHintsArrowPointer.CreateArrowPointer(position, parent);
+        }
+
+        public void CollectChildren(Transform parent)
 		{
 			if (tutorialBlocks == null)
 			{
@@ -104,5 +124,11 @@ namespace Kubs
 
 			EventManager.TriggerEvent(Constant.EVENT_NAME_TUTORIAL_MANAGER_READY, this);
 		}
-	}
+
+        private GameObject GetProgramBlockSnapDropZoneCloneForward()
+        {
+            return GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
+        }
+
+    }
 }
