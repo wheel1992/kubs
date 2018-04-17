@@ -25,7 +25,9 @@ namespace Kubs
         private AudioSource _mAudioSource;
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
-        
+        private GameObject _rightCtrl;
+        private RadialMenuManager _rightCtrlRadialMenuManager;
+
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -48,7 +50,10 @@ namespace Kubs
             var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
 
-            // Load tutorial
+            _rightCtrl = GetRightController();
+            _rightCtrlRadialMenuManager = GetRightControllerRadialMenuManager();
+            
+            // Load tutorial    
             Invoke("LoadTutorial", 1);
         }
         void DisableMenu()
@@ -67,6 +72,10 @@ namespace Kubs
         void HandleMenuDisable(object sender)
         {
             DisableMenu();
+            if (_rightCtrlRadialMenuManager != null)
+            {
+                _rightCtrlRadialMenuManager.HandleMenuDisable();
+            }
         }
         void HandleMenuEnable(object sender)
         {
@@ -119,7 +128,7 @@ namespace Kubs
             EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
             EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
         }
-        
+
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(
@@ -200,6 +209,17 @@ namespace Kubs
         GameObject GetMenu()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_CANVAS_MENU);
+        }
+        GameObject GetRightController()
+        {
+            return GameObject.Find("RightController");
+        }
+        RadialMenuManager GetRightControllerRadialMenuManager()
+        {
+            if (_rightCtrl == null) { return null; }
+            var radialMenuPanel = _rightCtrl.transform.Find("RadialMenu/RadialMenuUI/Panel");
+            if (radialMenuPanel == null) { return null; }
+            return radialMenuPanel.GetComponent<RadialMenuManager>();
         }
         Transform GetVRTKHeadsetCamera()
         {

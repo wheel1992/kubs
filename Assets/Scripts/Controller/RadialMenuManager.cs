@@ -22,6 +22,11 @@ namespace Kubs
         private bool isPointerEnabled = false;
         private bool isMenuEnabled = false;
 
+        public void HandleMenuDisable()
+        {
+            var menuPointer = GetRadialMenuButton(IndexPointer);
+            menuPointer.ButtonIcon = iconTeleport;
+            _radialMenu.RegenerateButtons();
 
         // public void OnOptionMenuClick()
         // {
@@ -39,6 +44,12 @@ namespace Kubs
 
         //     isMenuEnabled = !isMenuEnabled;
         // }
+            isMenuEnabled = false;
+            isPointerEnabled = false;
+        }
+        public void HandleMenuEnable()
+        {
+        }
 
         #region Pointer Events
         public void OnPointerClick()
