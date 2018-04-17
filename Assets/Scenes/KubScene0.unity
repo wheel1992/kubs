@@ -675,6 +675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastStage: 0
+  ArrowPrefab: {fileID: 1652495850495186, guid: 57fc36f7f2852df4bb16b9c16d43cf3b,
+    type: 2}
 --- !u!1 &589412245
 GameObject:
   m_ObjectHideFlags: 0

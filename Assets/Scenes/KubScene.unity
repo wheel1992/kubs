@@ -2340,6 +2340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lastStage: 0
+  ArrowPrefab: {fileID: 0}
 --- !u!1 &520102001
 GameObject:
   m_ObjectHideFlags: 0
@@ -8034,7 +8035,7 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 287
+      value: 283
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
