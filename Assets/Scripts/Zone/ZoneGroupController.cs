@@ -165,7 +165,7 @@ namespace Kubs
         {
             bool isValidMove = true;
 
-            Debug.Log("Hover: at " + args.CollidedZoneIndex + " with " + args.CollidedObject);
+            // Debug.Log("Hover: at " + args.CollidedZoneIndex + " with " + args.CollidedObject);
             var currentZone = GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]);
 
             // Test For loop
@@ -570,7 +570,7 @@ namespace Kubs
             {
                 if (forStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex)
                 {
-                    Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
+                    // Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
                     return false;
                 }
             }
@@ -599,7 +599,7 @@ namespace Kubs
             // Current forEnd's parent - ForStart is the nearest left
             if (forEnd.ForLoopStart.GetZoneIndex() >= targetZoneIndex)
             {
-                Debug.Log("IsForEndCorrectPlacement: forEnd target is less than its ForStart");
+                // Debug.Log("IsForEndCorrectPlacement: forEnd target is less than its ForStart");
                 return false;
             }
 
@@ -626,12 +626,12 @@ namespace Kubs
                 }
                 else if (leftForStart.ForLoopEnd.GetZoneIndex() > targetZoneIndex || leftForStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex)
                 {
-                    Debug.Log("IsForEndCorrectPlacement: false");
+                    // Debug.Log("IsForEndCorrectPlacement: false");
                     return false;
                 }
 
             }
-            Debug.Log("IsForEndCorrectPlacement: true");
+            // Debug.Log("IsForEndCorrectPlacement: true");
             return true;
         }
         private int GetNearestLeftForLoopStart(int index)

@@ -34,7 +34,7 @@ namespace Kubs
         }
         public void Snap(GameObject obj)
         {
-            Debug.Log("Snap: " + obj.name);
+            // Debug.Log("Snap: " + obj.name);
             GetChildVRTKSnapDropZone().ForceSnap(obj);
         }
         public void Unsnap()
@@ -75,7 +75,7 @@ namespace Kubs
         }
         private void DoSnapDropZoneSnapped(object sender, SnapDropZoneEventArgs e)
         {
-            Debug.Log("DoSnapDropZoneSnapped: ");
+            // Debug.Log("DoSnapDropZoneSnapped: ");
             if (e.snappedObject != null)
             {
                 var block = GetProgramBlockByObject(e.snappedObject);

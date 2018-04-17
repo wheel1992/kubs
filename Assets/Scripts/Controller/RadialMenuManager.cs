@@ -28,22 +28,6 @@ namespace Kubs
             menuPointer.ButtonIcon = iconTeleport;
             _radialMenu.RegenerateButtons();
 
-        // public void OnOptionMenuClick()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionMenuClick:");
-        //     if (isMenuEnabled)
-        //     {
-        //         // Current enable, click to disable
-        //         EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
-        //     }
-        //     else
-        //     {
-        //         // Current disable, click to enable
-        //         EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_ENABLE, null);
-        //     }
-
-        //     isMenuEnabled = !isMenuEnabled;
-        // }
             isMenuEnabled = false;
             isPointerEnabled = false;
         }
@@ -58,12 +42,10 @@ namespace Kubs
         }
         public void OnPointerHoverEnter()
         {
-            Debug.Log("OnPointerHoverEnter:");
             isPointerEnabled = true;
         }
         public void OnPointerHoverExit()
         {
-            Debug.Log("OnPointerHoverExit:");
             isPointerEnabled = false;
         }
 
@@ -72,8 +54,6 @@ namespace Kubs
         #region Menu Events
         public void OnMenuClick()
         {
-            Debug.Log("OnMenuClick:");
-            // Debug.Log("RadialMenuItems OnMenuClick:");
             if (isMenuEnabled)
             {
                 // Current enable, click to disable
@@ -103,52 +83,17 @@ namespace Kubs
         #region Help Events
         public void OnHelpClick()
         {
-            Debug.Log("OnHelpClick:");
             EnableTooltips();
         }
         public void OnHelpHoverEnter()
         {
-            Debug.Log("OnHelpHoverEnter:");
             EnableTooltips();
         }
         public void OnHelpHoverExit()
         {
-            Debug.Log("OnHelpHoverExit:");
             DisableTooltips();
         }
         #endregion 
-
-
-        // public void OnOptionSelectClick()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionSelectClick:");
-        // }
-        // public void OnOptionSelectHoverEnter()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionSelectHoverEnter:");
-        //     isPointerEnabled = true;
-        //     isPointerAllowTeleport = false;
-        // }
-        // public void OnOptionSelectHoverExit()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionSelectHoverExit:");
-        //     isPointerEnabled = false;
-        // }
-        // public void OnOptionTeleportClick()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionTeleportClick:");
-        // }
-        // public void OnOptionTeleportHoverEnter()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionTeleportHoverEnter:");
-        //     isPointerEnabled = true;
-        //     isPointerAllowTeleport = true;
-        // }
-        // public void OnOptionTeleportHoverExit()
-        // {
-        //     // Debug.Log("RadialMenuItems OnOptionSelectHoverExit:");
-        //     isPointerEnabled = false;
-        // }
 
         // Use this for initialization
         void Start()
@@ -163,16 +108,6 @@ namespace Kubs
         // Update is called once per frame
         void Update()
         {
-            // if (isPointerEnabled)
-            // {
-            //     EnablePointer(isPointerAllowTeleport);
-            // }
-            // else
-            // {
-            //     DisablePointer();
-            // }
-
-
             if (isMenuEnabled)
             {
 
@@ -192,17 +127,6 @@ namespace Kubs
                     DisablePointer();
                 }
             }
-        }
-        void OnEnable()
-        {
-            EventManager.StartListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
-            EventManager.StartListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
-        }
-
-        void OnDisable()
-        {
-            EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
-            EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
         }
         void EnablePointer(bool enableTeleport)
         {
@@ -232,17 +156,6 @@ namespace Kubs
         {
             controllerTooltips.SetActive(false);
             radialMenuTooltips.SetActive(false);
-        }
-        void HandleMenuDisable(object sender)
-        {
-            Debug.Log("HandleMenuDisable");
-            var menuPointer = GetRadialMenuButton(IndexPointer);
-            menuPointer.ButtonIcon = iconTeleport;
-            _radialMenu.RegenerateButtons();
-        }
-        void HandleMenuEnable(object sender)
-        {
-
         }
         GameObject GetController()
         {

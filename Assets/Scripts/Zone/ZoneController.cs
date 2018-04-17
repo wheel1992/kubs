@@ -133,7 +133,7 @@ namespace Kubs
                 // args.WhichBlock.ZoneIndex = this.Index;
                 // Attach block (child) to this zone (parent)
                 args.WhichBlock.SetParent(this.transform);
-                Debug.Log("HandleZoneOnSnapped: " + args.WhichBlock.name);
+                // Debug.Log("HandleZoneOnSnapped: " + args.WhichBlock.name);
                 OnZoneSnapped(this,
                     new ZoneEventArgs
                     {
