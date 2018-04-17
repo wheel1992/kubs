@@ -46,7 +46,6 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
         }
-
         //Testing Method
         public void buttonPressed()
         {
@@ -56,14 +55,11 @@ namespace Kubs
 
         private void OnTriggerExit(Collider other)
         {
-            //Debug.Log("OnTriggerExit");
             //gameObject.GetComponent<Renderer>().material = _defaultMaterial;
-
             // Run();
         }
         private void OnTriggerEnter(Collider other)
         {
-            //Debug.Log("OnTriggerEnter");
             //ChangeColor();
             // Debug.Log("OnTriggerEnter: " + other);
             // // if (!_isAnimating)
@@ -74,8 +70,9 @@ namespace Kubs
         }
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {
-            // Debug.Log("HandleOnTouched: " + args.interactingObject);
-            if (args.interactingObject.name.CompareTo("RightController") == 0 || args.interactingObject.name.CompareTo("LeftController") == 0)
+            // Debug.Log("HandleOnTouched: " + VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Right));
+            if (VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Right) ||
+                VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Left))
             {
                 if (!HasTouchedByController)
                 {
@@ -138,7 +135,7 @@ namespace Kubs
         private void EnableHaptic()
         {
             var haptic = GetVRTKInteractHaptics();
-            if(haptic != null) 
+            if (haptic != null)
                 haptic.strengthOnTouch = 1;
         }
         private void ChangeColor()
