@@ -80,6 +80,10 @@ namespace Kubs
         void HandleMenuEnable(object sender)
         {
             EnableMenu();
+            if (_rightCtrlRadialMenuManager != null)
+            {
+                _rightCtrlRadialMenuManager.HandleMenuEnable();
+            }
         }
         void LoadTutorial()
         {
