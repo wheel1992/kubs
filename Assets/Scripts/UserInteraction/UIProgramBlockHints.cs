@@ -139,6 +139,8 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // TEST
         Debug.Log("HandleOnTouch");
+        
+        if (_tutorialManager == null) { return; }
         if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
             _tutorialManager.HideArrowPointer();
@@ -160,9 +162,12 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // TEST
         Debug.Log("HandleUnTouch");
-        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        if (__tutorialManager != null)
         {
-            _tutorialManager.ShowArrowPointer();
+            if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+            {
+                _tutorialManager.ShowArrowPointer();
+            }
         }
     }
 

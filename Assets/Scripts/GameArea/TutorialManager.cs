@@ -124,7 +124,9 @@ namespace Kubs
         {
             if (arrowPointer != null)
             {
-                arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
+				var uiPointer = arrowPointer.GetComponent<UIHintsArrowPointer>();
+                uiPointer.Show();
+				uiPointer.BeginFloat();
             }
         }
         public void SetArrowPointerPositionToZone()
