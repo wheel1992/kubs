@@ -13,6 +13,23 @@ public class UIProgramBlockHints : MonoBehaviour
     private GameObject currentGameObject;
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
+    private TutorialManager _tutorialManager
+    {
+        get
+        {
+            if (__tutorialManager == null)
+            {
+                var go = GameObject.Find("TutorialManager");
+                if (go != null)
+                {
+                    __tutorialManager = go.GetComponent<TutorialManager>();
+                }
+            }
+
+            return __tutorialManager;
+        }
+    }
+    private TutorialManager __tutorialManager;
     private Character _character;
     public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
     public event ProgramBlockGrabEventHandler ProgramBlockGrab;
@@ -106,17 +123,25 @@ public class UIProgramBlockHints : MonoBehaviour
 
     void HandleOnTouch(object sender, VRTK.InteractableObjectEventArgs e)
     {
-        if (gameObject.GetComponent<ProgramBlock>().IsInSnapDropZoneClone())
+        if (GetProgramBlock().IsInSnapDropZoneClone())
         {
             _onHover = true;
         }
 
-        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        // if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        // {
+        //     // if (GameObject.Find("UIHintsArrowPointer") != null)
+        //     // {
+        //     //     Debug.Log(_tutorialManager.arrowPointer.name);
+        //     //     _tutorialManager.arrowPointer.SetActive(false);
+        //     // }
+        // }
+
+        // TEST
+        Debug.Log("HandleOnTouch");
+        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
-            if (GameObject.Find("UIHintsArrowPointer") != null)
-            {
-                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer.SetActive(false);
-            }
+            _tutorialManager.HideArrowPointer();
         }
     }
 
@@ -124,72 +149,113 @@ public class UIProgramBlockHints : MonoBehaviour
     {
         _onHover = false;
 
-        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+
+        // if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        // {
+        //     if (_tutorialManager.arrowPointer != null)
+        //     {
+        //         _tutorialManager.arrowPointer.SetActive(true);
+        //     }
+        // }
+
+        // TEST
+        Debug.Log("HandleUnTouch");
+        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
-            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer != null)
-            {
-                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer.SetActive(true);
-            }
+            _tutorialManager.ShowArrowPointer();
         }
     }
 
     void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
-        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+
+        if (_tutorialManager == null) { return; }
+        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
-            //GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
-            GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-            if (arrowPointer != null)
-            {
-                arrowPointer.transform.position = GameObject.Find("Zones").transform.GetChild(0).transform.position + new Vector3(0, 2f, 0);
-                Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-                arrowPointer.AddComponent<UIHintsArrowPointer>();
-                arrowPointer.SetActive(true);
-            }
+            Debug.Log("HandleOnGrab");
+            // _tutorialManager.ShowArrowPointer();
+            _tutorialManager.SetArrowPointerPositionToZone();
+
+            // //GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
+            // GameObject arrowPointer = _tutorialManager.arrowPointer;
+            // if (arrowPointer != null)
+            // {
+            //     arrowPointer.transform.position = GameObject.Find("Zones").transform.GetChild(0).transform.position + new Vector3(0, 2f, 0);
+            //     Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            //     Debug.Log("Destroy On Grab");
+            //     arrowPointer.AddComponent<UIHintsArrowPointer>();
+            //     arrowPointer.SetActive(true);
+            // }
         }
     }
 
     void HandleUnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
-        if (gameObject.GetComponent<ProgramBlock>() != null)
+        Debug.Log("HandleUnGrab");
+        var programBlock = GetProgramBlock();
+        if (programBlock == null) { return; }
+
+        if (_tutorialManager == null) { return; }
+
+        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
-            var programBlock = gameObject.GetComponent<ProgramBlock>();
-            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
-            {
-                GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-                if (arrowPointer != null)
-                {
-                    arrowPointer.SetActive(false);
-                    arrowPointer.transform.position = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward").transform.position + new Vector3(0, 2f, 0);
-                    Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-                    arrowPointer.AddComponent<UIHintsArrowPointer>();
-                    arrowPointer.SetActive(true);
-                    //GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-                    //if (arrowPointer != null)
-                    //{
-                    //    arrowPointer.SetActive(true);
-                    //}
-                }
-            }
+            // _tutorialManager.ShowArrowPointer();
+            _tutorialManager.SetArrowPointerPositionToSnapClone();
         }
+
+        // if (gameObject.GetComponent<ProgramBlock>() != null)
+        // {
+        //     var programBlock = gameObject.GetComponent<ProgramBlock>();
+        //     if (_tutorialManager.onShowTutorialArrow)
+        //     {
+        //         GameObject arrowPointer = _tutorialManager.arrowPointer;
+        //         if (arrowPointer != null)
+        //         {
+        //             arrowPointer.SetActive(false);
+        //             arrowPointer.transform.position = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward").transform.position + new Vector3(0, 2f, 0);
+        //             Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+        //             Debug.Log("Destroy On Un Grab");
+        //             arrowPointer.AddComponent<UIHintsArrowPointer>();
+        //             arrowPointer.SetActive(true);
+        //             //GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+        //             //if (arrowPointer != null)
+        //             //{
+        //             //    arrowPointer.SetActive(true);
+        //             //}
+        //         }
+        //     }
+        // }
     }
 
     void HandleOnSnap(object sender, InteractableObjectEventArgs e)
     {
-        if ((gameObject.GetComponent<ProgramBlock>() != null))
+        Debug.Log("HandleOnSnap");
+        var programBlock = gameObject.GetComponent<ProgramBlock>();
+        if (programBlock == null) { return; }
+
+        if (_tutorialManager.onShowTutorialArrow &&  // Currently arrow is showing
+            programBlock.Type == ProgramBlockType.Forward && // Snapped block is Forward
+            !programBlock.IsInSnapDropZoneClone()) // Snap not in SnapDropZoneClone
         {
-            var programBlock = gameObject.GetComponent<ProgramBlock>();
-            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow && programBlock.Type == ProgramBlockType.Forward && !programBlock.IsInSnapDropZoneClone())
-            {
-                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
-                GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-                if (arrowPointer != null)
-                {
-                    Destroy(arrowPointer);
-                }
-            }
+            _tutorialManager.onShowTutorialArrow = false;
+            _tutorialManager.DestroyArrowPointer();
         }
+
+        // if ((gameObject.GetComponent<ProgramBlock>() != null))
+        // {
+        //     var programBlock = gameObject.GetComponent<ProgramBlock>();
+        //     if (_tutorialManager.onShowTutorialArrow && programBlock.Type == ProgramBlockType.Forward && !programBlock.IsInSnapDropZoneClone())
+        //     {
+        //         _tutorialManager.onShowTutorialArrow = false;
+        //         GameObject arrowPointer = _tutorialManager.arrowPointer;
+        //         if (arrowPointer != null)
+        //         {
+        //             Destroy(arrowPointer);
+        //             Debug.Log("Destroy On Snap");
+        //         }
+        //     }
+        // }
     }
 
     private GameObject CreateProgramBlockUIHint(ProgramBlockType programBlockType)
@@ -414,6 +480,10 @@ public class UIProgramBlockHints : MonoBehaviour
             }
         }
         return cubeCollection;
+    }
+    private ProgramBlock GetProgramBlock()
+    {
+        return gameObject.GetComponent<ProgramBlock>();
     }
 
     private TerrainReplacer SetNamedPrefabs(TerrainReplacer terrainReplacer)

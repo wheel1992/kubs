@@ -16,13 +16,43 @@ public class UIHintsArrowPointer : MonoBehaviour
     // private Vector3 endPos;
     // private float incrementor;
 
-
+    public bool ShouldFloat = true;
     public float amplitude = 0.5f;
     public float frequency = 1f;
 
     // Position Storage Variables
     Vector3 posOffset = new Vector3();
     Vector3 tempPos = new Vector3();
+    IEnumerator _floatCoroutine;
+
+    public void BeginFloat()
+    {
+        // if (_floatCoroutine != null)
+        // {
+        //     StopCoroutine(_floatCoroutine);
+        // }
+        // _floatCoroutine = StartFloat();
+        // StartCoroutine(_floatCoroutine);
+        ShouldFloat = true;
+    }
+    public void StopFloat()
+    {
+        ShouldFloat = false;
+    }
+    public void Hide()
+    {
+        // if (_floatCoroutine != null)
+        // {
+        //     StopCoroutine(_floatCoroutine);
+        // }
+        StopFloat();
+        gameObject.SetActive(false);
+    }
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        //BeginFloat();
+    }
 
     // Use this for initialization
     void Start()
@@ -33,27 +63,24 @@ public class UIHintsArrowPointer : MonoBehaviour
         // startPos = endPos + new Vector3(0, xPosAbove, 0);
 
         posOffset = transform.position;
-        StartCoroutine(StartFloat());
+        BeginFloat();
     }
 
     // Update is called once per frame
-    // void Update()
-    // {
-    //     incrementor += Time.deltaTime;
-    //     if (Vector3.Distance(this.gameObject.transform.position, endPos) < distAccuracy)
-    //     {
-    //         this.gameObject.transform.position = startPos;
-    //         incrementor = 0.01f;
-    //     }
-    //     else
-    //     {
-    //         this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, endPos, incrementor);
-    //     }
-    // }
-
-    private IEnumerator StartFloat()
+    void Update()
     {
-        while (true)
+        // incrementor += Time.deltaTime;
+        // if (Vector3.Distance(this.gameObject.transform.position, endPos) < distAccuracy)
+        // {
+        //     this.gameObject.transform.position = startPos;
+        //     incrementor = 0.01f;
+        // }
+        // else
+        // {
+        //     this.gameObject.transform.position = Vector3.Lerp(this.gameObject.transform.position, endPos, incrementor);
+        // }
+
+        if (ShouldFloat)
         {
             // Spin object around Y-Axis
             // transform.Rotate(new Vector3(0f, Time.deltaTime * degreesPerSecond, 0f), Space.World);
@@ -63,8 +90,13 @@ public class UIHintsArrowPointer : MonoBehaviour
             tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
 
             transform.position = tempPos;
+        }
+    }
 
-            yield return null;
+    private IEnumerator StartFloat()
+    {
+        while (true)
+        {
         }
     }
 
