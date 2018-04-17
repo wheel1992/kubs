@@ -23,13 +23,13 @@ namespace Kubs
             onShowTutorialArrow = true;
             GameObject forwardBlock = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
             Vector3 arrowPos = forwardBlock.transform.position + new Vector3(0, 2f, 0f);
-            arrowPointer = CreateArrowPointer(arrowPos, forwardBlock.transform);
+            arrowPointer = CreateArrowPointer(arrowPos);
         }
 
-        public GameObject CreateArrowPointer(Vector3 position, Transform parent)
+        private GameObject CreateArrowPointer(Vector3 position)
         {
             UIHintsArrowPointer uIHintsArrowPointer = new UIHintsArrowPointer();
-            return uIHintsArrowPointer.CreateArrowPointer(position, parent);
+            return uIHintsArrowPointer.CreateArrowPointer(position);
         }
 
         public void CollectChildren(Transform parent)

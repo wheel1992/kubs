@@ -33,6 +33,7 @@ public class UIProgramBlockHints : MonoBehaviour
             io.InteractableObjectGrabbed += new InteractableObjectEventHandler(HandleOnGrab);
             io.InteractableObjectUntouched += new InteractableObjectEventHandler(HandleUnTouch);
             io.InteractableObjectUngrabbed += new InteractableObjectEventHandler(HandleUnGrab);
+            io.InteractableObjectSnappedToDropZone += new InteractableObjectEventHandler(HandleOnSnap);
             //if(gameObject.CompareTag("Block_Program"))
             //{
             currentGameObject = this.gameObject;
@@ -109,38 +110,85 @@ public class UIProgramBlockHints : MonoBehaviour
         {
             _onHover = true;
         }
+
+        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        {
+            if (GameObject.Find("UIHintsArrowPointer") != null)
+            {
+                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer.SetActive(false);
+            }
+        }
     }
 
     void HandleUnTouch(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
+
+        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        {
+            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer != null)
+            {
+                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer.SetActive(true);
+            }
+        }
     }
 
     void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
-        if (currentGameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        if (gameObject.GetComponent<ProgramBlock>().Type == ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
         {
-            GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
-            if(GameObject.Find("UIHintsArrowPointer") != null)
+            //GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
+            GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+            if (arrowPointer != null)
             {
-                GameObject.Find("UIHintsArrowPointer").SetActive(false);
+                arrowPointer.transform.position = GameObject.Find("Zones").transform.GetChild(0).transform.position + new Vector3(0, 2f, 0);
+                Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+                arrowPointer.AddComponent<UIHintsArrowPointer>();
+                arrowPointer.SetActive(true);
             }
         }
     }
 
     void HandleUnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
-        if(currentGameObject.GetComponent<ProgramBlock>().Type != ProgramBlockType.Forward && GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
+        if (gameObject.GetComponent<ProgramBlock>() != null)
         {
-            GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-            if(arrowPointer != null)
+            var programBlock = gameObject.GetComponent<ProgramBlock>();
+            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow)
             {
-                arrowPointer.SetActive(true);
+                GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+                if (arrowPointer != null)
+                {
+                    arrowPointer.SetActive(false);
+                    arrowPointer.transform.position = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward").transform.position + new Vector3(0, 2f, 0);
+                    Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+                    arrowPointer.AddComponent<UIHintsArrowPointer>();
+                    arrowPointer.SetActive(true);
+                    //GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+                    //if (arrowPointer != null)
+                    //{
+                    //    arrowPointer.SetActive(true);
+                    //}
+                }
             }
-        } else
+        }
+    }
+
+    void HandleOnSnap(object sender, InteractableObjectEventArgs e)
+    {
+        if ((gameObject.GetComponent<ProgramBlock>() != null))
         {
-            //if(this.gameObject.)
+            var programBlock = gameObject.GetComponent<ProgramBlock>();
+            if (GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow && programBlock.Type == ProgramBlockType.Forward && !programBlock.IsInSnapDropZoneClone())
+            {
+                GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
+                GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
+                if (arrowPointer != null)
+                {
+                    Destroy(arrowPointer);
+                }
+            }
         }
     }
 
@@ -297,7 +345,7 @@ public class UIProgramBlockHints : MonoBehaviour
                         if (_changeJump)
                         {
                             cubeTwo.tag = "Grass";
-                            
+
                             cubeOne.transform.localPosition = new Vector3(0, 0, -0.5f);
                             cubeTwo.transform.localPosition = new Vector3(0, 0, 0.5f);
                             cubeThree.transform.localPosition = new Vector3(0, 1f, 0.5f);
@@ -309,7 +357,7 @@ public class UIProgramBlockHints : MonoBehaviour
                         else
                         {
                             cubeTwo.tag = "Hole";
-                            
+
                             cubeOne.transform.localPosition = new Vector3(0, 0, -1f);
                             cubeTwo.transform.localPosition = new Vector3(0, 0, 0);
                             cubeThree.transform.localPosition = new Vector3(0, 0, 1f);

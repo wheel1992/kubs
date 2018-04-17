@@ -36,10 +36,10 @@ public class UIHintsArrowPointer : MonoBehaviour {
             }
     }
 
-    public GameObject CreateArrowPointer(Vector3 localPos, Transform parent)
+    public GameObject CreateArrowPointer(Vector3 localPos)
     {
-        GameObject arrowPointer = Instantiate(ArrowPrefab, parent);
-        arrowPointer.transform.localPosition = new Vector3(0, 2f, 0);
+        GameObject arrowPointer = Instantiate(ArrowPrefab);
+        arrowPointer.transform.position = localPos;
         arrowPointer.AddComponent<UIHintsArrowPointer>();
         arrowPointer.name = "UIHintsArrowPointer";
         return arrowPointer;
