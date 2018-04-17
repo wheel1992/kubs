@@ -13,8 +13,7 @@ namespace Kubs
         public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
 
-        public Menu menu;
-
+        public GameObject menu;
         public Material skybox;
 
         [SerializeField] private GameObject _forwardBlockPrefab;
@@ -26,7 +25,6 @@ namespace Kubs
         private AudioSource _mAudioSource;
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
-        private GameObject _menu;
         
         void Awake()
         {
@@ -55,16 +53,16 @@ namespace Kubs
         }
         void DisableMenu()
         {
-            _menu.SetActive(false);
+            menu.SetActive(false);
         }
         void EnableMenu()
         {
-            _menu.SetActive(true);
+            menu.SetActive(true);
             var menuDistance = 7;
             var camera = GetVRTKHeadsetCamera();
             var menuPos = camera.position + camera.forward * menuDistance;
-            _menu.transform.position = menuPos;
-            _menu.transform.rotation = camera.rotation;
+            menu.transform.position = menuPos;
+            menu.transform.rotation = camera.rotation;
         }
         void HandleMenuDisable(object sender)
         {
@@ -106,8 +104,7 @@ namespace Kubs
 
             if (sceneName.Equals(Constant.NAME_SCENE_MENU_SCENE))
             {
-                _menu = GetMenu();
-                menu = _menu.GetComponent<Menu>();
+                menu = GetMenu();
                 DisableMenu();
             }
         }
