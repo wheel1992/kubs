@@ -6,7 +6,7 @@ using VRTK;
 
 public class UIHintsArrowPointer : MonoBehaviour {
 
-    [SerializeField] GameObject ArrowPrefab;
+    //[SerializeField] GameObject ArrowPrefab;
     private float arrowMoveSpeed = 0.1f;
     private float xPosAbove = 1.0f;
     private bool _onShow = false;
