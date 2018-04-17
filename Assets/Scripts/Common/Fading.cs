@@ -23,7 +23,7 @@ namespace Kubs
 				fadeOutTexture.Apply(false);
 			}
 
-			OnLevelWasLoaded();
+			LevelWasLoaded();
 		}
 
 		void OnGUI()
@@ -46,8 +46,7 @@ namespace Kubs
 			return (fadeSpeed);
 		}
 
-		// OnLevelWasLoaded is called when a level is loaded. It takes loaded level index (int) as a parameter so you can limit the fade in to certain scenes.
-		void OnLevelWasLoaded()
+		void LevelWasLoaded()
 		{
 			// alpha = 1;  // use this if the alpha is not set to 1 by default
 			BeginFade(-1);  // call the fade in function

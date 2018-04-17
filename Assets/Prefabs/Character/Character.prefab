@@ -3435,8 +3435,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.5, y: 0.6, z: 0.4}
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Size: {x: 0.5, y: 0.6, z: 0.2}
+  m_Center: {x: 0, y: 0.3, z: 0.05}
 --- !u!95 &95481319014420662
 Animator:
   serializedVersion: 3
@@ -3465,11 +3465,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c776995a056d4829ad26e253a96e2d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stageTriggerManager: {fileID: 0}
   tutorialManager: {fileID: 0}
   _scale: 0
+  showPopup: 1
   audioClipWalk: {fileID: 8300000, guid: 93f920ff3130e514fb1f0d1d61edc75c, type: 3}
   audioClipChewFood: {fileID: 8300000, guid: a0aab0dc54c98c346bc2f7b1caa0d298, type: 3}
   audioClipJump: {fileID: 8300000, guid: 15e57742199a41440884d6337e7ef47c, type: 3}
+  HintProgramBlockPrefabs:
+    forwardBlockPrefab: {fileID: 1157666413697690, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
+      type: 2}
+    JumpBlockPrefab: {fileID: 1890968634550186, guid: 4856c757d47fafa468ba4cbc83cf4160,
+      type: 2}
+    RotateLeftBlockPrefab: {fileID: 1624275279796936, guid: adf0896c4868463409dbe475f2e4a998,
+      type: 2}
+    RotateRightBlockPrefab: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
+      type: 2}
 --- !u!137 &137326456956804460
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

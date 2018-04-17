@@ -56,11 +56,7 @@ namespace Kubs
             InitAudioClips();
             InitDefaultFirstZone();
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
+        
         void OnDisable()
         {
             EventManager.StopListening(Constant.EVENT_NAME_FOR_LOOP_END_UNGRAB, HandleForLoopEndUngrab);
@@ -92,6 +88,11 @@ namespace Kubs
             }
             Debug.Log("CompileProgramBlocks: " + msg);
             return list;
+        }
+        public void Reset()
+        {
+            DestroyAllZones();
+            AddZoneAt(0);
         }
 
         #endregion
@@ -164,7 +165,7 @@ namespace Kubs
         {
             bool isValidMove = true;
 
-            Debug.Log("Hover: at " + args.CollidedZoneIndex + " with " + args.CollidedObject);
+            // Debug.Log("Hover: at " + args.CollidedZoneIndex + " with " + args.CollidedObject);
             var currentZone = GetZoneControllerByGameObject(_zones[args.CollidedZoneIndex]);
 
             // Test For loop
@@ -450,11 +451,31 @@ namespace Kubs
                 MoveZoneToRight(i);
             }
         }
+        private void DestroyAllZones()
+        {
+            if (_zones.Count == 0) { return; }
+            foreach (var zone in _zones)
+            {
+                var block = GetZoneControllerByGameObject(zone).GetAttachedProgramBlock();
+                if (block != null)
+                {
+                    Destroy(block.gameObject);
+                }
+                Destroy(zone);
+            }
+            _zones.Clear();
+        }
         private void DestroyZone(int index)
         {
             //Debug.Log("DestroyZone: at " + index);
             if (index < 0 || index >= _zones.Count) { return; }
             var zone = _zones[index];
+            var block = GetZoneControllerByGameObject(zone).GetAttachedProgramBlock();
+            if (block != null)
+            {
+                Destroy(block.gameObject);
+            }
+
             _zones.RemoveAt(index);
             Destroy(zone);
         }
@@ -463,7 +484,7 @@ namespace Kubs
             for (int i = 0; i < _zones.Count; i++)
             {
                 var zone = GetZoneControllerByGameObject(_zones[i]);
-                var block = zone.GetAttachedProgramBlock();
+                // var block = zone.GetAttachedProgramBlock();
 
                 zone.Index = i;
             }
@@ -549,7 +570,7 @@ namespace Kubs
             {
                 if (forStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex)
                 {
-                    Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
+                    // Debug.Log("IsForStartCorrectPlacement: own forEnd is less than own ForStart");
                     return false;
                 }
             }
@@ -578,7 +599,7 @@ namespace Kubs
             // Current forEnd's parent - ForStart is the nearest left
             if (forEnd.ForLoopStart.GetZoneIndex() >= targetZoneIndex)
             {
-                Debug.Log("IsForEndCorrectPlacement: forEnd target is less than its ForStart");
+                // Debug.Log("IsForEndCorrectPlacement: forEnd target is less than its ForStart");
                 return false;
             }
 
@@ -605,12 +626,12 @@ namespace Kubs
                 }
                 else if (leftForStart.ForLoopEnd.GetZoneIndex() > targetZoneIndex || leftForStart.ForLoopEnd.GetZoneIndex() < targetZoneIndex)
                 {
-                    Debug.Log("IsForEndCorrectPlacement: false");
+                    // Debug.Log("IsForEndCorrectPlacement: false");
                     return false;
                 }
 
             }
-            Debug.Log("IsForEndCorrectPlacement: true");
+            // Debug.Log("IsForEndCorrectPlacement: true");
             return true;
         }
         private int GetNearestLeftForLoopStart(int index)
@@ -680,4 +701,3 @@ namespace Kubs
         #endregion
     }
 }
-

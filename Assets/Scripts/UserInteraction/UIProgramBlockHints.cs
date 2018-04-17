@@ -9,12 +9,14 @@ public class UIProgramBlockHints : MonoBehaviour
     private Transform transformHint;
     private bool _onHover = false;
     private bool _animating = false;
+    private bool _changeJump = false;
     private GameObject currentGameObject;
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
     private Character _character;
     public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
     public event ProgramBlockGrabEventHandler ProgramBlockGrab;
+    private IEnumerator _moveCoroutine;
 
     [SerializeField] private GameObject CharacterPrefab;
     [SerializeField] private GameObject GrassPrefab;
@@ -57,7 +59,9 @@ public class UIProgramBlockHints : MonoBehaviour
                         _animating = true;
                         //_character.Reset();
                         _character.gameObject.SetActive(true);
-                        StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
+
+                        _moveCoroutine = MoveCharacterAfterOneSecond(programBlockType);
+                        StartCoroutine(_moveCoroutine);
                     }
                 }
                 else UIProgramBlockHintsPointer = CreateProgramBlockUIHint(programBlockType);
@@ -72,7 +76,12 @@ public class UIProgramBlockHints : MonoBehaviour
                 {
                     _character.Reset();
                 }
-                StopCoroutine("MoveCharacterAfterOneSecond");
+
+                if (_moveCoroutine != null)
+                {
+                    StopCoroutine(_moveCoroutine);
+                }
+
                 UIProgramBlockHintsPointer = transformHint.gameObject;
                 UIProgramBlockHintsPointer.SetActive(false);
             }
@@ -183,6 +192,7 @@ public class UIProgramBlockHints : MonoBehaviour
                 break;
             case ProgramBlockType.Jump:
                 _character.Jump();
+                _changeJump = !_changeJump;
                 break;
             case ProgramBlockType.RotateLeft:
                 _character.RotateLeft();
@@ -280,12 +290,30 @@ public class UIProgramBlockHints : MonoBehaviour
                         cubeOne = cubeCollection[0];
                         cubeTwo = cubeCollection[1];
                         cubeThree = cubeCollection[2];
-                        cubeOne.transform.localPosition = new Vector3(0, 0, -1f);
                         cubeOne.tag = "Grass";
-                        cubeTwo.transform.localPosition = new Vector3(0, 0, 0);
-                        cubeTwo.tag = "Hole";
-                        cubeThree.transform.localPosition = new Vector3(0, 0, 1f);
+                        // cubeTwo.tag = "Hole";
                         cubeThree.tag = "Grass";
+
+                        if (_changeJump)
+                        {
+                            cubeTwo.tag = "Grass";
+                            
+                            cubeOne.transform.localPosition = new Vector3(0, 0, -0.5f);
+                            cubeTwo.transform.localPosition = new Vector3(0, 0, 0.5f);
+                            cubeThree.transform.localPosition = new Vector3(0, 1f, 0.5f);
+
+                            var characterPosition = _character.transform.localPosition;
+                            characterPosition.z = -0.5f;
+                            _character.transform.localPosition = characterPosition;
+                        }
+                        else
+                        {
+                            cubeTwo.tag = "Hole";
+                            
+                            cubeOne.transform.localPosition = new Vector3(0, 0, -1f);
+                            cubeTwo.transform.localPosition = new Vector3(0, 0, 0);
+                            cubeThree.transform.localPosition = new Vector3(0, 0, 1f);
+                        }
                         //if (GetCharacterFromGameArea(area) != null)
                         //{
                         //    miniChar = GetCharacterFromGameArea(area);
@@ -329,7 +357,6 @@ public class UIProgramBlockHints : MonoBehaviour
         List<GameObject> cubeCollection = new List<GameObject>();
         if (area != null)
         {
-            Debug.Log("Area Null");
             foreach (Transform child in area.transform)
             {
                 if (child.tag == "Cubes" || child.tag == "Grass" || child.tag == "Hole" || child.name.Contains("Grass") || child.name.Contains("Hole"))
@@ -357,10 +384,10 @@ public class UIProgramBlockHints : MonoBehaviour
         _character.gameObject.SetActive(false);
         _character.name = "MiniCharacter";
         _character.tag = "UICharacter";
-        Debug.Log(area.name);
         _character.transform.localPosition = GetCubesFromGameArea(area)[0].transform.localPosition + new Vector3(0, 1, 0);
         _character.gameObject.SetActive(true);
         _character.OnReset += new Character.CharacterEventHandler(HandleCharReset);
+        _character.showPopup = false;
         //new WaitForSecondsRealtime(2);
         return _character;
     }
@@ -370,6 +397,12 @@ public class UIProgramBlockHints : MonoBehaviour
         //Debug.Log("HandleCharReset()");
         // new WaitForSecondsRealtime(2f);
         // Debug.Log("After 2 seconds");
+
+        if (gameObject.name.Contains("Jump") && transform.Find("UIProgramBlockHints") != null)
+        {
+            ArrangeGameArea(transform.Find("UIProgramBlockHints").gameObject);
+        }
+
         _animating = false;
     }
 

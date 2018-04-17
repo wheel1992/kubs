@@ -13,10 +13,44 @@ namespace Kubs
 		// EventManager keeps calling the first instance, even if stop listening
 		private static int _activeStage;
 
+		private GameObject _medal;
+		private GameObject _medalSilhouette;
+		private Text _text;
+		private int _shortestSolution;
+
 		// Use this for initialization
 		void Start ()
 		{
 			GetComponent<Button>().onClick.AddListener(TaskOnClick);
+
+			if (transform.childCount > 1)
+			{
+				_medal = transform.Find("Medal").gameObject;
+				_medalSilhouette = transform.Find("MedalSilhouette").gameObject;
+				_text = transform.Find("Text").GetComponent<Text>();
+				_shortestSolution = int.Parse(_text.text.Trim());
+
+				ShowMedalSilhoutte();
+			}
+		}
+
+		public void ShowMedal(int solution)
+		{
+			if (solution > _shortestSolution)
+			{
+				return;
+			}
+
+			_medal.SetActive(true);
+			_medalSilhouette.SetActive(false);
+			_text.color = Color.black;
+		}
+
+		public void ShowMedalSilhoutte()
+		{
+			_medal.SetActive(false);
+			_medalSilhouette.SetActive(true);
+			_text.color = Color.white;
 		}
 
 		private void TaskOnClick()

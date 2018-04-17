@@ -7,7 +7,6 @@ namespace Kubs
 {
     public class SnapDropZone_Block_Group : MonoBehaviour
     {
-        [SerializeField] private int maximumNumberOfSnapDropZones = 10;
         [SerializeField] private GameObject levelPrefab;
         [SerializeField] private GameObject snapDropZonePrefab;
         [SerializeField] private GameObject tempPositionObjectPrefab;
@@ -22,7 +21,6 @@ namespace Kubs
         private IList<GameObject> _zones;
         private IList<GameObject> _tempPositionObjects;
         private Stack<StackItemMoveZone> _stackMoveZones;
-        private static int _numOfSnapDropZone = 1;
         private Vector3 _prevPos;
 
         // public List<ProgramBlock> GetListOfSnappedProgramBlocks()
@@ -442,4 +440,3 @@ namespace Kubs
         // }
     }
 }
-

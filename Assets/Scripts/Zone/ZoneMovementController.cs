@@ -19,20 +19,15 @@ namespace Kubs
         private float accuracyWP = 0.1f;
         private bool moveValid;
         private GameObject zones;
-        private BoxCollider blockChainPlateBoxCollider;
         private Vector3 direction;
         public bool forward { get; set; }
 
         //Attributes for expansion & depression
-        private float _currentScale = InitScale;
         private const float TargetBigScale = 1f;
         private const float TargetSmallScale = 0.1f;
         private const float InitScale = 1f;
         private const int FramesCount = 100;
         private const float AnimationTimeSeconds = 2f;
-        private float _deltaTime = AnimationTimeSeconds / FramesCount;
-        private float _dx = (TargetBigScale - InitScale) / FramesCount;
-        private float _dxDepress = (InitScale - TargetSmallScale) / FramesCount;
         //private bool setActive = false;
 
         private GameObject Program_Block_Snap_Zone;
@@ -137,12 +132,6 @@ namespace Kubs
             {
                 // ...
             }
-
-        }
-
-        void InitBlockChainPlateBoxCollider()
-        {
-            blockChainPlateBoxCollider = gameObject.transform.Find("BlockChainPlate").GetComponent<BoxCollider>();
         }
 
         public bool MoveBlockChain()

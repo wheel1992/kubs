@@ -364,33 +364,9 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
         type: 2}
-      propertyPath: showPopup
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
-        type: 2}
-      propertyPath: HintProgramBlockPrefabs.forwardBlockPrefab
+      propertyPath: stageTriggerManager
       value: 
-      objectReference: {fileID: 1157666413697690, guid: 7f0ca5dbbdc9b0a4e93f262f93020f06,
-        type: 2}
-    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
-        type: 2}
-      propertyPath: HintProgramBlockPrefabs.JumpBlockPrefab
-      value: 
-      objectReference: {fileID: 1890968634550186, guid: 4856c757d47fafa468ba4cbc83cf4160,
-        type: 2}
-    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
-        type: 2}
-      propertyPath: HintProgramBlockPrefabs.RotateLeftBlockPrefab
-      value: 
-      objectReference: {fileID: 1624275279796936, guid: adf0896c4868463409dbe475f2e4a998,
-        type: 2}
-    - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
-        type: 2}
-      propertyPath: HintProgramBlockPrefabs.RotateRightBlockPrefab
-      value: 
-      objectReference: {fileID: 1304932599801270, guid: 661b272772493cb47a4fd4b30dd3ae12,
-        type: 2}
+      objectReference: {fileID: 481754782}
     - target: {fileID: 114768121219797824, guid: 11a59f5cda98c7140a41884c2f977922,
         type: 2}
       propertyPath: tutorialManager
@@ -506,7 +482,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 481754780}
-  - component: {fileID: 481754781}
   - component: {fileID: 481754782}
   - component: {fileID: 481754783}
   m_Layer: 0
@@ -535,18 +510,6 @@ Transform:
   m_Father: {fileID: 1531116116}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
---- !u!114 &481754781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 481754779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74d48f9d01fce924f9c2b70444b5e2c5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialManager: {fileID: 518171593}
 --- !u!114 &481754782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,6 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa9dfd9530012a4a9ac610d217a1392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialManager: {fileID: 518171593}
   autoSetNextStage: 1
   stage: 0
 --- !u!114 &481754783

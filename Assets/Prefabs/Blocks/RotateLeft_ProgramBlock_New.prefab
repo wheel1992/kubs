@@ -106,7 +106,6 @@ GameObject:
   - component: {fileID: 114772631493904516}
   - component: {fileID: 114295804295715178}
   - component: {fileID: 122194867397173090}
-  - component: {fileID: 114530365711611646}
   - component: {fileID: 114158823078842714}
   - component: {fileID: 114555453654596258}
   m_Layer: 0
@@ -168,7 +167,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1893538393160964}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -4.96, y: -0.67, z: -1.88}
+  m_LocalPosition: {x: -4.987, y: -0.67, z: -1.876}
   m_LocalScale: {x: 100, y: 102, z: 100}
   m_Children:
   - {fileID: 4709015037430826}
@@ -212,7 +211,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1624275279796936}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.04, y: 0.5, z: 4}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4609076233981710}
@@ -449,27 +448,13 @@ MonoBehaviour:
   onGrabCollisionDelay: 0
   destroyImmediatelyOnThrow: 1
   breakForce: 1500
---- !u!114 &114530365711611646
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1624275279796936}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterPrefab: {fileID: 0}
-  GrassPrefab: {fileID: 0}
-  HolePrefab: {fileID: 0}
 --- !u!114 &114555453654596258
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1624275279796936}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
   m_Name: 

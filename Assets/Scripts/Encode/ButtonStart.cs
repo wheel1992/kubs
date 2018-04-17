@@ -46,12 +46,6 @@ namespace Kubs
             GetVRTKInteractableObject().InteractableObjectTouched += new InteractableObjectEventHandler(HandleOnTouched);
             GetVRTKInteractableObject().InteractableObjectUntouched += new InteractableObjectEventHandler(HandleOnUntouched);
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        }
-
         //Testing Method
         public void buttonPressed()
         {
@@ -61,14 +55,11 @@ namespace Kubs
 
         private void OnTriggerExit(Collider other)
         {
-            //Debug.Log("OnTriggerExit");
             //gameObject.GetComponent<Renderer>().material = _defaultMaterial;
-
             // Run();
         }
         private void OnTriggerEnter(Collider other)
         {
-            //Debug.Log("OnTriggerEnter");
             //ChangeColor();
             // Debug.Log("OnTriggerEnter: " + other);
             // // if (!_isAnimating)
@@ -79,24 +70,27 @@ namespace Kubs
         }
         private void HandleOnTouched(object sender, InteractableObjectEventArgs args)
         {
-            // Debug.Log("HandleOnTouched: " + args.interactingObject);
-            if (args.interactingObject.name.CompareTo("RightController") == 0 || args.interactingObject.name.CompareTo("LeftController") == 0)
+            // Debug.Log("HandleOnTouched: " + VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Right));
+            if (VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Right) ||
+                VRTK_DeviceFinder.IsControllerOfHand(args.interactingObject, SDK_BaseController.ControllerHand.Left))
             {
                 if (!HasTouchedByController)
                 {
                     HasTouchedByController = true;
                     _audioSourceButtonPressed.Play();
+                    Run();
                     StartCoroutine(Depress());
+                    DisableHaptic();
                 }
             }
         }
         private void HandleOnUntouched(object sender, InteractableObjectEventArgs args)
         {
             // Debug.Log("HandleOnUntouched: " + args.interactingObject);
-            if (HasTouchedByController)
+            if (HasTouchedByController && !_isAnimating)
             {
                 HasTouchedByController = false;
-                Run();
+                EnableHaptic();
             }
         }
 
@@ -132,7 +126,18 @@ namespace Kubs
             var listBlocks = _zoneGroupController.CompileProgramBlocks();
             GetDecoder().Decode(listBlocks);
         }
-
+        private void DisableHaptic()
+        {
+            var haptic = GetVRTKInteractHaptics();
+            if (haptic != null)
+                haptic.strengthOnTouch = 0;
+        }
+        private void EnableHaptic()
+        {
+            var haptic = GetVRTKInteractHaptics();
+            if (haptic != null)
+                haptic.strengthOnTouch = 1;
+        }
         private void ChangeColor()
         {
             // gameObject.GetComponent<Renderer>().material.color = Color.red;
@@ -198,6 +203,10 @@ namespace Kubs
         private Decoder GetDecoder()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_LEVEL).GetComponent<Decoder>();
+        }
+        public VRTK_InteractHaptics GetVRTKInteractHaptics()
+        {
+            return GetComponent<VRTK_InteractHaptics>();
         }
         public VRTK_InteractableObject GetVRTKInteractableObject()
         {

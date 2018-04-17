@@ -12,11 +12,10 @@ namespace Kubs
         public delegate void ProgramBlockShiftEventHandler(int startZoneIndex);
         public delegate void ProgramBlockPlaceEventHandler(int startZoneIndex);
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
-        public event ProgramBlockShiftEventHandler ProgramBlockShiftRightWhenHover;
-        public event ProgramBlockShiftEventHandler ProgramBlockShiftRevert;
-        public event ProgramBlockSnapEventHandler ProgramBlockSnap;
 
+        public GameObject menu;
         public Material skybox;
+
         [SerializeField] private GameObject _forwardBlockPrefab;
         [SerializeField] private GameObject _forLoopStartBlockPrefab;
         [SerializeField] private GameObject _rotateLeftBlockPrefab;
@@ -26,7 +25,9 @@ namespace Kubs
         private AudioSource _mAudioSource;
         private ButtonStart _buttonStart;
         private GameObject _zonesObject;
-        private GameObject _menu;
+        private GameObject _rightCtrl;
+        private RadialMenuManager _rightCtrlRadialMenuManager;
+
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -49,20 +50,32 @@ namespace Kubs
             var rotateRightBlock = CreateRotateRightBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneRotateRight().ForceSnap(rotateRightBlock);
 
-            // Load tutorial
+            _rightCtrl = GetRightController();
+            _rightCtrlRadialMenuManager = GetRightControllerRadialMenuManager();
+            
+            // Load tutorial    
             Invoke("LoadTutorial", 1);
         }
         void DisableMenu()
         {
-            _menu.SetActive(false);
+            menu.SetActive(false);
         }
         void EnableMenu()
         {
-            _menu.SetActive(true);
+            menu.SetActive(true);
+            var menuDistance = 7;
+            var camera = GetVRTKHeadsetCamera();
+            var menuPos = camera.position + camera.forward * menuDistance;
+            menu.transform.position = menuPos;
+            menu.transform.rotation = camera.rotation;
         }
         void HandleMenuDisable(object sender)
         {
             DisableMenu();
+            if (_rightCtrlRadialMenuManager != null)
+            {
+                _rightCtrlRadialMenuManager.HandleMenuDisable();
+            }
         }
         void HandleMenuEnable(object sender)
         {
@@ -100,7 +113,7 @@ namespace Kubs
 
             if (sceneName.Equals(Constant.NAME_SCENE_MENU_SCENE))
             {
-                _menu = GetMenu();
+                menu = GetMenu();
                 DisableMenu();
             }
         }
@@ -115,11 +128,7 @@ namespace Kubs
             EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
             EventManager.StopListening(Constant.EVENT_NAME_MENU_ENABLE, HandleMenuEnable);
         }
-        // Update is called once per frame
-        void Update()
-        {
-            // ...
-        }
+
         GameObject CreateForwardBlock(Vector3 position)
         {
             var forwardBlock = (GameObject)Instantiate(
@@ -200,6 +209,21 @@ namespace Kubs
         GameObject GetMenu()
         {
             return GameObject.FindGameObjectWithTag(Constant.TAG_CANVAS_MENU);
+        }
+        GameObject GetRightController()
+        {
+            return GameObject.Find("RightController");
+        }
+        RadialMenuManager GetRightControllerRadialMenuManager()
+        {
+            if (_rightCtrl == null) { return null; }
+            var radialMenuPanel = _rightCtrl.transform.Find("RadialMenu/RadialMenuUI/Panel");
+            if (radialMenuPanel == null) { return null; }
+            return radialMenuPanel.GetComponent<RadialMenuManager>();
+        }
+        Transform GetVRTKHeadsetCamera()
+        {
+            return VRTK_DeviceFinder.HeadsetCamera();
         }
         VRTK_SnapDropZone GetVRTKSnapDropZoneCloneForward()
         {

@@ -11,6 +11,7 @@ namespace Kubs
         public delegate void CharacterEventHandler();
         public event CharacterEventHandler OnReset;
 
+        public StageTriggerManager stageTriggerManager;
         public TutorialManager tutorialManager;
 
         // Components
@@ -20,7 +21,6 @@ namespace Kubs
         // Animation
         private bool _isAnimating;
         private Queue<ProgramBlockType> _queue = new Queue<ProgramBlockType>();
-        private ProgramBlockType _type;
 
         // Position
         private Vector3 startPos;
@@ -46,8 +46,6 @@ namespace Kubs
         private AudioSource _audioSourceWalk;
         private AudioSource _audioSourceChewFood;
         private AudioSource _audioSourceJump;
-
-        private GameObject _zonesObject;
 
         public HintPrefabs HintProgramBlockPrefabs;
         private bool IsShowingPopup = false;
@@ -149,9 +147,10 @@ namespace Kubs
                 */
             }
 
-            _zonesObject = GetZonesGameObject();
-
-            EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            if (gameObject.tag != "UICharacter")
+            {
+                EventManager.TriggerEvent(Constant.EVENT_NAME_CHARACTER_DID_START, this);
+            }
         }
 
         // Update is called once per frame
@@ -167,7 +166,7 @@ namespace Kubs
                 // Vector3 direction = VRTK_DeviceFinder.HeadsetCamera().position - child.transform.position;
                 // direction.z -= 0;
                 // child.transform.rotation = Quaternion.Slerp(child.transform.rotation, Quaternion.LookRotation(direction), 100f * Time.deltaTime);
-                Debug.Log("LookAtRotation");
+                // Debug.Log("LookAtRotation");
                 child.transform.LookAt(VRTK_DeviceFinder.HeadsetCamera());
                 child.transform.Rotate(0f, -90f, -90f);
 
@@ -248,7 +247,7 @@ namespace Kubs
                 {
                     if (tutorialManager != null)
                     {
-                        tutorialManager.ShowStage(collectableBlock.nextStage);
+                        tutorialManager.ShowStage(collectableBlock.nextStage, false);
 
                         var tutorialBlock = collectableBlock.GetComponent<TutorialBlock>();
                         if (tutorialBlock == null || tutorialBlock.stage != tutorialManager.lastStage)
@@ -282,7 +281,6 @@ namespace Kubs
             trajectoryHeight = 0;
 
             Set(Animations.Move);
-            _type = ProgramBlockType.Forward;
 
             _audioSourceWalk.Play();
 
@@ -311,17 +309,16 @@ namespace Kubs
             {
                 // Jump up
                 endPos = transform.position + (transform.forward + transform.up) * _scale;
-                trajectoryHeight = 1f;
+                trajectoryHeight = 1.2f * _scale;
             }
             else
             {
                 // Jump over
                 endPos = transform.position + (transform.forward + transform.forward) * _scale;
-                trajectoryHeight = 0.5f;
+                trajectoryHeight = 0.5f * _scale;
             }
 
             Set(Animations.Jump);
-            _type = ProgramBlockType.Jump;
 
             _audioSourceJump.Play();
 
@@ -348,7 +345,6 @@ namespace Kubs
             endRot = Quaternion.LookRotation(-transform.right);
 
             Set(Animations.Move_L);
-            _type = ProgramBlockType.RotateLeft;
 
             StartCoroutine("UpdateRotation");
             return true;
@@ -373,7 +369,6 @@ namespace Kubs
             endRot = Quaternion.LookRotation(transform.right);
 
             Set(Animations.Move_R);
-            _type = ProgramBlockType.RotateRight;
 
             StartCoroutine("UpdateRotation");
             return true;
@@ -432,16 +427,17 @@ namespace Kubs
             Set(Animations.Idle);
             Stop();
 
+            DestroyPopupIfAny();
+
             if (OnReset != null)
             {
                 OnReset();
             }
 
-            //if (_zonesObject != null)
-            //{
-            //    _zonesObject.SetActive(true);
-            //    // _zonesObject.GetComponent<ZoneMovementController>().MoveBlockChain();
-            //}
+            if (stageTriggerManager != null)
+            {
+                stageTriggerManager.Reset();
+            }
         }
 
         private void SetResetFlag()
@@ -467,7 +463,10 @@ namespace Kubs
 
         private void Set(Animations animation)
         {
-            _animator.SetInteger("animation", (int)animation);
+            if (gameObject.transform.parent.gameObject.activeSelf)
+            {
+                _animator.SetInteger("animation", (int)animation);
+            }
         }
 
         private IEnumerator UpdatePosition()
@@ -476,7 +475,7 @@ namespace Kubs
 
             var incrementor = 0f;
 
-            while (transform.position != endPos)
+            while (Vector3.SqrMagnitude(transform.position - endPos) > 0.00000001)
             {
                 // https://answers.unity.com/questions/8318/throwing-object-with-acceleration-equationscript.html
                 // calculate current time within our lerping time range
@@ -487,6 +486,12 @@ namespace Kubs
                 currentPos.y += trajectoryHeight * Mathf.Sin(Mathf.Clamp01(incrementor) * Mathf.PI);
                 // finally assign the computed position to our gameObject:
                 transform.position = currentPos;
+
+                if (Vector3.SqrMagnitude(transform.position - endPos) < 0.00000001)
+                {
+                    break;
+                }
+
                 yield return null;
             }
 

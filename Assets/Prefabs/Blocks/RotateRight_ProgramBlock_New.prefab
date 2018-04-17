@@ -75,7 +75,6 @@ GameObject:
   - component: {fileID: 114241291031732844}
   - component: {fileID: 114034862047136802}
   - component: {fileID: 122209182406187592}
-  - component: {fileID: 114720661083014070}
   - component: {fileID: 114666542404291098}
   - component: {fileID: 114663800647100334}
   m_Layer: 0
@@ -181,7 +180,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1304932599801270}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.18, y: 0.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4965619953868700}
@@ -248,7 +247,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1050289801362828}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -6.77, y: -0.68, z: -3.23}
+  m_LocalPosition: {x: -6.77, y: -0.68, z: -3.189}
   m_LocalScale: {x: 100, y: 102, z: 100}
   m_Children:
   - {fileID: 4029326203721994}
@@ -460,7 +459,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1304932599801270}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
   m_Name: 
@@ -493,20 +492,6 @@ MonoBehaviour:
   strengthOnUse: 0
   durationOnUse: 0
   intervalOnUse: 0.05
---- !u!114 &114720661083014070
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1304932599801270}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 906d3faa6a1c9944b8f52c59b7115e4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterPrefab: {fileID: 0}
-  GrassPrefab: {fileID: 0}
-  HolePrefab: {fileID: 0}
 --- !u!114 &114721545595761450
 MonoBehaviour:
   m_ObjectHideFlags: 1

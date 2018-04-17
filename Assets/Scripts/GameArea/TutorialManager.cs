@@ -61,7 +61,7 @@ namespace Kubs
 			StartCoroutine(TriggerReadOnNextFrame());
 		}
 
-		public void ShowStage(int stage)
+		public void ShowStage(int stage, bool hidePreviousStages = true)
 		{
 			if (stage == 0)
 			{
@@ -71,7 +71,7 @@ namespace Kubs
 			var prevStage = _activeStage;
 			_activeStage = stage;
 
-			if (stage < prevStage)
+			if (stage < prevStage && hidePreviousStages)
 			{
 				HideStagesInRange(stage, prevStage);
 			}

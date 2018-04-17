@@ -67,10 +67,6 @@ namespace Kubs
             _predicterCtrl.OnPredicterTriggerEnter += new ZoneHintPredicterController.ZoneHintPredicterEventHandler(HandlePredicterTriggerEnter);
             _predicterCtrl.OnPredicterTriggerExit += new ZoneHintPredicterController.ZoneHintPredicterEventHandler(HandlePredicterTriggerExit);
         }
-        void Update()
-        {
-
-        }
 
         #endregion
 

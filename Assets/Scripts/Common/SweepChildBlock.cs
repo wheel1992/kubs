@@ -12,18 +12,6 @@ namespace Kubs
         public event TriggerEventHandler OnEnter;
         public event TriggerEventHandler OnExit;
 
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         private void OnTriggerExit(Collider other)
         {
             //Debug.Log("SweepChildBlock OnTriggerExit");
