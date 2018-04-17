@@ -9,10 +9,12 @@ namespace Kubs
     {
         public int lastStage;
         public bool onShowTutorialArrow { get; set; }
+        public GameObject arrowPointer { set; get; }
 
         private int _activeStage = 1;
         private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
-        public GameObject arrowPointer { set; get; }
+
+        [SerializeField] GameObject ArrowPrefab;
 
         //For purpose of UI guide Arrows for Demonstration
         private void Start()
@@ -28,8 +30,11 @@ namespace Kubs
 
         private GameObject CreateArrowPointer(Vector3 position)
         {
-            UIHintsArrowPointer uIHintsArrowPointer = new UIHintsArrowPointer();
-            return uIHintsArrowPointer.CreateArrowPointer(position);
+            GameObject tempArrowPointer = Instantiate(ArrowPrefab);
+            tempArrowPointer.transform.position = position;
+            tempArrowPointer.AddComponent<UIHintsArrowPointer>();
+            tempArrowPointer.name = "UIHintsArrowPointer";
+            return tempArrowPointer;
         }
 
         public void CollectChildren(Transform parent)

@@ -5,7 +5,8 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ArrowPrefab: {fileID: 100004, guid: e9f718403f324a54a8fcc0ffe4f35622, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
