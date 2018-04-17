@@ -369,15 +369,23 @@ namespace VRTK
 
         protected virtual void RemoveAllButtons()
         {
-            if (menuButtons == null)
+            // if (menuButtons == null)
+            // {
+            //     menuButtons = new List<GameObject>();
+            // }
+            // for (int i = 0; i < menuButtons.Count; i++)
+            // {
+            //     DestroyImmediate(menuButtons[i]);
+            // }
+            // menuButtons = new List<GameObject>();
+            if (menuButtons != null)
             {
-                menuButtons = new List<GameObject>();
+                for (int i = 0; i < menuButtons.Count; i++)
+                {
+                    DestroyImmediate(menuButtons[i]);
+                }
+                menuButtons.Clear();
             }
-            for (int i = 0; i < menuButtons.Count; i++)
-            {
-                DestroyImmediate(menuButtons[i]);
-            }
-            menuButtons = new List<GameObject>();
         }
     }
 }

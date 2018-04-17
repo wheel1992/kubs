@@ -24,6 +24,7 @@ namespace Kubs
 
         public void HandleMenuDisable()
         {
+            Debug.Log("HandleMenuDisable");
             var menuPointer = GetRadialMenuButton(IndexPointer);
             menuPointer.ButtonIcon = iconTeleport;
             _radialMenu.RegenerateButtons();
@@ -33,6 +34,9 @@ namespace Kubs
         }
         public void HandleMenuEnable()
         {
+            var menuPointer = GetRadialMenuButton(IndexPointer);
+            menuPointer.ButtonIcon = iconPointer;
+            _radialMenu.RegenerateButtons();
         }
 
         #region Pointer Events
@@ -57,26 +61,15 @@ namespace Kubs
             if (isMenuEnabled)
             {
                 // Current enable, click to disable
+                isMenuEnabled = false;
                 EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
             }
             else
             {
                 // Current disable, click to enable
+                isMenuEnabled = true;
                 EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_ENABLE, null);
             }
-
-            isMenuEnabled = !isMenuEnabled;
-
-            var menuPointer = GetRadialMenuButton(IndexPointer);
-            if (isMenuEnabled)
-            {
-                menuPointer.ButtonIcon = iconPointer;
-            }
-            else
-            {
-                menuPointer.ButtonIcon = iconTeleport;
-            }
-            _radialMenu.RegenerateButtons();
         }
         #endregion
 
@@ -114,6 +107,10 @@ namespace Kubs
                 if (isPointerEnabled)
                 {
                     EnablePointer(false);
+                }
+                else
+                {
+                    DisablePointer();
                 }
             }
             else
