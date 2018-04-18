@@ -13,6 +13,7 @@ namespace Kubs
 
         private int _activeStage = 1;
         private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
+        private ButtonStart _buttonStart;
 
         [SerializeField] GameObject ArrowPrefab;
 
@@ -30,6 +31,9 @@ namespace Kubs
 			} else {
 				arrowPointer = GameObject.Find("UIHintsArrowPointer");
 			}
+
+            _buttonStart = GetButtonStart();
+            _buttonStart.OnTouched += new ButtonStart.ButtonEventHandler(HandleButtonStartOnTouched);
         }
 
 		void OnDestroy() {
@@ -129,6 +133,20 @@ namespace Kubs
 				uiPointer.BeginFloat();
             }
         }
+        public void SetArrowPointerPositionToButtonStart()
+        {
+            Debug.Log("Set arrow to button start!");
+            if (_buttonStart == null) { return; }
+            var targetPos = _buttonStart.transform.position + new Vector3(0, 2f, 0);
+            // arrowPointer.StopAllCoroutines();
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
+            arrowPointer.transform.position = targetPos;
+
+			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
+        }
         public void SetArrowPointerPositionToZone()
         {
             Debug.Log("Set arrow to zone there!");
@@ -136,7 +154,7 @@ namespace Kubs
             // arrowPointer.StopAllCoroutines();
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
-			
+
 			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
 			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
@@ -156,6 +174,13 @@ namespace Kubs
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
+        }
+        private void HandleButtonStartOnTouched()
+        {
+            // Button Start is touched
+            // Character is playing
+            onShowTutorialArrow = false;
+            DestroyArrowPointer();
         }
 
         private void HideStagesInRange(int start, int end)
@@ -191,6 +216,11 @@ namespace Kubs
         {
             return GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
         }
-
+        private ButtonStart GetButtonStart()
+        {
+            var go = GameObject.Find("ButtonStart_New");
+            if (go == null) { return null; }
+            return go.GetComponent<ButtonStart>();
+        }
     }
 }

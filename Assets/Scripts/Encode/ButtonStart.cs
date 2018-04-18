@@ -13,6 +13,9 @@ namespace Kubs
     //}
     public class ButtonStart : MonoBehaviour
     {
+        public delegate void ButtonEventHandler();
+        public event ButtonEventHandler OnTouched;
+
         public AudioClip audioClipButtonPressed;
         private AudioSource _audioSourceButtonPressed;
         private VRTK_Button_UnityEvents buttonEvents;
@@ -76,6 +79,11 @@ namespace Kubs
             {
                 if (!HasTouchedByController)
                 {
+                    if (OnTouched != null)
+                    {
+                        OnTouched();
+                    }
+
                     HasTouchedByController = true;
                     _audioSourceButtonPressed.Play();
                     Run();

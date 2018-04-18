@@ -6,6 +6,9 @@ using VRTK;
 
 public class UIProgramBlockHints : MonoBehaviour
 {
+    public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
+    public event ProgramBlockGrabEventHandler ProgramBlockGrab;
+
     private Transform transformHint;
     private bool _onHover = false;
     private bool _animating = false;
@@ -33,8 +36,6 @@ public class UIProgramBlockHints : MonoBehaviour
     }
     private TutorialManager __tutorialManager;
     private Character _character;
-    public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
-    public event ProgramBlockGrabEventHandler ProgramBlockGrab;
     private IEnumerator _moveCoroutine;
 
     [SerializeField] private GameObject CharacterPrefab;
@@ -251,8 +252,9 @@ public class UIProgramBlockHints : MonoBehaviour
             programBlock.Type == ProgramBlockType.Forward && // Snapped block is Forward
             !programBlock.IsInSnapDropZoneClone()) // Snap not in SnapDropZoneClone
         {
-            _tutorialManager.onShowTutorialArrow = false;
-            _tutorialManager.DestroyArrowPointer();
+            //_tutorialManager.onShowTutorialArrow = false;
+            // _tutorialManager.DestroyArrowPointer();
+            _tutorialManager.SetArrowPointerPositionToButtonStart();
             HideGripTooltip();
         }
 
@@ -480,7 +482,6 @@ public class UIProgramBlockHints : MonoBehaviour
         }
 
     }
-
     private Character GetCharacterFromGameArea(GameObject area)
     {
         Character miniChar = new Character();
