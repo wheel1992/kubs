@@ -4,4 +4,31 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/KubScene.unity
+    guid: 91349396fd01b42a99a46439512478f0
+  - enabled: 1
+    path: Assets/Scenes/KubScene0.unity
+    guid: 9f35c3d267e5d3d4fbc765ace5abf331
+  - enabled: 1
+    path: Assets/Scenes/KubScene1.unity
+    guid: f82dcdb2616d87647ab299cb5943fd05
+  - enabled: 1
+    path: Assets/Scenes/KubScene2.unity
+    guid: 36a46b5229d951c4a8d17125cbd4d5d0
+  - enabled: 1
+    path: Assets/Scenes/KubScene3.unity
+    guid: 9e20f808aae04574d99ade75709991f0
+  - enabled: 1
+    path: Assets/Scenes/KubScene4.unity
+    guid: a5daacb54f4bb524695e4ef37a306bba
+  - enabled: 1
+    path: Assets/Scenes/KubSceneWin.unity
+    guid: 6ad76fef19b4c754ba9a6a692f539793
+  - enabled: 1
+    path: Assets/Scenes/MenuScene.unity
+    guid: 21774215d6cba904c987e1dc651254a4
+  - enabled: 1
+    path: Assets/Scenes/Showcase_preview.unity
+    guid: d7ebbd80c09164047a9d239076b329cb
