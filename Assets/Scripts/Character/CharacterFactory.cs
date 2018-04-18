@@ -36,6 +36,7 @@ namespace Kubs
 
 			var go = Instantiate(prefab, transform);
 			go.SetActive(true);
+			go.name = "Character";
 
 			var character = go.AddComponent<Character>();
 			character.transform.localPosition = placeholder.transform.localPosition;
