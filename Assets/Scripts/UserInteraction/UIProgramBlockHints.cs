@@ -260,7 +260,7 @@ public class UIProgramBlockHints : MonoBehaviour
             if (activeStage == 1 && programBlock.Type == ProgramBlockType.Forward)
             {
                 // Move arrow pointer to ButtonStart
-                _tutorialManager._tutorialManager.SetArrowPointerPositionToButtonStart();
+                _tutorialManager.SetArrowPointerPositionToButtonStart();
             }
             else if (activeStage == 4 && programBlock.Type == ProgramBlockType.ForLoopStart)
             {

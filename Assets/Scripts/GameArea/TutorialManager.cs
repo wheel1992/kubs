@@ -31,7 +31,9 @@ namespace Kubs
                 arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
             }
             else if (_activeStage == 4) {
-                arrowPos = SetArrowPointerPositionToSnapCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
+                arrowPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
+            } else {
+                return;
             }
 
 			if (GameObject.Find("UIHintsArrowPointer") == null) {
