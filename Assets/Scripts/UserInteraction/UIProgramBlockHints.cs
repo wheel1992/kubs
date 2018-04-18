@@ -175,7 +175,8 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // TEST
         Debug.Log("HandleUnTouch");
-        if (_tutorialManager != null && _tutorialManager.onShowTutorialArrow)
+        if (_tutorialManager == null) { return; }
+        if (_tutorialManager.onShowTutorialArrow)
         {
             var activeStage = _tutorialManager.GetCurrentActiveStage();
             // Either current tutorial stage = 1 & programBlock is Forward
@@ -254,6 +255,7 @@ public class UIProgramBlockHints : MonoBehaviour
         if (programBlock == null) { return; }
         if (programBlock.IsInSnapDropZoneClone()) { return; }
 
+        if (_tutorialManager == null) { return; }
         if (_tutorialManager.onShowTutorialArrow)
         {
             var activeStage = _tutorialManager.GetCurrentActiveStage();
