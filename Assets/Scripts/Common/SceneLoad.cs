@@ -14,6 +14,7 @@ namespace Kubs
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
 
         public GameObject menu;
+        public GameObject characterManager;
         public Material skybox;
 
         [SerializeField] private GameObject _forwardBlockPrefab;
@@ -27,7 +28,8 @@ namespace Kubs
         private GameObject _zonesObject;
         private GameObject _rightCtrl;
         private RadialMenuManager _rightCtrlRadialMenuManager;
-
+        
+    
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
@@ -52,13 +54,26 @@ namespace Kubs
 
             _rightCtrl = GetRightController();
             _rightCtrlRadialMenuManager = GetRightControllerRadialMenuManager();
-            
+
+            characterManager = GetCharacterManager();
+
             // Load tutorial    
             Invoke("LoadTutorial", 1);
+        }
+        void DisableCharacterManager()
+        {
+            characterManager.SetActive(false);
         }
         void DisableMenu()
         {
             menu.SetActive(false);
+        }
+        void EnableCharacterManager()
+        {
+            characterManager.SetActive(true);
+            var menuPos = menu.transform.position;
+            characterManager.transform.position = new Vector3(menuPos.x, menuPos.y, menuPos.z);
+            characterManager.transform.rotation = menu.transform.rotation;
         }
         void EnableMenu()
         {
@@ -69,9 +84,11 @@ namespace Kubs
             menu.transform.position = menuPos;
             menu.transform.rotation = camera.rotation;
         }
+       
         void HandleMenuDisable(object sender)
         {
             DisableMenu();
+            DisableCharacterManager();
             if (_rightCtrlRadialMenuManager != null)
             {
                 _rightCtrlRadialMenuManager.HandleMenuDisable();
@@ -80,6 +97,7 @@ namespace Kubs
         void HandleMenuEnable(object sender)
         {
             EnableMenu();
+            EnableCharacterManager();
             if (_rightCtrlRadialMenuManager != null)
             {
                 _rightCtrlRadialMenuManager.HandleMenuEnable();
@@ -197,6 +215,10 @@ namespace Kubs
             block.Type = ProgramBlockType.RotateRight;
 
             return rotateRightBlock;
+        }
+        GameObject GetCharacterManager()
+        {
+            return GameObject.Find("CharacterManager");
         }
         ProgramBlock GetForLoopStartProgramBlock()
         {
