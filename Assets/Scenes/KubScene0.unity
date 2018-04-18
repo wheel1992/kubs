@@ -526,8 +526,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialManager: {fileID: 518171593}
-  autoSetNextStage: 1
-  stage: 0
+  autoSetNextStage: 0
+  stage: 1
 --- !u!114 &481754783
 MonoBehaviour:
   m_ObjectHideFlags: 0

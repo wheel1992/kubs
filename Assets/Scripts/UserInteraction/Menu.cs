@@ -17,7 +17,7 @@ namespace Kubs
 
 		public void ShowMedal(int stage)
 		{
-			if (stage == 0)
+			if (stage <= 0)
 			{
 				return;
 			}
