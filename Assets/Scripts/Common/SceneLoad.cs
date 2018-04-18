@@ -31,6 +31,7 @@ namespace Kubs
         void Awake()
         {
             _mAudioSource = GetComponent<AudioSource>();
+            _mAudioSource.volume = 0.3f;
             _mAudioSource.Play();
         }
         void Start()

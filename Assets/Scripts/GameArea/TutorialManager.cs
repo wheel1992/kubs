@@ -31,32 +31,45 @@ namespace Kubs
             //    var uiProgramBlockHints = new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
             onShowTutorialArrow = true;
 
-            Vector3 arrowPos;
-            if (_activeStage == 1) {
-                arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
-            }
-            else if (_activeStage == 4) {
-                arrowPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
-            } else {
-                return;
-            }
+            Vector3 arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
+            // if (_activeStage == 1)
+            // {
+            //     arrowPos = 
+            // }
+            // else if (_activeStage == 4)
+            // {
+            //     arrowPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
+            // }
+            // else
+            // {
+            //     return;
+            // }
 
-			if (GameObject.Find("UIHintsArrowPointer") == null) {
-				arrowPointer = CreateArrowPointer(arrowPos);
-			} else {
-				arrowPointer = GameObject.Find("UIHintsArrowPointer");
-			}
+            if (GameObject.Find("UIHintsArrowPointer") == null)
+            {
+                arrowPointer = CreateArrowPointer(arrowPos);
+            }
+            else
+            {
+                arrowPointer = GameObject.Find("UIHintsArrowPointer");
+            }
 
             _buttonStart = GetButtonStart();
             _buttonStart.OnTouched += new ButtonStart.ButtonEventHandler(HandleButtonStartOnTouched);
 
             _audioSources = new List<AudioSource>();
             InitAudioClips();
+
+            if(_activeStage == 1) {
+                StopAllAudioSources();
+                _audioSourceTutorialIntroduction.Play();
+            }
         }
 
-		void OnDestroy() {
-			Destroy(arrowPointer);
-		}
+        void OnDestroy()
+        {
+            Destroy(arrowPointer);
+        }
 
         private GameObject CreateArrowPointer(Vector3 position)
         {
@@ -121,14 +134,25 @@ namespace Kubs
 
             EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
 
-            if (_activeStage == 1) {
+            if (_activeStage == 1)
+            {
                 StopAllAudioSources();
                 _audioSourceTutorialIntroduction.Play();
+
+                onShowTutorialArrow = true;
+                SetArrowPointerPositionToSnapCloneForward();
             }
             else if (_activeStage == 4)
             {
                 StopAllAudioSources();
                 _audioSourceTutorialStageFour.Play();
+
+                onShowTutorialArrow = true;
+                SetArrowPointerPositionToSnapCloneForStartEnd();
+            }
+            else
+            {
+                onShowTutorialArrow = false;
             }
         }
 
@@ -159,9 +183,9 @@ namespace Kubs
         {
             if (arrowPointer != null)
             {
-				var uiPointer = arrowPointer.GetComponent<UIHintsArrowPointer>();
+                var uiPointer = arrowPointer.GetComponent<UIHintsArrowPointer>();
                 uiPointer.Show();
-				uiPointer.BeginFloat();
+                uiPointer.BeginFloat();
             }
         }
         public void SetArrowPointerPositionToButtonStart()
@@ -173,8 +197,8 @@ namespace Kubs
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
 
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
         }
@@ -186,8 +210,8 @@ namespace Kubs
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
 
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
@@ -200,8 +224,8 @@ namespace Kubs
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
 
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
@@ -214,8 +238,8 @@ namespace Kubs
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
 
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
         }
@@ -224,7 +248,8 @@ namespace Kubs
             // Button Start is touched
             // Character is playing
             onShowTutorialArrow = false;
-            DestroyArrowPointer();
+            // DestroyArrowPointer();
+            HideArrowPointer();
         }
 
         private void HideStagesInRange(int start, int end)
@@ -255,7 +280,8 @@ namespace Kubs
 
             _audioSources.Add(_audioSourceTutorialStageFour);
         }
-        private void StopAllAudioSources() {
+        private void StopAllAudioSources()
+        {
             if (_audioSources == null || _audioSources.Count == 0) { return; }
             foreach (var source in _audioSources)
             {

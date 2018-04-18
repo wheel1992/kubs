@@ -14,7 +14,7 @@ public class UIProgramBlockHints : MonoBehaviour
     private bool _animating = false;
     private bool _changeJump = false;
     private GameObject currentGameObject;
-    private float scaleFactor = 0.3f;
+    private float scaleFactor = 0.5f;
     private GameObject UIProgramBlockHintsPointer;
     private GameObject rightControllerTooltip;
     private GameObject gripTooltip;
@@ -201,8 +201,9 @@ public class UIProgramBlockHints : MonoBehaviour
     void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
-
+        Debug.Log("HandleOnGrab");
         if (_tutorialManager == null) { return; }
+         Debug.Log("HandleOnGrab: " + _tutorialManager.onShowTutorialArrow);
         if (_tutorialManager.onShowTutorialArrow)
         {
             var activeStage = _tutorialManager.GetCurrentActiveStage();
@@ -267,7 +268,8 @@ public class UIProgramBlockHints : MonoBehaviour
             else if (activeStage == 4 && programBlock.Type == ProgramBlockType.ForLoopStart)
             {
                 // Remove arrow pointer
-                _tutorialManager.DestroyArrowPointer();
+                _tutorialManager.onShowTutorialArrow = false;
+                _tutorialManager.HideArrowPointer();
             }
             HideGripTooltip();
         }
@@ -319,7 +321,7 @@ public class UIProgramBlockHints : MonoBehaviour
                     UIProgramBlockHints = CreateMiniGameArea(1, "Program_Block_SnapDropZone_Clone_RotateRight");
                     break;
                 default:
-                    break;
+                    return null;
             }
         }
         //Instantiate Char
@@ -332,7 +334,7 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // _character.Reset();
         // StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
-        UIProgramBlockHints.transform.localEulerAngles = new Vector3(0, 80, 0); // new Vector3(0, 45, 0);
+        UIProgramBlockHints.transform.localEulerAngles = new Vector3(0, 45, 0);
         return UIProgramBlockHints;
         // _animating = false;
     }
