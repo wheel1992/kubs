@@ -14,7 +14,19 @@ namespace Kubs
         public delegate void ProgramBlockSnapEventHandler(GameObject block, int zoneId);
 
         public GameObject menu;
-        public GameObject characterManager;
+        public GameObject characterManager
+        {
+            get
+            {
+                if (_characterManager == null)
+                {
+                    _characterManager = GetCharacterManager();
+                }
+
+                return _characterManager;
+            }
+        }
+        private GameObject _characterManager;
         public Material skybox;
 
         [SerializeField] private GameObject _forwardBlockPrefab;
@@ -38,6 +50,8 @@ namespace Kubs
         }
         void Start()
         {
+            SceneManager.LoadScene("Showcase_preview", LoadSceneMode.Additive);
+
             var forwardBlock = CreateForwardBlock(new Vector3(0, 0, 0));
             GetVRTKSnapDropZoneCloneForward().ForceSnap(forwardBlock);
 
@@ -56,7 +70,7 @@ namespace Kubs
             _rightCtrl = GetRightController();
             _rightCtrlRadialMenuManager = GetRightControllerRadialMenuManager();
 
-            characterManager = GetCharacterManager();
+            // characterManager = GetCharacterManager();
 
             // Load tutorial    
             Invoke("LoadTutorial", 1);
