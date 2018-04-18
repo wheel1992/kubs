@@ -22,7 +22,8 @@ namespace Kubs
             sceneName = sceneName == CHARACTER_STAGE ? STAGE_PREFIX : sceneName;
 
             var stageString = sceneName.Substring(STAGE_PREFIX.Length);
-            return stageString == "" ? -1 : int.Parse(stageString);
+            int stage;
+            return stageString == "" || !int.TryParse(stageString, out stage) ? -1 : stage;
         }
 
         private static int? TryGetActiveStage()
@@ -78,6 +79,7 @@ namespace Kubs
 			ResetZones(nextScene);
 
             // Unload the previous Scene
+            SceneManager.SetActiveScene(nextScene);
             SceneManager.UnloadSceneAsync(currentScene);
 
             EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
