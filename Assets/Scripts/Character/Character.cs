@@ -106,6 +106,11 @@ namespace Kubs
 
             InitAudioClips();
 
+            if (_rigidbody == null)
+            {
+                _rigidbody = gameObject.AddComponent<Rigidbody>();
+            }
+
             if (_isDebug)
             {
                 // Test blockchain movement

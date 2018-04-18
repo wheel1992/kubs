@@ -17,8 +17,15 @@ namespace Kubs
 				return bearPrefab.activeSelf ? bearPrefab :
 						bunnyPrefab.activeSelf ? bunnyPrefab :
 						catPrefab.activeSelf ? catPrefab :
-						null;
+						_activePrefab;
 			}
+		}
+		private GameObject _activePrefab;
+
+		void Start()
+		{
+			// Default;
+			_activePrefab = bearPrefab;
 		}
 	}
 }
