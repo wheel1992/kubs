@@ -83,10 +83,10 @@ namespace Kubs
 			boxCollider.size = placeholder.GetComponent<BoxCollider>().size;
 
 			// Copy audio sources
-			// ...
+			character.CopyAudio(placeholder.GetComponent<Character>());
 
 			// Copy popups
-			// ...
+			character.CopyPopups(placeholder.GetComponent<Character>());
 		}
 	}
 }

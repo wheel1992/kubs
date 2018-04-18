@@ -567,5 +567,19 @@ namespace Kubs
         {
             return GameObject.Find("Zones");
         }
+
+        public void CopyAudio(Character character)
+        {
+            this.audioClipChewFood = character.audioClipChewFood;
+            this.audioClipJump = character.audioClipJump;
+            this.audioClipWalk = character.audioClipWalk;
+
+            InitAudioClips();
+        }
+
+        public void CopyPopups(Character character)
+        {
+            this.HintProgramBlockPrefabs = character.HintProgramBlockPrefabs;
+        }
     }
 }
