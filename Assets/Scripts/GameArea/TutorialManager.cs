@@ -16,7 +16,12 @@ namespace Kubs
         private ButtonStart _buttonStart;
 
         [SerializeField] GameObject ArrowPrefab;
+        [SerializeField] AudioClip audioClipTutorialIntroduction;
+        [SerializeField] AudioClip audioClipTutorialStageFour;
 
+        private AudioSource _audioSourceTutorialIntroduction;
+        private AudioSource _audioSourceTutorialStageFour;
+        private List<AudioSource> _audioSources;
         //For purpose of UI guide Arrows for Demonstration
         private void Start()
         {
@@ -44,6 +49,9 @@ namespace Kubs
 
             _buttonStart = GetButtonStart();
             _buttonStart.OnTouched += new ButtonStart.ButtonEventHandler(HandleButtonStartOnTouched);
+
+            _audioSources = new List<AudioSource>();
+            InitAudioClips();
         }
 
 		void OnDestroy() {
@@ -112,6 +120,16 @@ namespace Kubs
             }
 
             EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
+
+            if (_activeStage == 1) {
+                StopAllAudioSources();
+                _audioSourceTutorialIntroduction.Play();
+            }
+            else if (_activeStage == 4)
+            {
+                StopAllAudioSources();
+                _audioSourceTutorialStageFour.Play();
+            }
         }
 
         public void TransferComponent(GameObject from, GameObject to)
@@ -217,6 +235,31 @@ namespace Kubs
                 {
                     block.Shrink();
                 }
+            }
+        }
+        private void InitAudioClips()
+        {
+            _audioSourceTutorialIntroduction = gameObject.AddComponent<AudioSource>();
+            _audioSourceTutorialIntroduction.clip = audioClipTutorialIntroduction;
+            _audioSourceTutorialIntroduction.loop = false;
+            _audioSourceTutorialIntroduction.playOnAwake = false;
+            _audioSourceTutorialIntroduction.volume = 1.0f;
+
+            _audioSources.Add(_audioSourceTutorialIntroduction);
+
+            _audioSourceTutorialStageFour = gameObject.AddComponent<AudioSource>();
+            _audioSourceTutorialStageFour.clip = audioClipTutorialStageFour;
+            _audioSourceTutorialStageFour.loop = false;
+            _audioSourceTutorialStageFour.playOnAwake = false;
+            _audioSourceTutorialStageFour.volume = 1.0f;
+
+            _audioSources.Add(_audioSourceTutorialStageFour);
+        }
+        private void StopAllAudioSources() {
+            if (_audioSources == null || _audioSources.Count == 0) { return; }
+            foreach (var source in _audioSources)
+            {
+                source.Stop();
             }
         }
 

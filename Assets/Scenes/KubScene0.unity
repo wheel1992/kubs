@@ -316,7 +316,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4195697654101576, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4195697654101576, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
       propertyPath: m_LocalPosition.y
@@ -324,7 +324,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4195697654101576, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.789
       objectReference: {fileID: 0}
     - target: {fileID: 4195697654101576, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
       propertyPath: m_LocalRotation.x
@@ -372,6 +372,10 @@ Prefab:
       propertyPath: tutorialManager
       value: 
       objectReference: {fileID: 518171593}
+    - target: {fileID: 1689716247661856, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
   m_IsPrefabParent: 0
@@ -677,6 +681,10 @@ MonoBehaviour:
   lastStage: 0
   ArrowPrefab: {fileID: 1652495850495186, guid: 57fc36f7f2852df4bb16b9c16d43cf3b,
     type: 2}
+  audioClipTutorialIntroduction: {fileID: 8300000, guid: 5aed6cded8cf4614b82ddb25ada0a015,
+    type: 3}
+  audioClipTutorialStageFour: {fileID: 8300000, guid: 2af74cff3dafe2641b37b3ebb2dbf3d4,
+    type: 3}
 --- !u!1 &589412245
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,6 +1012,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 765552144}
+  - component: {fileID: 765552145}
   m_Layer: 0
   m_Name: Characters
   m_TagString: Untagged
@@ -1025,6 +1034,18 @@ Transform:
   m_Father: {fileID: 1531116116}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &765552145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 765552143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8c23b56847e694f92fde33bffb1947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1689716247661856, guid: 11a59f5cda98c7140a41884c2f977922, type: 2}
 --- !u!1 &908789775
 GameObject:
   m_ObjectHideFlags: 0
