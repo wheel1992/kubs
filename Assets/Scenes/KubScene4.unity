@@ -294,7 +294,7 @@ GameObject:
   - component: {fileID: 80543456}
   m_Layer: 0
   m_Name: Cube (10)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -326,7 +326,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 143914223}
   m_Layer: 0
   m_Name: Cube (4)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -494,7 +494,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -601,7 +601,7 @@ GameObject:
   - component: {fileID: 274387129}
   m_Layer: 0
   m_Name: Cube (15)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -633,7 +633,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -852,6 +852,8 @@ MonoBehaviour:
     prefab: {fileID: 1457686693877260, guid: 126417fa8639fec48924968ea2e62b00, type: 2}
   - name: Hole
     prefab: {fileID: 1713203723102424, guid: 3a407dd42627acd4898cfa4288f7a159, type: 2}
+  - name: Dirt
+    prefab: {fileID: 1601590353426080, guid: 18f8e08189993d543a956d665bee1f16, type: 2}
   tutorialManager: {fileID: 0}
 --- !u!1 &326533312
 GameObject:
@@ -866,7 +868,7 @@ GameObject:
   - component: {fileID: 326533314}
   m_Layer: 0
   m_Name: Cube (8)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -898,7 +900,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1118,7 +1120,7 @@ GameObject:
   - component: {fileID: 470335486}
   m_Layer: 0
   m_Name: Cube (20)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1150,7 +1152,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1202,7 +1204,7 @@ GameObject:
   - component: {fileID: 489726485}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1234,7 +1236,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1286,7 +1288,7 @@ GameObject:
   - component: {fileID: 538359862}
   m_Layer: 0
   m_Name: Cube (7)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1318,7 +1320,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1370,7 +1372,7 @@ GameObject:
   - component: {fileID: 581622089}
   m_Layer: 0
   m_Name: Cube (14)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1402,7 +1404,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1593,7 +1595,7 @@ GameObject:
   - component: {fileID: 680937086}
   m_Layer: 0
   m_Name: Cube (18)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1625,7 +1627,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2024,7 +2026,7 @@ GameObject:
   - component: {fileID: 740495744}
   m_Layer: 0
   m_Name: Cube (28)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2056,7 +2058,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2108,7 +2110,7 @@ GameObject:
   - component: {fileID: 830356165}
   m_Layer: 0
   m_Name: Cube (21)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2140,7 +2142,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2276,7 +2278,7 @@ GameObject:
   - component: {fileID: 894727172}
   m_Layer: 0
   m_Name: Cube (26)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2308,7 +2310,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2360,7 +2362,7 @@ GameObject:
   - component: {fileID: 906205045}
   m_Layer: 0
   m_Name: Cube (24)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2392,7 +2394,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2612,7 +2614,7 @@ GameObject:
   - component: {fileID: 1019646342}
   m_Layer: 0
   m_Name: Cube (5)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2644,7 +2646,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3475,7 +3477,7 @@ GameObject:
   - component: {fileID: 1542568018}
   m_Layer: 0
   m_Name: Cube (23)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3507,7 +3509,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3778,7 +3780,7 @@ GameObject:
   - component: {fileID: 1742276310}
   m_Layer: 0
   m_Name: Cube (13)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3810,7 +3812,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3917,7 +3919,7 @@ GameObject:
   - component: {fileID: 1884844405}
   m_Layer: 0
   m_Name: Cube (11)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3949,7 +3951,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

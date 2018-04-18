@@ -41,6 +41,7 @@ TagManager:
   - ZoneStartDummy
   - UICharacter
   - CanvasMenu
+  - Dirt
   layers:
   - Default
   - TransparentFX

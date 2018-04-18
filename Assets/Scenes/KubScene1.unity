@@ -506,6 +506,8 @@ MonoBehaviour:
     prefab: {fileID: 1457686693877260, guid: 126417fa8639fec48924968ea2e62b00, type: 2}
   - name: Hole
     prefab: {fileID: 1713203723102424, guid: 3a407dd42627acd4898cfa4288f7a159, type: 2}
+  - name: Dirt
+    prefab: {fileID: 1601590353426080, guid: 18f8e08189993d543a956d665bee1f16, type: 2}
   tutorialManager: {fileID: 0}
 --- !u!1001 &786206438
 Prefab:
@@ -932,7 +934,7 @@ GameObject:
   - component: {fileID: 1186368388}
   m_Layer: 0
   m_Name: Cube (1)
-  m_TagString: Grass
+  m_TagString: Dirt
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -964,7 +966,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c25fa01a596c01744911bf296a51be8f, type: 2}
+  - {fileID: 2100000, guid: a797b3092de34e04d91e6ce2da9c6fa2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
