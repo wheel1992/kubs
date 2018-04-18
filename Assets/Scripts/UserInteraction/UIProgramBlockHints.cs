@@ -247,6 +247,7 @@ public class UIProgramBlockHints : MonoBehaviour
         var programBlock = gameObject.GetComponent<ProgramBlock>();
         if (programBlock == null) { return; }
 
+        if (_tutorialManager == null) return;
         if (_tutorialManager.onShowTutorialArrow &&  // Currently arrow is showing
             programBlock.Type == ProgramBlockType.Forward && // Snapped block is Forward
             !programBlock.IsInSnapDropZoneClone()) // Snap not in SnapDropZoneClone
