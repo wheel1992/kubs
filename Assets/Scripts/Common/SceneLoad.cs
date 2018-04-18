@@ -93,6 +93,12 @@ namespace Kubs
             {
                 _rightCtrlRadialMenuManager.HandleMenuDisable();
             }
+
+            var characterFactory = GameObject.FindObjectOfType<CharacterFactory>();
+            if (characterFactory != null)
+            {
+                characterFactory.HandleMenuDisable(null);
+            }
         }
         void HandleMenuEnable(object sender)
         {

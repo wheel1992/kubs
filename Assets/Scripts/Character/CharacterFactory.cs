@@ -7,6 +7,7 @@ namespace Kubs
 	public class CharacterFactory : MonoBehaviour
 	{
 		public GameObject prefab { get { return _characterManager.activePrefab; }}
+		public bool dirty;
 
 		private CharacterManager _characterManager
 		{
@@ -14,7 +15,7 @@ namespace Kubs
 			{
 				if (__characterManager == null)
 				{
-					var go = GameObject.Find("CharacterManager");
+					var go = GameObject.FindObjectOfType<SceneLoad>().characterManager;
 					if (go == null)
 					{
 						return null;
@@ -31,7 +32,39 @@ namespace Kubs
 		// Use this for initialization
 		void Start()
 		{
-			var placeholder = transform.GetChild(0).gameObject;
+			ReplaceCharacter();
+		}
+
+        void OnEnable()
+        {
+            EventManager.StartListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+			Debug.Log("CharacterFactory.OnEnable");
+        }
+
+        void OnDisable()
+        {
+            EventManager.StopListening(Constant.EVENT_NAME_MENU_DISABLE, HandleMenuDisable);
+			Debug.Log("CharacterFactory.OnDisable");
+        }
+
+		public void SetDirty()
+		{
+			dirty = true;
+		}
+
+		public void HandleMenuDisable(object sender)
+		{
+			Debug.Log("CharacterFactory.HandleMenuDisable");
+
+			if (!dirty) return;
+			dirty = false;
+
+			ReplaceCharacter();
+		}
+
+		private void ReplaceCharacter()
+		{
+			var placeholder = transform.GetChild(transform.childCount - 1).gameObject;
 			placeholder.SetActive(false);
 
 			var go = Instantiate(prefab, transform);
@@ -48,6 +81,12 @@ namespace Kubs
 			var boxCollider = go.AddComponent<BoxCollider>();
 			boxCollider.center = placeholder.GetComponent<BoxCollider>().center;
 			boxCollider.size = placeholder.GetComponent<BoxCollider>().size;
+
+			// Copy audio sources
+			// ...
+
+			// Copy popups
+			// ...
 		}
 	}
 }

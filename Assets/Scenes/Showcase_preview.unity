@@ -1621,6 +1621,7 @@ GameObject:
   - component: {fileID: 416826261}
   - component: {fileID: 416826260}
   - component: {fileID: 416826263}
+  - component: {fileID: 416826264}
   m_Layer: 5
   m_Name: Button (17)
   m_TagString: Untagged
@@ -1770,6 +1771,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 100, y: 20, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &416826264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 416826258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &420510439
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,6 +2787,7 @@ GameObject:
   - component: {fileID: 679877475}
   - component: {fileID: 679877474}
   - component: {fileID: 679877477}
+  - component: {fileID: 679877478}
   m_Layer: 5
   m_Name: Button (17)
   m_TagString: Untagged
@@ -2924,6 +2937,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 100, y: 20, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &679877478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 679877472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &703900865
 GameObject:
   m_ObjectHideFlags: 0
@@ -7044,6 +7068,7 @@ GameObject:
   - component: {fileID: 854190489}
   - component: {fileID: 854190488}
   - component: {fileID: 854190491}
+  - component: {fileID: 854190492}
   m_Layer: 5
   m_Name: Button (17)
   m_TagString: Untagged
@@ -7292,6 +7317,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 30, y: 30, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &854190492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 854190486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &869617980 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1494519653813730, guid: ec4e8f85137b8254e8307578cfdda970,
@@ -8025,6 +8061,7 @@ GameObject:
   - component: {fileID: 1095082390}
   - component: {fileID: 1095082389}
   - component: {fileID: 1095082392}
+  - component: {fileID: 1095082393}
   m_Layer: 5
   m_Name: Button (19)
   m_TagString: Untagged
@@ -8273,6 +8310,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 30, y: 30, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1095082393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1095082387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1104274052
 GameObject:
   m_ObjectHideFlags: 0
@@ -10326,6 +10374,7 @@ GameObject:
   - component: {fileID: 1630934449}
   - component: {fileID: 1630934448}
   - component: {fileID: 1630934451}
+  - component: {fileID: 1630934452}
   m_Layer: 5
   m_Name: Button (18)
   m_TagString: Untagged
@@ -10574,6 +10623,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 30, y: 30, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1630934452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1630934446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1632660575 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114851304809812968, guid: 0af0f0b76509ed246a71537bc6d030e2,
@@ -11456,6 +11516,7 @@ GameObject:
   - component: {fileID: 1943316640}
   - component: {fileID: 1943316639}
   - component: {fileID: 1943316642}
+  - component: {fileID: 1943316643}
   m_Layer: 5
   m_Name: Button (18)
   m_TagString: Untagged
@@ -11605,6 +11666,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 100, y: 20, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1943316643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1943316637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ada49cddffd205e41ba47950decc79ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1947574084 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1269606934454088, guid: 0af0f0b76509ed246a71537bc6d030e2,
