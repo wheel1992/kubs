@@ -13,6 +13,8 @@ public class UIProgramBlockHints : MonoBehaviour
     private GameObject currentGameObject;
     private float scaleFactor = 0.3f;
     private GameObject UIProgramBlockHintsPointer;
+    private GameObject rightControllerTooltip;
+    private GameObject gripTooltip;
     private TutorialManager _tutorialManager
     {
         get
@@ -56,6 +58,8 @@ public class UIProgramBlockHints : MonoBehaviour
             currentGameObject = this.gameObject;
             //Debug.Log("UIProgramBlockHints Start Function: " + currentGameObject.name );
         }
+        rightControllerTooltip = GetRightVRTKControllerTooltips();
+        gripTooltip = GetRightVRTKGripTooltips();
     }
 
     // Update is called once per frame
@@ -139,11 +143,12 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // TEST
         Debug.Log("HandleOnTouch");
-        
+
         if (_tutorialManager == null) { return; }
         if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         {
             _tutorialManager.HideArrowPointer();
+            ShowGripTooltip();
         }
     }
 
@@ -167,6 +172,7 @@ public class UIProgramBlockHints : MonoBehaviour
             if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
             {
                 _tutorialManager.ShowArrowPointer();
+                HideGripTooltip();
             }
         }
     }
@@ -182,6 +188,7 @@ public class UIProgramBlockHints : MonoBehaviour
             // _tutorialManager.ShowArrowPointer();
             _tutorialManager.SetArrowPointerPositionToZone();
 
+            HideGripTooltip();
             // //GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
             // GameObject arrowPointer = _tutorialManager.arrowPointer;
             // if (arrowPointer != null)
@@ -207,6 +214,7 @@ public class UIProgramBlockHints : MonoBehaviour
         {
             // _tutorialManager.ShowArrowPointer();
             _tutorialManager.SetArrowPointerPositionToSnapClone();
+            HideGripTooltip();
         }
 
         // if (gameObject.GetComponent<ProgramBlock>() != null)
@@ -245,6 +253,7 @@ public class UIProgramBlockHints : MonoBehaviour
         {
             _tutorialManager.onShowTutorialArrow = false;
             _tutorialManager.DestroyArrowPointer();
+            HideGripTooltip();
         }
 
         // if ((gameObject.GetComponent<ProgramBlock>() != null))
@@ -262,7 +271,24 @@ public class UIProgramBlockHints : MonoBehaviour
         //     }
         // }
     }
-
+    private void HideGripTooltip()
+    {
+        if (gripTooltip == null)
+        {
+            gripTooltip = GetRightVRTKGripTooltips();
+        }
+        rightControllerTooltip.SetActive(false);
+        gripTooltip.SetActive(false);
+    }
+    private void ShowGripTooltip()
+    {
+        if (gripTooltip == null)
+        {
+            gripTooltip = GetRightVRTKGripTooltips();
+        }
+        rightControllerTooltip.SetActive(true);
+        gripTooltip.SetActive(true);
+    }
     private GameObject CreateProgramBlockUIHint(ProgramBlockType programBlockType)
     {
         GameObject UIProgramBlockHints = null;
@@ -489,6 +515,20 @@ public class UIProgramBlockHints : MonoBehaviour
     private ProgramBlock GetProgramBlock()
     {
         return gameObject.GetComponent<ProgramBlock>();
+    }
+    private GameObject GetRightVRTKGripTooltips()
+    {
+        var rightCtrlTooltip = GetRightVRTKControllerTooltips();
+        if (rightCtrlTooltip == null) { return null; }
+        var tooltip = rightCtrlTooltip.transform.Find("GripTooltip");
+        if (tooltip == null) { return null; }
+        return tooltip.gameObject;
+    }
+    private GameObject GetRightVRTKControllerTooltips() {
+        var rightCtrl = GameObject.Find("RightController");
+        if (rightCtrl == null) { return null; }
+        var tooltip = rightCtrl.transform.Find("ControllerTooltips");
+        return tooltip.gameObject;
     }
 
     private TerrainReplacer SetNamedPrefabs(TerrainReplacer terrainReplacer)
