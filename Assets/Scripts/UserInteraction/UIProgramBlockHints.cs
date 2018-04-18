@@ -330,7 +330,7 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // _character.Reset();
         // StartCoroutine(MoveCharacterAfterOneSecond(programBlockType));
-        UIProgramBlockHints.transform.localEulerAngles = new Vector3(0, 45, 0);
+        UIProgramBlockHints.transform.localEulerAngles = new Vector3(0, 80, 0); // new Vector3(0, 45, 0);
         return UIProgramBlockHints;
         // _animating = false;
     }
