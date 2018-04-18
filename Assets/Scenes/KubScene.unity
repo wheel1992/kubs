@@ -4656,6 +4656,7 @@ MonoBehaviour:
   tutorialManager: {fileID: 0}
   _scale: 0
   showPopup: 1
+  showWin: 0
   audioClipWalk: {fileID: 8300000, guid: 93f920ff3130e514fb1f0d1d61edc75c, type: 3}
   audioClipChewFood: {fileID: 8300000, guid: a0aab0dc54c98c346bc2f7b1caa0d298, type: 3}
   audioClipJump: {fileID: 8300000, guid: 15e57742199a41440884d6337e7ef47c, type: 3}
@@ -7992,7 +7993,7 @@ Prefab:
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 287
+      value: 327
       objectReference: {fileID: 0}
     - target: {fileID: 224000012623161658, guid: d46cf6b1ad9d84a48ae7548a2a6b41b3,
         type: 2}

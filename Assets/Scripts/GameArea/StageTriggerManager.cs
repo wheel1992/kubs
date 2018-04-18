@@ -17,7 +17,7 @@ namespace Kubs
 
 		void Start()
 		{
-			_menu = GameObject.FindObjectOfType<SceneLoad>().menu.GetComponentInChildren<Menu>();
+			_menu = FindMenu();
 
 			AutoSetNextStageIfNeeded();
 			CollectChildren();
@@ -48,6 +48,12 @@ namespace Kubs
 			{
 				tutorialManager.CollectChildren(transform);
 			}
+		}
+
+		private Menu FindMenu()
+		{
+			var sceneLoad = GameObject.FindObjectOfType<SceneLoad>();
+			return sceneLoad == null ? null : sceneLoad.menu.GetComponentInChildren<Menu>();
 		}
 
 		private void OnChildTriggerEnter(StageTrigger trigger)

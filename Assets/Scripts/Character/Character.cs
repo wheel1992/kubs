@@ -38,6 +38,7 @@ namespace Kubs
         private bool _resetFlag = false;
         public float _scale;
         public bool showPopup;
+        public bool showWin;
 
         // Audio
         public AudioClip audioClipWalk;
@@ -145,6 +146,11 @@ namespace Kubs
                 Invoke("Jump", 1);
                 Invoke("Jump", 1);
                 */
+            }
+
+            if (showWin)
+            {
+                InvokeRepeating("ShowWin", 0, 2);
             }
 
             if (gameObject.tag != "UICharacter")
@@ -307,7 +313,7 @@ namespace Kubs
 
             if (IsBlocked())
             {
-                // Jump up
+                // Jump on
                 endPos = transform.position + (transform.forward + transform.up) * _scale;
                 trajectoryHeight = 1.2f * _scale;
             }
@@ -444,6 +450,15 @@ namespace Kubs
         {
             DebugLog("SetResetFlag");
             _resetFlag = true;
+        }
+
+        private void ShowWin()
+        {
+            _audioSourceJump.Play();
+            _rigidbody.AddForce(Vector3.up * 200);
+
+            Invoke("Reset", 1f);
+            Set(Animations.Jump);
         }
 
         private void Stop()
