@@ -6,8 +6,19 @@ namespace Kubs
 {
 	public class CharacterManager : MonoBehaviour
 	{
-		public static GameObject characterPrefab;
-		
-		public GameObject[] characterPrefabs;
+		public GameObject bearPrefab;
+		public GameObject bunnyPrefab;
+		public GameObject catPrefab;
+
+		public GameObject activePrefab
+		{
+			get
+			{
+				return bearPrefab.activeSelf ? bearPrefab :
+						bunnyPrefab.activeSelf ? bunnyPrefab :
+						catPrefab.activeSelf ? catPrefab :
+						null;
+			}
+		}
 	}
 }
