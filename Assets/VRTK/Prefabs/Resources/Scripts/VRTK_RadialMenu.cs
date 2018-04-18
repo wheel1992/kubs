@@ -382,7 +382,7 @@ namespace VRTK
             {
                 for (int i = 0; i < menuButtons.Count; i++)
                 {
-                    DestroyImmediate(menuButtons[i]);
+                    Destroy(menuButtons[i]);
                 }
                 menuButtons.Clear();
             }

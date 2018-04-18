@@ -106,6 +106,11 @@ namespace Kubs
 
             InitAudioClips();
 
+            if (_rigidbody == null)
+            {
+                _rigidbody = gameObject.AddComponent<Rigidbody>();
+            }
+
             if (_isDebug)
             {
                 // Test blockchain movement
@@ -561,6 +566,20 @@ namespace Kubs
         private GameObject GetZonesGameObject()
         {
             return GameObject.Find("Zones");
+        }
+
+        public void CopyAudio(Character character)
+        {
+            this.audioClipChewFood = character.audioClipChewFood;
+            this.audioClipJump = character.audioClipJump;
+            this.audioClipWalk = character.audioClipWalk;
+
+            InitAudioClips();
+        }
+
+        public void CopyPopups(Character character)
+        {
+            this.HintProgramBlockPrefabs = character.HintProgramBlockPrefabs;
         }
     }
 }
