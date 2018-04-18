@@ -6,12 +6,15 @@ using VRTK;
 
 public class UIProgramBlockHints : MonoBehaviour
 {
+    public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
+    public event ProgramBlockGrabEventHandler ProgramBlockGrab;
+
     private Transform transformHint;
     private bool _onHover = false;
     private bool _animating = false;
     private bool _changeJump = false;
     private GameObject currentGameObject;
-    private float scaleFactor = 0.3f;
+    private float scaleFactor = 0.5f;
     private GameObject UIProgramBlockHintsPointer;
     private GameObject rightControllerTooltip;
     private GameObject gripTooltip;
@@ -33,8 +36,6 @@ public class UIProgramBlockHints : MonoBehaviour
     }
     private TutorialManager __tutorialManager;
     private Character _character;
-    public delegate void ProgramBlockGrabEventHandler(ProgramBlockType programBlockType);
-    public event ProgramBlockGrabEventHandler ProgramBlockGrab;
     private IEnumerator _moveCoroutine;
 
     [SerializeField] private GameObject CharacterPrefab;
@@ -144,11 +145,18 @@ public class UIProgramBlockHints : MonoBehaviour
         // TEST
         Debug.Log("HandleOnTouch");
 
-        if (_tutorialManager == null) { return; }
-        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        //if (_tutorialManager == null) { return; }
+        if (_tutorialManager != null && _tutorialManager.onShowTutorialArrow)
         {
-            _tutorialManager.HideArrowPointer();
-            ShowGripTooltip();
+            var activeStage = _tutorialManager.GetCurrentActiveStage();
+            // Either current tutorial stage = 1 & programBlock is Forward
+            // Or current tutorial stage = 4 & programBlock is ForLoopStart
+            if ((activeStage == 1 && GetProgramBlock().Type == ProgramBlockType.Forward) ||
+                (activeStage == 4 && GetProgramBlock().Type == ProgramBlockType.ForLoopStart))
+            {
+                _tutorialManager.HideArrowPointer();
+                ShowGripTooltip();
+            }
         }
     }
 
@@ -167,39 +175,50 @@ public class UIProgramBlockHints : MonoBehaviour
 
         // TEST
         Debug.Log("HandleUnTouch");
-        if (__tutorialManager != null)
+        if (_tutorialManager == null) { return; }
+        if (_tutorialManager.onShowTutorialArrow)
         {
-            if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+            var activeStage = _tutorialManager.GetCurrentActiveStage();
+            // Either current tutorial stage = 1 & programBlock is Forward
+            // Or current tutorial stage = 4 & programBlock is ForLoopStart
+            if ((activeStage == 1 && GetProgramBlock().Type == ProgramBlockType.Forward) ||
+                (activeStage == 4 && GetProgramBlock().Type == ProgramBlockType.ForLoopStart))
             {
                 _tutorialManager.ShowArrowPointer();
-                HideGripTooltip();
+                ShowGripTooltip();
             }
         }
+        // if (__tutorialManager != null)
+        // {
+        //     if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        //     {
+        //         _tutorialmanager.ShowArrowPointer();
+        //         HideGripTooltip();
+        //     }
+        // }
     }
 
     void HandleOnGrab(object sender, VRTK.InteractableObjectEventArgs e)
     {
         _onHover = false;
-
+        Debug.Log("HandleOnGrab");
         if (_tutorialManager == null) { return; }
-        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+         Debug.Log("HandleOnGrab: " + _tutorialManager.onShowTutorialArrow);
+        if (_tutorialManager.onShowTutorialArrow)
         {
-            Debug.Log("HandleOnGrab");
-            // _tutorialManager.ShowArrowPointer();
-            _tutorialManager.SetArrowPointerPositionToZone();
-
-            HideGripTooltip();
-            // //GameObject.Find("TutorialManager").GetComponent<TutorialManager>().onShowTutorialArrow = false;
-            // GameObject arrowPointer = _tutorialManager.arrowPointer;
-            // if (arrowPointer != null)
-            // {
-            //     arrowPointer.transform.position = GameObject.Find("Zones").transform.GetChild(0).transform.position + new Vector3(0, 2f, 0);
-            //     Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-            //     Debug.Log("Destroy On Grab");
-            //     arrowPointer.AddComponent<UIHintsArrowPointer>();
-            //     arrowPointer.SetActive(true);
-            // }
+            var activeStage = _tutorialManager.GetCurrentActiveStage();
+            if ((activeStage == 1 && GetProgramBlock().Type == ProgramBlockType.Forward) ||
+                (activeStage == 4 && GetProgramBlock().Type == ProgramBlockType.ForLoopStart)) {
+                _tutorialManager.SetArrowPointerPositionToZone();
+                HideGripTooltip();
+            }
         }
+        // if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        // {
+        //     Debug.Log("HandleOnGrab");
+        //     _tutorialManager.SetArrowPointerPositionToZone();
+        //     HideGripTooltip();
+        // }
     }
 
     void HandleUnGrab(object sender, VRTK.InteractableObjectEventArgs e)
@@ -209,35 +228,24 @@ public class UIProgramBlockHints : MonoBehaviour
         if (programBlock == null) { return; }
 
         if (_tutorialManager == null) { return; }
-
-        if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
+        if (_tutorialManager.onShowTutorialArrow)
         {
-            // _tutorialManager.ShowArrowPointer();
-            _tutorialManager.SetArrowPointerPositionToSnapClone();
+            var activeStage = _tutorialManager.GetCurrentActiveStage();
+            if (activeStage == 1 && programBlock.Type == ProgramBlockType.Forward)
+            {
+                _tutorialManager.SetArrowPointerPositionToSnapCloneForward();
+            }
+            else if (activeStage == 4 && programBlock.Type == ProgramBlockType.ForLoopStart)
+            {
+                _tutorialManager.SetArrowPointerPositionToSnapCloneForStartEnd();
+            }
             HideGripTooltip();
         }
-
-        // if (gameObject.GetComponent<ProgramBlock>() != null)
+        // if (GetProgramBlock().Type == ProgramBlockType.Forward && _tutorialManager.onShowTutorialArrow)
         // {
-        //     var programBlock = gameObject.GetComponent<ProgramBlock>();
-        //     if (_tutorialManager.onShowTutorialArrow)
-        //     {
-        //         GameObject arrowPointer = _tutorialManager.arrowPointer;
-        //         if (arrowPointer != null)
-        //         {
-        //             arrowPointer.SetActive(false);
-        //             arrowPointer.transform.position = GameObject.Find("Program_Block_SnapDropZone_Clone_Forward").transform.position + new Vector3(0, 2f, 0);
-        //             Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-        //             Debug.Log("Destroy On Un Grab");
-        //             arrowPointer.AddComponent<UIHintsArrowPointer>();
-        //             arrowPointer.SetActive(true);
-        //             //GameObject arrowPointer = GameObject.Find("TutorialManager").GetComponent<TutorialManager>().arrowPointer;
-        //             //if (arrowPointer != null)
-        //             //{
-        //             //    arrowPointer.SetActive(true);
-        //             //}
-        //         }
-        //     }
+        //     // _tutorialManager.ShowArrowPointer();
+        //     _tutorialManager.SetArrowPointerPositionToSnapCloneForward();
+        //     HideGripTooltip();
         // }
     }
 
@@ -246,30 +254,34 @@ public class UIProgramBlockHints : MonoBehaviour
         Debug.Log("HandleOnSnap");
         var programBlock = gameObject.GetComponent<ProgramBlock>();
         if (programBlock == null) { return; }
+        if (programBlock.IsInSnapDropZoneClone()) { return; }
 
-        if (_tutorialManager == null) return;
-        if (_tutorialManager.onShowTutorialArrow &&  // Currently arrow is showing
-            programBlock.Type == ProgramBlockType.Forward && // Snapped block is Forward
-            !programBlock.IsInSnapDropZoneClone()) // Snap not in SnapDropZoneClone
+
+        if (_tutorialManager == null) { return; }
+        if (_tutorialManager.onShowTutorialArrow)
         {
-            _tutorialManager.onShowTutorialArrow = false;
-            _tutorialManager.DestroyArrowPointer();
+            var activeStage = _tutorialManager.GetCurrentActiveStage();
+            if (activeStage == 1 && programBlock.Type == ProgramBlockType.Forward)
+            {
+                // Move arrow pointer to ButtonStart
+                _tutorialManager.SetArrowPointerPositionToButtonStart();
+            }
+            else if (activeStage == 4 && programBlock.Type == ProgramBlockType.ForLoopStart)
+            {
+                // Remove arrow pointer
+                _tutorialManager.onShowTutorialArrow = false;
+                _tutorialManager.HideArrowPointer();
+            }
             HideGripTooltip();
         }
-
-        // if ((gameObject.GetComponent<ProgramBlock>() != null))
+        // if (_tutorialManager.onShowTutorialArrow &&  // Currently arrow is showing
+        //     programBlock.Type == ProgramBlockType.Forward && // Snapped block is Forward
+        //     !programBlock.IsInSnapDropZoneClone()) // Snap not in SnapDropZoneClone
         // {
-        //     var programBlock = gameObject.GetComponent<ProgramBlock>();
-        //     if (_tutorialManager.onShowTutorialArrow && programBlock.Type == ProgramBlockType.Forward && !programBlock.IsInSnapDropZoneClone())
-        //     {
-        //         _tutorialManager.onShowTutorialArrow = false;
-        //         GameObject arrowPointer = _tutorialManager.arrowPointer;
-        //         if (arrowPointer != null)
-        //         {
-        //             Destroy(arrowPointer);
-        //             Debug.Log("Destroy On Snap");
-        //         }
-        //     }
+        //     //_tutorialManager.onShowTutorialArrow = false;
+        //     // _tutorialManager.DestroyArrowPointer();
+        //     _tutorialManager.SetArrowPointerPositionToButtonStart();
+        //     HideGripTooltip();
         // }
     }
     private void HideGripTooltip()
@@ -310,7 +322,7 @@ public class UIProgramBlockHints : MonoBehaviour
                     UIProgramBlockHints = CreateMiniGameArea(1, "Program_Block_SnapDropZone_Clone_RotateRight");
                     break;
                 default:
-                    break;
+                    return null;
             }
         }
         //Instantiate Char
@@ -481,7 +493,6 @@ public class UIProgramBlockHints : MonoBehaviour
         }
 
     }
-
     private Character GetCharacterFromGameArea(GameObject area)
     {
         Character miniChar = new Character();

@@ -13,9 +13,15 @@ namespace Kubs
 
         private int _activeStage = 1;
         private Dictionary<int, List<TutorialBlock>> tutorialBlocks;
+        private ButtonStart _buttonStart;
 
         [SerializeField] GameObject ArrowPrefab;
+        [SerializeField] AudioClip audioClipTutorialIntroduction;
+        [SerializeField] AudioClip audioClipTutorialStageFour;
 
+        private AudioSource _audioSourceTutorialIntroduction;
+        private AudioSource _audioSourceTutorialStageFour;
+        private List<AudioSource> _audioSources;
         //For purpose of UI guide Arrows for Demonstration
         private void Start()
         {
@@ -24,17 +30,46 @@ namespace Kubs
             //    hints.ProgramBlockGrab += new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
             //    var uiProgramBlockHints = new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
             onShowTutorialArrow = true;
-            var arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
-			if (GameObject.Find("UIHintsArrowPointer") == null) {
-				arrowPointer = CreateArrowPointer(arrowPos);
-			} else {
-				arrowPointer = GameObject.Find("UIHintsArrowPointer");
-			}
+
+            Vector3 arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
+            // if (_activeStage == 1)
+            // {
+            //     arrowPos = 
+            // }
+            // else if (_activeStage == 4)
+            // {
+            //     arrowPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
+            // }
+            // else
+            // {
+            //     return;
+            // }
+
+            if (GameObject.Find("UIHintsArrowPointer") == null)
+            {
+                arrowPointer = CreateArrowPointer(arrowPos);
+            }
+            else
+            {
+                arrowPointer = GameObject.Find("UIHintsArrowPointer");
+            }
+
+            _buttonStart = GetButtonStart();
+            _buttonStart.OnTouched += new ButtonStart.ButtonEventHandler(HandleButtonStartOnTouched);
+
+            _audioSources = new List<AudioSource>();
+            InitAudioClips();
+
+            if(_activeStage == 1) {
+                StopAllAudioSources();
+                _audioSourceTutorialIntroduction.Play();
+            }
         }
 
-		void OnDestroy() {
-			Destroy(arrowPointer);
-		}
+        void OnDestroy()
+        {
+            Destroy(arrowPointer);
+        }
 
         private GameObject CreateArrowPointer(Vector3 position)
         {
@@ -44,7 +79,10 @@ namespace Kubs
             tempArrowPointer.name = "UIHintsArrowPointer";
             return tempArrowPointer;
         }
-
+        public int GetCurrentActiveStage()
+        {
+            return _activeStage;
+        }
         public void CollectChildren(Transform parent)
         {
             if (tutorialBlocks == null)
@@ -95,6 +133,27 @@ namespace Kubs
             }
 
             EventManager.TriggerEvent(Constant.EVENT_NAME_MENU_DISABLE, null);
+
+            if (_activeStage == 1)
+            {
+                StopAllAudioSources();
+                _audioSourceTutorialIntroduction.Play();
+
+                onShowTutorialArrow = true;
+                SetArrowPointerPositionToSnapCloneForward();
+            }
+            else if (_activeStage == 4)
+            {
+                StopAllAudioSources();
+                _audioSourceTutorialStageFour.Play();
+
+                onShowTutorialArrow = true;
+                SetArrowPointerPositionToSnapCloneForStartEnd();
+            }
+            else
+            {
+                onShowTutorialArrow = false;
+            }
         }
 
         public void TransferComponent(GameObject from, GameObject to)
@@ -124,10 +183,24 @@ namespace Kubs
         {
             if (arrowPointer != null)
             {
-				var uiPointer = arrowPointer.GetComponent<UIHintsArrowPointer>();
+                var uiPointer = arrowPointer.GetComponent<UIHintsArrowPointer>();
                 uiPointer.Show();
-				uiPointer.BeginFloat();
+                uiPointer.BeginFloat();
             }
+        }
+        public void SetArrowPointerPositionToButtonStart()
+        {
+            Debug.Log("Set arrow to button start!");
+            if (_buttonStart == null) { return; }
+            var targetPos = _buttonStart.transform.position + new Vector3(0, 2f, 0);
+            // arrowPointer.StopAllCoroutines();
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
+            arrowPointer.transform.position = targetPos;
+
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
         }
         public void SetArrowPointerPositionToZone()
         {
@@ -136,26 +209,47 @@ namespace Kubs
             // arrowPointer.StopAllCoroutines();
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
-			
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
         }
-        public void SetArrowPointerPositionToSnapClone()
+        public void SetArrowPointerPositionToSnapCloneForward()
         {
-            Debug.Log("Set arrow to snap clone!");
+            Debug.Log("Set arrow to snap clone forward!");
             var targetPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0);
             // arrowPointer.StopAllCoroutines();
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
             arrowPointer.transform.position = targetPos;
 
-			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
-			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
+        }
+        public void SetArrowPointerPositionToSnapCloneForStartEnd()
+        {
+            Debug.Log("Set arrow to snap clone For Start End!");
+            var targetPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0);
+            // arrowPointer.StopAllCoroutines();
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
+            arrowPointer.transform.position = targetPos;
+
+            Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+            arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
+        }
+        private void HandleButtonStartOnTouched()
+        {
+            // Button Start is touched
+            // Character is playing
+            onShowTutorialArrow = false;
+            // DestroyArrowPointer();
+            HideArrowPointer();
         }
 
         private void HideStagesInRange(int start, int end)
@@ -166,6 +260,32 @@ namespace Kubs
                 {
                     block.Shrink();
                 }
+            }
+        }
+        private void InitAudioClips()
+        {
+            _audioSourceTutorialIntroduction = gameObject.AddComponent<AudioSource>();
+            _audioSourceTutorialIntroduction.clip = audioClipTutorialIntroduction;
+            _audioSourceTutorialIntroduction.loop = false;
+            _audioSourceTutorialIntroduction.playOnAwake = false;
+            _audioSourceTutorialIntroduction.volume = 1.0f;
+
+            _audioSources.Add(_audioSourceTutorialIntroduction);
+
+            _audioSourceTutorialStageFour = gameObject.AddComponent<AudioSource>();
+            _audioSourceTutorialStageFour.clip = audioClipTutorialStageFour;
+            _audioSourceTutorialStageFour.loop = false;
+            _audioSourceTutorialStageFour.playOnAwake = false;
+            _audioSourceTutorialStageFour.volume = 1.0f;
+
+            _audioSources.Add(_audioSourceTutorialStageFour);
+        }
+        private void StopAllAudioSources()
+        {
+            if (_audioSources == null || _audioSources.Count == 0) { return; }
+            foreach (var source in _audioSources)
+            {
+                source.Stop();
             }
         }
 
@@ -191,6 +311,15 @@ namespace Kubs
         {
             return GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
         }
-
+        private GameObject GetProgramBlockSnapDropZoneCloneForStartEnd()
+        {
+            return GameObject.Find("Program_Block_SnapDropZone_Clone_ForStartEnd");
+        }
+        private ButtonStart GetButtonStart()
+        {
+            var go = GameObject.Find("ButtonStart_New");
+            if (go == null) { return null; }
+            return go.GetComponent<ButtonStart>();
+        }
     }
 }
