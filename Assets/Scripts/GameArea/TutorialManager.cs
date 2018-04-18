@@ -25,7 +25,15 @@ namespace Kubs
             //    hints.ProgramBlockGrab += new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
             //    var uiProgramBlockHints = new UIProgramBlockHints.ProgramBlockGrabEventHandler(HandleProgramBlockGrab);
             onShowTutorialArrow = true;
-            var arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
+
+            Vector3 arrowPos;
+            if (_activeStage == 1) {
+                arrowPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0f);
+            }
+            else if (_activeStage == 4) {
+                arrowPos = SetArrowPointerPositionToSnapCloneForStartEnd().transform.position + new Vector3(0, 2f, 0f);
+            }
+
 			if (GameObject.Find("UIHintsArrowPointer") == null) {
 				arrowPointer = CreateArrowPointer(arrowPos);
 			} else {
@@ -48,7 +56,10 @@ namespace Kubs
             tempArrowPointer.name = "UIHintsArrowPointer";
             return tempArrowPointer;
         }
-
+        public int GetCurrentActiveStage()
+        {
+            return _activeStage;
+        }
         public void CollectChildren(Transform parent)
         {
             if (tutorialBlocks == null)
@@ -161,9 +172,9 @@ namespace Kubs
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
         }
-        public void SetArrowPointerPositionToSnapClone()
+        public void SetArrowPointerPositionToSnapCloneForward()
         {
-            Debug.Log("Set arrow to snap clone!");
+            Debug.Log("Set arrow to snap clone forward!");
             var targetPos = GetProgramBlockSnapDropZoneCloneForward().transform.position + new Vector3(0, 2f, 0);
             // arrowPointer.StopAllCoroutines();
             arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
@@ -174,6 +185,19 @@ namespace Kubs
 
             arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
             //arrowPointer.BeginFloat();
+        }
+        public void SetArrowPointerPositionToSnapCloneForStartEnd()
+        {
+            Debug.Log("Set arrow to snap clone For Start End!");
+            var targetPos = GetProgramBlockSnapDropZoneCloneForStartEnd().transform.position + new Vector3(0, 2f, 0);
+            // arrowPointer.StopAllCoroutines();
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Hide();
+            arrowPointer.transform.position = targetPos;
+
+			Destroy(arrowPointer.GetComponent<UIHintsArrowPointer>());
+			arrowPointer.gameObject.AddComponent<UIHintsArrowPointer>();
+
+            arrowPointer.GetComponent<UIHintsArrowPointer>().Show();
         }
         private void HandleButtonStartOnTouched()
         {
@@ -215,6 +239,10 @@ namespace Kubs
         private GameObject GetProgramBlockSnapDropZoneCloneForward()
         {
             return GameObject.Find("Program_Block_SnapDropZone_Clone_Forward");
+        }
+        private GameObject GetProgramBlockSnapDropZoneCloneForStartEnd()
+        {
+            return GameObject.Find("Program_Block_SnapDropZone_Clone_ForStartEnd");
         }
         private ButtonStart GetButtonStart()
         {
